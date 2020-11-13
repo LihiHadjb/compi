@@ -1,5 +1,6 @@
-package Ex1;
+package Ex1.Inheritance;
 
+import Ex1.Inheritance.InheritanceNode;
 import ast.ClassDecl;
 import ast.Program;
 import java.util.HashMap;

@@ -1,13 +1,11 @@
 package Ex1.tests;
 
-import Ex1.InheritanceNode;
-import Ex1.InheritanceTrees;
+import Ex1.Inheritance.InheritanceTrees;
 import ast.AstXMLSerializer;
 import ast.Program;
 import org.junit.*;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.HashSet;
 
 import static org.junit.Assert.*;

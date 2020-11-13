@@ -1,8 +1,6 @@
-package Ex1;
+package Ex1.SymbolTables;
 
 import ast.AstType;
-import ast.IntAstType;
-import ast.VarDecl;
 import ast.VariableIntroduction;
 
 public class VarEntry {

@@ -1,4 +1,4 @@
-package Ex1;
+package Ex1.SymbolTables;
 
 import ast.AstNode;
 import ast.MethodDecl;

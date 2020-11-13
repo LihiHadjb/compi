@@ -1,4 +1,4 @@
-package Ex1;
+package Ex1.Inheritance;
 
 import ast.AstNode;
 import ast.ClassDecl;

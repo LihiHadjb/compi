@@ -1,6 +1,6 @@
 package ast;
 
-import Ex1.SymbolTable;
+import Ex1.SymbolTables.SymbolTable;
 import javax.xml.bind.annotation.XmlElement;
 
 public abstract class AstNode {
