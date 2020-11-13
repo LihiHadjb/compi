@@ -26,5 +26,18 @@ public class InheritanceTrees {
         }
     }
 
+    public HashMap<String, InheritanceNode> roots(){
+        return this.roots;
+    }
+
+    public HashMap<String, InheritanceNode> flatClasses(){
+        return this.flatClasses;
+    }
+
+    public InheritanceNode currNode(){
+        return this.currNode;
+    }
+
+
 
 }

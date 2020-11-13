@@ -21,15 +21,16 @@ public class InheritanceTest {
         prog = xmlSerializer.deserialize(new File("myExample1"));
         InheritanceTrees trees = new InheritanceTrees(prog);
 
+        //check flatmap
         HashSet<String> expectedFlatClasseskeys = new HashSet<>();
         expectedFlatClasseskeys.add("A");
         expectedFlatClasseskeys.add("B");
         expectedFlatClasseskeys.add("C");
         expectedFlatClasseskeys.add("D");
         expectedFlatClasseskeys.add("E");
+        assertTrue(trees.roots().keySet().equals(expectedFlatClasseskeys));
 
-        assertTrue(trees.keySet().equals(expectedFlatClasseskeys);
-
+        //check tree
         System.out.println(trees);
     }
 
