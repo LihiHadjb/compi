@@ -10,6 +10,10 @@ class Example {
 		e = new Example();
 		return e.run();
 	}
+
+	public int run2(){
+		return new NonExample().run();
+	}
 }
 
 class NonExample {

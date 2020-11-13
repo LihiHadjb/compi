@@ -1,3 +1,4 @@
+import Ex1.Rename;
 import ast.*;
 
 import java.io.*;
@@ -52,8 +53,8 @@ public class Main {
                     } else {
                         throw new IllegalArgumentException("unknown rename type " + type);
                     }
-
-                    throw new UnsupportedOperationException("TODO - Ex. 1");
+                    Rename rename = new Rename(prog);
+                    //throw new UnsupportedOperationException("TODO - Ex. 1");
 
                 } else {
                     throw new IllegalArgumentException("unknown command line action " + action);
