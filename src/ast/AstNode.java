@@ -21,4 +21,8 @@ public abstract class AstNode {
     public void setSymbolTable(SymbolTable symbolTable){
         this.symbolTable = symbolTable;
     }
+
+    public SymbolTable symbolTable(){
+        return this.symbolTable;
+    }
 }

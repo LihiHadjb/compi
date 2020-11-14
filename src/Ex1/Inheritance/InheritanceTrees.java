@@ -12,6 +12,7 @@ public class InheritanceTrees {
 
     public InheritanceTrees(Program prog){
         this.roots = new HashMap<>();
+        this.flatClasses = new HashMap<>();
         for (ClassDecl classdecl : prog.classDecls()){
             if (classdecl.superName() == null){
                 currNode = new InheritanceNode(null, classdecl);

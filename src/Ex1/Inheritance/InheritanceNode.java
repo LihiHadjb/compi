@@ -30,5 +30,13 @@ public class InheritanceNode {
                 "name: " + name + "\n";
     }
 
+    public String name(){
+        return this.name;
+    }
+
+    public List<InheritanceNode> children(){
+        return this.children;
+    }
+
 
 }

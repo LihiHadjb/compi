@@ -33,4 +33,23 @@ public class SymbolTable {
         this.methods.put(name, entry);
     }
 
+    public String type(){
+        return this.type;
+    }
+
+    public HashMap<String, MethodEntry> methods(){
+        return this.methods;
+    }
+
+    public HashMap<String, VarEntry> variables(){
+        return this.variables;
+    }
+
+    public SymbolTable parent(){
+        return this.parent;
+    }
+
+    public AstNode astNodeInProgram(){
+        return this.astNodeInProgram;
+    }
 }
