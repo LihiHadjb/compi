@@ -1,5 +1,6 @@
 package Ex1.RenameVisitors;
 
+import Ex1.SearchInContext;
 import ast.*;
 
 import java.util.Set;
@@ -11,14 +12,15 @@ public class MethodRenameVisitor implements Visitor {
     private String newName;
     private MethodDecl lastMethodSeen;
     private boolean isLastOwnerInClassesToCheck;
+    SearchInContext searchInContext;
 
 
-
-    public MethodRenameVisitor(Program prog, Set<String> classesToCheck, String oldName, String newName){
+    public MethodRenameVisitor(Program prog, Set<String> classesToCheck, String oldName, String newName, SearchInContext searchInContext){
         this.prog = prog;
         this.classesToCheck = classesToCheck;
         this.oldName = oldName;
         this.newName = newName;
+        this.searchInContext = searchInContext;
     }
 
     @Override
@@ -187,15 +189,13 @@ public class MethodRenameVisitor implements Visitor {
 
     @Override
     public void visit(IdentifierExpr e) {
-        //TODO
-        String type = getVariableType(lastMethodSeen, e.id());
+        String type = searchInContext.getVariableType(lastMethodSeen.symbolTable(), e.id());
         isLastOwnerInClassesToCheck = classesToCheck.contains(type);
     }
 
     @Override
     public void visit(ThisExpr e) {
-        //TODO
-        String type = getContextClass(lastMethodSeen, e);
+        String type = getContextClass(lastMethodSeen, e); // TODO
         isLastOwnerInClassesToCheck = classesToCheck.contains(type);
     }
 
@@ -240,5 +240,3 @@ public class MethodRenameVisitor implements Visitor {
     }
 
 }
-
-

@@ -34,6 +34,10 @@ public class InheritanceNode {
         return this.name;
     }
 
+    public InheritanceNode parent(){ return this.parent; }
+
+    public AstNode astNode(){ return this.astNode; }
+
     public List<InheritanceNode> children(){
         return this.children;
     }

@@ -3,6 +3,7 @@ package Ex1;
 import Ex1.Inheritance.InheritanceNode;
 import Ex1.Inheritance.InheritanceTrees;
 import Ex1.RenameVisitors.MethodRenameVisitor;
+import Ex1.SymbolTables.SymbolTable;
 import Ex1.SymbolTables.SymbolTableBuilder;
 import ast.AstNode;
 import ast.AstXMLSerializer;
@@ -25,13 +26,9 @@ public class Rename {
     public String newName;
     public String newFile;
     AstNode targetAstNode;
+    SearchInContext searchInContext;
 
-//    HashMap<AstNode, SymbolTable> symbolTable;
-//    InheritanceTrees inheritanceTrees;
-//    public Rename(Program prog) {
-//        this.inheritanceTrees = new InheritanceTrees(prog);
-//        this.symbolTable = buildSymbolTable(prog);
-    public Rename(Program prog, Boolean isMethod, String oldName, String lineNumber, String newName, String newFile){
+    public Rename(Program prog, Boolean isMethod, String oldName, String lineNumber, String newName, String newFile) {
         this.inheritanceTrees = new InheritanceTrees(prog);
         SymbolTableBuilder symbolTableBuilder = new SymbolTableBuilder();
         symbolTableBuilder.build(prog);
@@ -41,37 +38,34 @@ public class Rename {
         this.newName = newName;
         this.newFile = newFile;
         this.targetAstNode = SearchTargetAstNode();
+        this.searchInContext = new SearchInContext(inheritanceTrees);
 
-        if (isMethod){
+        if (isMethod) {
             RenameMethod();
-        }
-
-        else{
+        } else {
             RenameVariable(); //inside split to 3 cases/methods: formalParameter, varDecl, Field
         }
         //think how to return/update new xml
     }
 
-    public void RenameMethod(){
+    public void RenameMethod() {
         InheritanceNode highestAncestor = FindAncestorClassForMethod();
         Set<String> classesToCheck = GetAllClassesUnderAncestor(highestAncestor);
-        MethodRenameVisitor methodRenameVisitor = new MethodRenameVisitor(prog, classesToCheck, oldName, newName);
+        MethodRenameVisitor methodRenameVisitor = new MethodRenameVisitor(prog, classesToCheck, oldName, newName, searchInContext);
         methodRenameVisitor.visit(prog);
-
-
 
 
     }
 
-    public Set<String> GetAllClassesUnderAncestor(InheritanceNode highestAncestor){
+    public Set<String> GetAllClassesUnderAncestor(InheritanceNode highestAncestor) {
         Set<String> classesToCheck = new HashSet<>();
         classesToCheck.add(highestAncestor.name());
 
-        if (highestAncestor.children().isEmpty()){
+        if (highestAncestor.children().isEmpty()) {
             return classesToCheck;
         }
 
-        for (InheritanceNode child : highestAncestor.children()){
+        for (InheritanceNode child : highestAncestor.children()) {
             classesToCheck.addAll(GetAllClassesUnderAncestor(child));
         }
 

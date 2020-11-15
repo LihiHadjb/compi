@@ -9,4 +9,8 @@ public class VarEntry {
     public VarEntry(VariableIntroduction var){
         this.type = var.type();
     }
+
+    public AstType type(){
+        return this.type;
+    }
 }

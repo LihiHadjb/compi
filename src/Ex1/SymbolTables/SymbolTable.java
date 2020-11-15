@@ -1,8 +1,6 @@
 package Ex1.SymbolTables;
 
-import ast.AstNode;
-import ast.MethodDecl;
-import ast.VariableIntroduction;
+import ast.*;
 
 import java.util.HashMap;
 
@@ -53,12 +51,13 @@ public class SymbolTable {
         return this.astNodeInProgram;
     }
 
-    public String getVariableType(MethodlDecl lastMethodSeen, String varName){
-//        for(VarEntry varEntry : lastMethodSeen.symbolTable().variables()){
-//            if varEntry.
-//        }
-        if(lastMethodSeen.symbolTable().variables().keySet().contains(varName)){
-            return lastMethodSeen.symbolTable().variables().get(varName).
+    public String GetVariableTypeFromSymbolTable(String varName){
+        if(this.variables().keySet().contains(varName)){
+            AstType type = this.variables().get(varName).type();
+            if (this.variables().get(varName).type() instanceof RefType){
+                return ((RefType) type).id();
+            }
         }
+        return null;
     }
 }
