@@ -52,4 +52,13 @@ public class SymbolTable {
     public AstNode astNodeInProgram(){
         return this.astNodeInProgram;
     }
+
+    public String getVariableType(MethodlDecl lastMethodSeen, String varName){
+//        for(VarEntry varEntry : lastMethodSeen.symbolTable().variables()){
+//            if varEntry.
+//        }
+        if(lastMethodSeen.symbolTable().variables().keySet().contains(varName)){
+            return lastMethodSeen.symbolTable().variables().get(varName).
+        }
+    }
 }

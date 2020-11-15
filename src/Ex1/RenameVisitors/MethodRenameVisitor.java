@@ -10,6 +10,7 @@ public class MethodRenameVisitor implements Visitor {
     private String oldName;
     private String newName;
     private MethodDecl lastMethodSeen;
+    private boolean isLastOwnerInClassesToCheck;
 
 
 
@@ -157,8 +158,8 @@ public class MethodRenameVisitor implements Visitor {
 
     @Override
     public void visit(MethodCallExpr e) {
-        boolean isOwnerInClassesToCheck = IsInClassesToCheck(e.ownerExpr());
-        if (isOwnerInClassesToCheck && e.methodId().equals(oldName)){
+        e.ownerExpr().accept(this);
+        if (isLastOwnerInClassesToCheck && e.methodId().equals(oldName)){
             e.setMethodId(newName);
         }
 
@@ -167,8 +168,6 @@ public class MethodRenameVisitor implements Visitor {
                 actual.accept(this);
             }
         }
-
-        e.ownerExpr().accept(this);
     }
 
     @Override
@@ -188,72 +187,58 @@ public class MethodRenameVisitor implements Visitor {
 
     @Override
     public void visit(IdentifierExpr e) {
-
+        //TODO
+        String type = getVariableType(lastMethodSeen, e.id());
+        isLastOwnerInClassesToCheck = classesToCheck.contains(type);
     }
 
     @Override
     public void visit(ThisExpr e) {
-
+        //TODO
+        String type = getContextClass(lastMethodSeen, e);
+        isLastOwnerInClassesToCheck = classesToCheck.contains(type);
     }
 
     @Override
     public void visit(NewIntArrayExpr e) {
-
+        e.lengthExpr().accept(this);
     }
 
     @Override
     public void visit(NewObjectExpr e) {
+        String type = e.classId();
+        isLastOwnerInClassesToCheck = classesToCheck.contains(type);
 
     }
 
     @Override
     public void visit(NotExpr e) {
-
+        e.e().accept(this);
     }
 
     @Override
     public void visit(IntAstType t) {
+        //do nothing
 
     }
 
     @Override
     public void visit(BoolAstType t) {
+        //do nothing
 
     }
 
     @Override
     public void visit(IntArrayAstType t) {
-
+        //do nothing
     }
 
     @Override
     public void visit(RefType t) {
+        //do nothing
 
     }
 
-    public boolean IsInClassesToCheck(Expr owner){
-
-    }
-
-
-    public boolean IsInClassesToCheck(IdentifierExpr owner){
-        String type = this.lastMethodSeen.symbolTable().FindVarType(owner.id());
-        // if (this.lastMethodSeen.symbolTable().variables().keySet().contains(owner.id()))
-
-        return classesToCheck.contains(type);
-
-//        for (String key : this.lastMethodSeen.symbolTable().variables().keySet()){
-//            if (key.equals(owner)){
-//
-//            }
-//        }
-    }
-
-    public boolean IsInClassesToCheck(NewObjectExpr owner){
-    }
-
-    public boolean IsInClassesToCheck(ThisExpr owner){
-    }
 }
 
 
