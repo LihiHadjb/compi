@@ -195,7 +195,7 @@ public class MethodRenameVisitor implements Visitor {
 
     @Override
     public void visit(ThisExpr e) {
-        String type = getContextClass(lastMethodSeen, e); // TODO
+        String type = searchInContext.getContextClass(lastMethodSeen.symbolTable()); // TODO: verify Tslil
         isLastOwnerInClassesToCheck = classesToCheck.contains(type);
     }
 
@@ -208,7 +208,6 @@ public class MethodRenameVisitor implements Visitor {
     public void visit(NewObjectExpr e) {
         String type = e.classId();
         isLastOwnerInClassesToCheck = classesToCheck.contains(type);
-
     }
 
     @Override
@@ -236,7 +235,6 @@ public class MethodRenameVisitor implements Visitor {
     @Override
     public void visit(RefType t) {
         //do nothing
-
     }
 
 }

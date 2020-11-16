@@ -26,6 +26,7 @@ public class Rename {
     public String newName;
     public String newFile;
     AstNode targetAstNode;
+    AstNode targetAstNodeClass;
     SearchInContext searchInContext;
 
     public Rename(Program prog, Boolean isMethod, String oldName, String lineNumber, String newName, String newFile) {
@@ -37,19 +38,20 @@ public class Rename {
         this.lineNumber = lineNumber;
         this.newName = newName;
         this.newFile = newFile;
-        this.targetAstNode = SearchTargetAstNode();
+        this.targetAstNode = searchInContext.SearchTargetAstNode(); //this func updates a field called targetAstNodeClass
+        this.targetAstNodeClass = searchInContext.getTargetAstNodeClass();
         this.searchInContext = new SearchInContext(inheritanceTrees);
 
         if (isMethod) {
             RenameMethod();
         } else {
-            RenameVariable(); //inside split to 3 cases/methods: formalParameter, varDecl, Field
+            RenameVariable(); //inside split to 3 cases: formalParameter, varDecl, Field
         }
         //think how to return/update new xml
     }
 
     public void RenameMethod() {
-        InheritanceNode highestAncestor = FindAncestorClassForMethod();
+        InheritanceNode highestAncestor = searchInContext.FindAncestorClass(targetAstNodeClass); //TODO: verify Tslil
         Set<String> classesToCheck = GetAllClassesUnderAncestor(highestAncestor);
         MethodRenameVisitor methodRenameVisitor = new MethodRenameVisitor(prog, classesToCheck, oldName, newName, searchInContext);
         methodRenameVisitor.visit(prog);
