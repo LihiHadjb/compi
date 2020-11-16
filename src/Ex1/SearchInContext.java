@@ -60,9 +60,7 @@ public class SearchInContext {
         // to targetAstNode's parent (which is a ClassDecl node) --> find it's name --> get relevant InheritanceNode
         // of this class from flatClasses --> go up from parent to parent until we get to null (which means we got to
         // the highest ancestor) --> return the highestAncestor
-
-        String classId = ((ClassDecl)targetAstNodeClass).name();
-        InheritanceNode currClassInheritanceNode = inheritanceTrees.flatClasses().get(classId);
+        InheritanceNode currClassInheritanceNode = GetInheritanceNodeOfAstNode((ClassDecl)targetAstNodeClass);
         InheritanceNode parentClassInheritanceNode = currClassInheritanceNode.parent();
 
         while (parentClassInheritanceNode != null){
@@ -71,6 +69,13 @@ public class SearchInContext {
         }
 
         return currClassInheritanceNode;
+    }
+
+    public InheritanceNode GetInheritanceNodeOfAstNode(ClassDecl classAstNode){
+        String classId = classAstNode.name();
+        InheritanceNode classInheritanceNode = inheritanceTrees.flatClasses().get(classId);
+
+        return classInheritanceNode;
     }
 
 }

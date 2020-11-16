@@ -3,6 +3,7 @@ package Ex1;
 import Ex1.Inheritance.InheritanceNode;
 import Ex1.Inheritance.InheritanceTrees;
 import Ex1.RenameVisitors.MethodRenameVisitor;
+import Ex1.RenameVisitors.VariableRenameVisitor;
 import Ex1.SymbolTables.SymbolTable;
 import Ex1.SymbolTables.SymbolTableBuilder;
 import ast.AstNode;
@@ -26,6 +27,7 @@ public class Rename {
     public String newName;
     public String newFile;
     AstNode targetAstNode;
+    AstNode targetAstNodeMethod;
     AstNode targetAstNodeClass;
     SearchInContext searchInContext;
 
@@ -39,6 +41,7 @@ public class Rename {
         this.newName = newName;
         this.newFile = newFile;
         this.targetAstNode = searchInContext.SearchTargetAstNode(); //this func updates a field called targetAstNodeClass
+        this.targetAstNodeMethod = searchInContext.getTargetAstNodeMethod();
         this.targetAstNodeClass = searchInContext.getTargetAstNodeClass();
         this.searchInContext = new SearchInContext(inheritanceTrees);
 
@@ -55,8 +58,13 @@ public class Rename {
         Set<String> classesToCheck = GetAllClassesUnderAncestor(highestAncestor);
         MethodRenameVisitor methodRenameVisitor = new MethodRenameVisitor(prog, classesToCheck, oldName, newName, searchInContext);
         methodRenameVisitor.visit(prog);
+    }
 
-
+    public void RenameVariable() {
+        InheritanceNode targetInheritanceNodeClass = searchInContext.GetInheritanceNodeOfAstNode((ClassDecl)targetAstNodeClass);
+        Set<String> classesToCheck = GetAllClassesUnderAncestor(targetInheritanceNodeClass);
+        VariableRenameVisitor variableRenameVisitor = new VariableRenameVisitor(prog, classesToCheck, oldName, newName, searchInContext);
+        variableRenameVisitor.visit(prog);
     }
 
     public Set<String> GetAllClassesUnderAncestor(InheritanceNode highestAncestor) {

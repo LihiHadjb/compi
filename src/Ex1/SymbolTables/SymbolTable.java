@@ -19,8 +19,8 @@ public class SymbolTable {
         this.astNodeInProgram = astNode;
     }
 
-    public void addVarEntry(VariableIntroduction var){
-        VarEntry entry = new VarEntry(var);
+    public void addVarEntry(VariableIntroduction var, String varType){
+        VarEntry entry = new VarEntry(var, varType);
         String name = var.name();
         this.variables.put(name, entry);
     }

@@ -16,7 +16,7 @@ public class SymbolTableBuilder{
             SymbolTable curr = new SymbolTable(null, classDecl, "class");
             if (classDecl.fields() != null){
                 for (VarDecl field : classDecl.fields()) {
-                    curr.addVarEntry(field);
+                    curr.addVarEntry(field, "field");
                 }
             }
 
@@ -36,13 +36,13 @@ public class SymbolTableBuilder{
 
         if (methodDecl.formals() != null){
             for (FormalArg formalArg : methodDecl.formals()){
-                curr.addVarEntry(formalArg);
+                curr.addVarEntry(formalArg, "formal");
             }
         }
 
         if (methodDecl.vardecls() != null){
             for (VarDecl varDecl : methodDecl.vardecls()) {
-                curr.addVarEntry(varDecl);
+                curr.addVarEntry(varDecl, "varDecl");
             }
         }
 

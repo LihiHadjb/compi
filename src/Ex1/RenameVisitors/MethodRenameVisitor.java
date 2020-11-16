@@ -71,12 +71,12 @@ public class MethodRenameVisitor implements Visitor {
 
     @Override
     public void visit(FormalArg formalArg) {
-
+        //do nothing
     }
 
     @Override
     public void visit(VarDecl varDecl) {
-
+        //do nothing
     }
 
     @Override
