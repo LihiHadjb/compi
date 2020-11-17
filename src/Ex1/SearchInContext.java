@@ -35,7 +35,7 @@ public class SearchInContext {
         // Class case
         else {
             String classId = ((ClassDecl) currSymbolTable.astNodeInProgram()).name();
-            InheritanceNode currInheritanceNode = inheritanceTrees.flatClasses().get(classId);
+            InheritanceNode currInheritanceNode = inheritanceTrees.getInheritanceNodeOfClassName(classId);
             InheritanceNode parentInheritanceNode = currInheritanceNode.parent();
             AstNode parentAstNode = parentInheritanceNode.astNode();
             SymbolTable parentSymbolTable = parentAstNode.symbolTable();
@@ -73,12 +73,7 @@ public class SearchInContext {
         return currClassInheritanceNode;
     }
 
-    public InheritanceNode GetInheritanceNodeOfAstNode(ClassDecl classAstNode){
-        String classId = classAstNode.name();
-        InheritanceNode classInheritanceNode = inheritanceTrees.flatClasses().get(classId);
 
-        return classInheritanceNode;
-    }
 
     public String GetVarIntroductionType(VariableIntroduction targetAstNode, MethodDecl targetAstNodeMethod, ClassDecl targetAstNodeClass){
         if (targetAstNodeMethod.vardecls().contains(targetAstNode)){

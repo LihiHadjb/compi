@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InheritanceNode {
-    InheritanceNode parent;
-    List<InheritanceNode> children;
-    String name;
-    AstNode astNode;
+    private InheritanceNode parent;
+    private List<InheritanceNode> children;
+    private String name;
+    private AstNode astNode;
 
     public InheritanceNode(InheritanceNode parent, ClassDecl classDecl){
         this.parent = parent;

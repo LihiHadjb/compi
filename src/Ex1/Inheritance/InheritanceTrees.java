@@ -6,11 +6,11 @@ import ast.Program;
 import java.util.HashMap;
 
 public class InheritanceTrees {
-    HashMap<String, InheritanceNode> roots;
-    HashMap<String, InheritanceNode> flatClasses;
-    InheritanceNode currNode;
+    private HashMap<String, InheritanceNode> roots;
+    private HashMap<String, InheritanceNode> flatClasses;
 
     public InheritanceTrees(Program prog){
+        InheritanceNode currNode;
         this.roots = new HashMap<>();
         this.flatClasses = new HashMap<>();
         for (ClassDecl classdecl : prog.classDecls()){
@@ -32,13 +32,25 @@ public class InheritanceTrees {
         return this.roots;
     }
 
-    public HashMap<String, InheritanceNode> flatClasses(){
-        return this.flatClasses;
+//    public HashMap<String, InheritanceNode> flatClasses(){
+//        return this.flatClasses;
+//    }
+
+    public InheritanceNode getInheritanceNodeOfClassName(String className){
+        return this.flatClasses.get(className);
     }
 
-    public InheritanceNode currNode(){
-        return this.currNode;
+    public InheritanceNode getInheritanceNodeOfAstNode(ClassDecl classAstNode){
+        String classId = classAstNode.name();
+        return getInheritanceNodeOfClassName(classId);
     }
+
+
+
+//
+//    public InheritanceNode currNode(){
+//        return this.currNode;
+//    }
 
 
 
