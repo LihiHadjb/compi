@@ -1,9 +1,11 @@
 package Ex1.Inheritance;
 
-import Ex1.Inheritance.InheritanceNode;
+import ast.AstNode;
 import ast.ClassDecl;
 import ast.Program;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class InheritanceTrees {
     private HashMap<String, InheritanceNode> roots;
@@ -36,13 +38,30 @@ public class InheritanceTrees {
 //        return this.flatClasses;
 //    }
 
-    public InheritanceNode getInheritanceNodeOfClassName(String className){
+    public InheritanceNode className2InheritanceNode(String className){
         return this.flatClasses.get(className);
     }
 
-    public InheritanceNode getInheritanceNodeOfAstNode(ClassDecl classAstNode){
-        String classId = classAstNode.name();
-        return getInheritanceNodeOfClassName(classId);
+    public InheritanceNode classAstNode2InheritanceNode(AstNode classAstNode){
+        ClassDecl classDecl = (ClassDecl)classAstNode;
+        String classId = classDecl.name();
+        return className2InheritanceNode(classId);
+    }
+
+
+    private Set<String> GetAllClassesUnderAncestor(InheritanceNode highestAncestor) {
+        Set<String> classesToCheck = new HashSet<>();
+        classesToCheck.add(highestAncestor.name());
+
+        if (highestAncestor.hasChildren()) {
+            return classesToCheck;
+        }
+
+        for (InheritanceNode child : highestAncestor.children()) {
+            classesToCheck.addAll(GetAllClassesUnderAncestor(child));
+        }
+
+        return classesToCheck;
     }
 
 
