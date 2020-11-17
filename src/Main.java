@@ -53,7 +53,9 @@ public class Main {
                     } else {
                         throw new IllegalArgumentException("unknown rename type " + type);
                     }
-                    Rename rename = new Rename(prog);
+                    Rename rename = new Rename(prog, isMethod, originalName, originalLine, newName);
+                    AstXMLSerializer xmlSerializer = new AstXMLSerializer();
+                    xmlSerializer.serialize(prog, outfilename);
                     //throw new UnsupportedOperationException("TODO - Ex. 1");
 
                 } else {

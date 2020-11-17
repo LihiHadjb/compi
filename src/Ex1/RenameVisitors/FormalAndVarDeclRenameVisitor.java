@@ -6,52 +6,27 @@ import ast.*;
 
 import java.util.Set;
 
-//TODO: currently only for field case
-public class VariableRenameVisitor implements Visitor {
-    private Program prog;
-    private Set<String> classesToCheck;
+public class FormalAndVarDeclRenameVisitor implements Visitor {
     private String oldName;
     private String newName;
-    private MethodDecl lastMethodSeen;
-    private boolean isLastOwnerInClassesToCheck;
     SearchInContext searchInContext;
 
 
-    public VariableRenameVisitor(Program prog, Set<String> classesToCheck, String oldName, String newName, SearchInContext searchInContext){
-        this.prog = prog;
-        this.classesToCheck = classesToCheck;
+    public FormalAndVarDeclRenameVisitor(String oldName, String newName, SearchInContext searchInContext){
         this.oldName = oldName;
         this.newName = newName;
         this.searchInContext = searchInContext;
     }
 
+
     @Override
-    public void visit(Program prog) {
-        prog.mainClass().accept(this); // visit(prog.mainClass());
-        if (prog.classDecls() != null){
-            for (ClassDecl classDecl : prog.classDecls()){
-                classDecl.accept(this); // visit(classDecl);
-            }
-        }
+    public void visit(Program program) {
+        //do nothing
     }
 
     @Override
     public void visit(ClassDecl classDecl) {
-        if (classesToCheck.contains(classDecl.name())){
-            if (classDecl.fields() != null){
-                for (VarDecl field : classDecl.fields()){
-                    if (field.name().equals(oldName)){
-                        field.setName(newName);
-                    }
-                }
-            }
-
-            if (classDecl.methoddecls() != null){
-                for (MethodDecl methodDecl : classDecl.methoddecls()){
-                    methodDecl.accept(this); // visit(methodDecl);
-                }
-            }
-        }
+        // do nothing
     }
 
     @Override
@@ -61,30 +36,37 @@ public class VariableRenameVisitor implements Visitor {
 
     @Override
     public void visit(MethodDecl methodDecl) {
-        this.lastMethodSeen = methodDecl;
-        boolean isHidingVarExists = false;
-
-        isHidingVarExists = !methodDecl.symbolTable().variables().containsKey(oldName);
-
-        if (!isHidingVarExists){
-            if (methodDecl.body() != null){
-                for (Statement statement : methodDecl.body()){
-                    statement.accept(this); // visit(statement);
-                }
+        if (methodDecl.formals() != null){
+            for (FormalArg formalArg : methodDecl.formals()){
+                formalArg.accept(this);
             }
-
-            methodDecl.ret().accept(this); // visit(methodDecl.ret());
         }
+
+        if (methodDecl.vardecls() != null){
+            for (VarDecl varDecl : methodDecl.vardecls()){
+                varDecl.accept(this);
+            }
+        }
+
+        if (methodDecl.body() != null){
+            for (Statement statement : methodDecl.body()){
+                statement.accept(this); // visit(statement);
+            }
+        }
+
+        methodDecl.ret().accept(this); // visit(methodDecl.ret());
     }
 
     @Override
     public void visit(FormalArg formalArg) {
-        // do nothing
+        if (formalArg.name().equals(oldName)){
+            formalArg.setName(newName);
+        }
     }
 
     @Override
     public void visit(VarDecl varDecl) {
-        //do nothing
+        // do nothing
     }
 
     @Override
@@ -116,11 +98,17 @@ public class VariableRenameVisitor implements Visitor {
 
     @Override
     public void visit(AssignStatement assignStatement) {
+        if (assignStatement.lv().equals(oldName)){
+            assignStatement.setLv(newName);
+        }
         assignStatement.rv().accept(this);
     }
 
     @Override
     public void visit(AssignArrayStatement assignArrayStatement) {
+        if (assignArrayStatement.lv().equals(oldName)){
+            assignArrayStatement.setLv(newName);
+        }
         assignArrayStatement.index().accept(this);
         assignArrayStatement.rv().accept(this);
     }
@@ -193,15 +181,15 @@ public class VariableRenameVisitor implements Visitor {
     }
 
     @Override
-    public void visit(IdentifierExpr e) { //TODO: VERIFY!!!
+    public void visit(IdentifierExpr e) {
         if (e.id().equals(oldName)){
-           e.setId(newName);
+            e.setId(newName);
         }
     }
 
     @Override
     public void visit(ThisExpr e) {
-        //do nothing
+        // do nothing
     }
 
     @Override

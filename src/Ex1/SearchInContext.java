@@ -5,6 +5,8 @@ import Ex1.Inheritance.InheritanceTrees;
 import Ex1.SymbolTables.SymbolTable;
 import ast.AstNode;
 import ast.ClassDecl;
+import ast.MethodDecl;
+import ast.VariableIntroduction;
 
 public class SearchInContext {
     public InheritanceTrees inheritanceTrees;
@@ -76,6 +78,18 @@ public class SearchInContext {
         InheritanceNode classInheritanceNode = inheritanceTrees.flatClasses().get(classId);
 
         return classInheritanceNode;
+    }
+
+    public String GetVarIntroductionType(VariableIntroduction targetAstNode, MethodDecl targetAstNodeMethod, ClassDecl targetAstNodeClass){
+        if (targetAstNodeMethod.vardecls().contains(targetAstNode)){
+            return "varDecl";
+        }
+        if (targetAstNodeMethod.formals().contains(targetAstNode)){
+            return "formal";
+        }
+        else{
+            return "field";
+        }
     }
 
 }

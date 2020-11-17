@@ -5,11 +5,15 @@ import ast.VariableIntroduction;
 
 public class VarEntry {
     AstType type;
-    String varType;
+    boolean isFormal;
+    boolean isVarDecl;
+    boolean isField;
 
     public VarEntry(VariableIntroduction var, String varType){
         this.type = var.type();
-        this.varType = varType;
+        this.isFormal = varType.equals("forrmal");
+        this.isVarDecl = varType.equals("varDecl");
+        this.isField = varType.equals("field");
     }
 
     public AstType type(){

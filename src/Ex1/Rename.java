@@ -2,21 +2,15 @@ package Ex1;
 
 import Ex1.Inheritance.InheritanceNode;
 import Ex1.Inheritance.InheritanceTrees;
+import Ex1.RenameVisitors.FormalAndVarDeclRenameVisitor;
 import Ex1.RenameVisitors.MethodRenameVisitor;
-import Ex1.RenameVisitors.VariableRenameVisitor;
-import Ex1.SymbolTables.SymbolTable;
+import Ex1.RenameVisitors.FieldRenameVisitor;
 import Ex1.SymbolTables.SymbolTableBuilder;
-import ast.AstNode;
-import ast.AstXMLSerializer;
-import ast.ClassDecl;
-import ast.Program;
-import com.sun.jdi.request.MethodEntryRequest;
+import Ex1.SymbolTables.VarEntry;
+import ast.*;
 
 
-import java.io.File;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class Rename {
@@ -27,11 +21,11 @@ public class Rename {
     public String newName;
     public String newFile;
     AstNode targetAstNode;
-    AstNode targetAstNodeMethod;
-    AstNode targetAstNodeClass;
+    MethodDecl targetAstNodeMethod;
+    ClassDecl targetAstNodeClass;
     SearchInContext searchInContext;
 
-    public Rename(Program prog, Boolean isMethod, String oldName, String lineNumber, String newName, String newFile) {
+    public Rename(Program prog, Boolean isMethod, String oldName, String lineNumber, String newName) {
         this.inheritanceTrees = new InheritanceTrees(prog);
         SymbolTableBuilder symbolTableBuilder = new SymbolTableBuilder();
         symbolTableBuilder.build(prog);
@@ -39,18 +33,24 @@ public class Rename {
         this.oldName = oldName;
         this.lineNumber = lineNumber;
         this.newName = newName;
-        this.newFile = newFile;
-        this.targetAstNode = searchInContext.SearchTargetAstNode(); //this func updates a field called targetAstNodeClass
+        this.searchInContext = new SearchInContext(inheritanceTrees);
+        this.targetAstNode = searchInContext.SearchTargetAstNode(); // search for astNode using lineNumber:
+        // visit prog until you get to the right node. While searching, save last methos & last class
         this.targetAstNodeMethod = searchInContext.getTargetAstNodeMethod();
         this.targetAstNodeClass = searchInContext.getTargetAstNodeClass();
-        this.searchInContext = new SearchInContext(inheritanceTrees);
 
         if (isMethod) {
             RenameMethod();
         } else {
-            RenameVariable(); //inside split to 3 cases: formalParameter, varDecl, Field
+            String varIntroductionType = searchInContext.GetVarIntroductionType((VariableIntroduction)targetAstNode, targetAstNodeMethod, targetAstNodeClass);
+
+            if (varIntroductionType.equals("field")){
+                RenameField();
+            }
+            else{ // in case it's formalParameter OR varDecl
+                RenameFormalOrVarDecl();
+            }
         }
-        //think how to return/update new xml
     }
 
     public void RenameMethod() {
@@ -60,11 +60,16 @@ public class Rename {
         methodRenameVisitor.visit(prog);
     }
 
-    public void RenameVariable() {
+    public void RenameField() {
         InheritanceNode targetInheritanceNodeClass = searchInContext.GetInheritanceNodeOfAstNode((ClassDecl)targetAstNodeClass);
         Set<String> classesToCheck = GetAllClassesUnderAncestor(targetInheritanceNodeClass);
-        VariableRenameVisitor variableRenameVisitor = new VariableRenameVisitor(prog, classesToCheck, oldName, newName, searchInContext);
-        variableRenameVisitor.visit(prog);
+        FieldRenameVisitor fieldRenameVisitor = new FieldRenameVisitor(prog, classesToCheck, oldName, newName, searchInContext);
+        fieldRenameVisitor.visit(prog);
+    }
+
+    public void RenameFormalOrVarDecl(){
+        FormalAndVarDeclRenameVisitor formalAndVarDeclRenameVisitor = new FormalAndVarDeclRenameVisitor(oldName, newName, searchInContext);
+        formalAndVarDeclRenameVisitor.visit(targetAstNodeMethod);
     }
 
     public Set<String> GetAllClassesUnderAncestor(InheritanceNode highestAncestor) {
