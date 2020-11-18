@@ -12,8 +12,7 @@
                     <name>field1</name>
                 </field>
             </fields>
-            <methoddecls>
-            </methoddecls>
+            <methoddecls/>
         </classdecl>
         <classdecl>
             <name>A</name>
@@ -38,25 +37,24 @@
                         <formal>
                             <lineNumber>20</lineNumber>
                             <type>
-                                <int/>
+<int/>
                             </type>
                             <name>a</name>
                         </formal>
                     </formals>
                     <vardecls/>
-                    <body>
-                    </body>
+                    <body/>
                     <ret>
                         <add>
                             <e1>
-                                <ref-id>
-                                    <id>a</id>
-                                </ref-id>
+<ref-id>
+    <id>a</id>
+</ref-id>
                             </e1>
                             <e2>
-                                <ref-id>
-                                    <id>a</id>
-                                </ref-id>
+<ref-id>
+    <id>a</id>
+</ref-id>
                             </e2>
                         </add>
                     </ret>
@@ -66,8 +64,7 @@
         <classdecl>
             <name>F</name>
             <superName>E</superName>
-            <fields>
-            </fields>
+            <fields/>
             <methoddecls>
                 <methoddecl>
                     <lineNumber>25</lineNumber>
@@ -79,25 +76,24 @@
                         <formal>
                             <lineNumber>30</lineNumber>
                             <type>
-                                <int/>
+<int/>
                             </type>
                             <name>a</name>
                         </formal>
                     </formals>
                     <vardecls/>
-                    <body>
-                    </body>
+                    <body/>
                     <ret>
                         <add>
                             <e1>
-                                <ref-id>
-                                    <id>a</id>
-                                </ref-id>
+<ref-id>
+    <id>a</id>
+</ref-id>
                             </e1>
                             <e2>
-                                <ref-id>
-                                    <id>a</id>
-                                </ref-id>
+<ref-id>
+    <id>a</id>
+</ref-id>
                             </e2>
                         </add>
                     </ret>
@@ -107,8 +103,7 @@
         <classdecl>
             <name>B</name>
             <superName>A</superName>
-            <fields>
-            </fields>
+            <fields/>
             <methoddecls>
                 <methoddecl>
                     <lineNumber>35</lineNumber>
@@ -120,25 +115,24 @@
                         <formal>
                             <lineNumber>40</lineNumber>
                             <type>
-                                <int/>
+<int/>
                             </type>
                             <name>a</name>
                         </formal>
                     </formals>
                     <vardecls/>
-                    <body>
-                    </body>
+                    <body/>
                     <ret>
                         <add>
                             <e1>
-                                <ref-id>
-                                    <id>a</id>
-                                </ref-id>
+<ref-id>
+    <id>a</id>
+</ref-id>
                             </e1>
                             <e2>
-                                <ref-id>
-                                    <id>a</id>
-                                </ref-id>
+<ref-id>
+    <id>a</id>
+</ref-id>
                             </e2>
                         </add>
                     </ret>
@@ -148,8 +142,7 @@
         <classdecl>
             <name>C</name>
             <superName>A</superName>
-            <fields>
-            </fields>
+            <fields/>
             <methoddecls>
                 <methoddecl>
                     <lineNumber>45</lineNumber>
@@ -161,25 +154,24 @@
                         <formal>
                             <lineNumber>50</lineNumber>
                             <type>
-                                <int/>
+<int/>
                             </type>
                             <name>a</name>
                         </formal>
                     </formals>
                     <vardecls/>
-                    <body>
-                    </body>
+                    <body/>
                     <ret>
                         <add>
                             <e1>
-                                <ref-id>
-                                    <id>a</id>
-                                </ref-id>
+<ref-id>
+    <id>a</id>
+</ref-id>
                             </e1>
                             <e2>
-                                <ref-id>
-                                    <id>a</id>
-                                </ref-id>
+<ref-id>
+    <id>a</id>
+</ref-id>
                             </e2>
                         </add>
                     </ret>
@@ -189,8 +181,7 @@
         <classdecl>
             <name>D</name>
             <superName>B</superName>
-            <fields>
-            </fields>
+            <fields/>
             <methoddecls>
                 <methoddecl>
                     <lineNumber>55</lineNumber>
@@ -202,25 +193,24 @@
                         <formal>
                             <lineNumber>60</lineNumber>
                             <type>
-                                <int/>
+<int/>
                             </type>
                             <name>a</name>
                         </formal>
                     </formals>
                     <vardecls/>
-                    <body>
-                    </body>
+                    <body/>
                     <ret>
                         <add>
                             <e1>
-                                <ref-id>
-                                    <id>a</id>
-                                </ref-id>
+<ref-id>
+    <id>a</id>
+</ref-id>
                             </e1>
                             <e2>
-                                <ref-id>
-                                    <id>a</id>
-                                </ref-id>
+<ref-id>
+    <id>a</id>
+</ref-id>
                             </e2>
                         </add>
                     </ret>

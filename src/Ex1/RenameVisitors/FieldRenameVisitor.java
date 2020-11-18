@@ -1,6 +1,7 @@
 package Ex1.RenameVisitors;
 
 import Ex1.SearchInContext;
+import Ex1.SymbolTables.SymbolTable;
 import Ex1.SymbolTables.VarEntry;
 import ast.*;
 import Ex1.RenameVisitors.RenameVisitor;
@@ -63,8 +64,8 @@ public class FieldRenameVisitor extends RenameVisitor {
         this.lastMethodSeen = methodDecl;
         boolean isHidingVarExists = false;
 
-        //isHidingVarExists = !methodDecl.symbolTable().variables().containsKey(oldName);
-        isHidingVarExists = !methodDecl.symbolTable().hasVariableWithName(oldName);
+        SymbolTable methodSymbolTable = searchInContext.astNodeToSymbolTable().get(methodDecl);
+        isHidingVarExists = !methodSymbolTable.hasVariableWithName(oldName);
 
 
         if (!isHidingVarExists){

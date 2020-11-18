@@ -6,6 +6,7 @@ import Ex1.SymbolTables.SymbolTable;
 import Ex1.SymbolTables.SymbolTableBuilder;
 import ast.*;
 
+import java.util.HashMap;
 import java.util.Set;
 
 public class SearchInContext {
@@ -13,11 +14,13 @@ public class SearchInContext {
     private AstNode targetAstNode;
     private MethodDecl targetAstNodeMethod;
     private ClassDecl targetAstNodeClass;
+    private HashMap<AstNode, SymbolTable> astNodeToSymbolTable;
 
     //____________________COMMON_______________________________________
 
     public SearchInContext(Program prog, boolean isMethod, String oldName, String lineNumber){
-        SymbolTableBuilder symbolTableBuilder = new SymbolTableBuilder();
+        this.astNodeToSymbolTable = new HashMap<>();
+        SymbolTableBuilder symbolTableBuilder = new SymbolTableBuilder(astNodeToSymbolTable);
         symbolTableBuilder.build(prog);
         this.inheritanceTrees = new InheritanceTrees(prog);
         InitTargetsVisitor initTargetsVisitor = new InitTargetsVisitor(oldName, lineNumber);
@@ -66,7 +69,8 @@ public class SearchInContext {
 
     private SymbolTable inheritanceNode2ClassSymbolTable(InheritanceNode inheritanceNode){
         AstNode classAstNode = inheritanceNode.astNode();
-        return classAstNode.symbolTable();
+        SymbolTable classSymbolTable =  this.astNodeToSymbolTable.get(classAstNode);
+        return classSymbolTable;
 
     }
 
@@ -84,7 +88,7 @@ public class SearchInContext {
     }
 
     public String lookupVariableType(MethodDecl context, String varName){
-        SymbolTable currTable = context.symbolTable();
+        SymbolTable currTable = this.astNodeToSymbolTable.get(context);
         String type;
 
         while (!currTable.hasVariableWithName(varName)){
@@ -109,7 +113,7 @@ public class SearchInContext {
         // class in which the method was declared and find out what is the name/id of the class.
         // Meaning, only need to go up once to the symbol table of the parent class --> go to the AstNode of the class
         // --> get it's name (which is basically the type of "this" that we need to find)
-        SymbolTable methodSymbolTable = methodDecl.symbolTable();
+        SymbolTable methodSymbolTable = this.astNodeToSymbolTable.get(methodDecl);
         SymbolTable classSymbolTable = lookupParentSymbolTable(methodSymbolTable);
         ClassDecl classDecl = classSymbolTable2ClassDecl(classSymbolTable);
         return classDecl.name();
@@ -118,7 +122,7 @@ public class SearchInContext {
     //alternative for FindAncestorClass(...)
     public InheritanceNode lookupHighestAncestorClassThatHasMethod(MethodDecl methodDecl){
         String methodName = methodDecl.name();
-        SymbolTable methodSymbolTable = methodDecl.symbolTable();
+        SymbolTable methodSymbolTable = this.astNodeToSymbolTable.get(methodDecl);
         SymbolTable initialClassSymbolTable = lookupParentSymbolTable(methodSymbolTable);
 
         SymbolTable curr = initialClassSymbolTable;
@@ -164,6 +168,8 @@ public class SearchInContext {
     public ClassDecl targetAstNodeClass(){
         return this.targetAstNodeClass;
     }
+
+    public HashMap<AstNode, SymbolTable> astNodeToSymbolTable(){ return this.astNodeToSymbolTable; }
 
 
 }

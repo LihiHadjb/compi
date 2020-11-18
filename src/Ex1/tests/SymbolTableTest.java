@@ -7,6 +7,7 @@ import ast.*;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,17 +20,18 @@ public class SymbolTableTest {
         Program prog;
         AstXMLSerializer xmlSerializer = new AstXMLSerializer();
         prog = xmlSerializer.deserialize(new File("/home/pc/IdeaProjects/compi/examples/ex1/testExamples/myExample1.java.xml"));
-        SymbolTableBuilder symbolTableBuilder = new SymbolTableBuilder();
+        HashMap<AstNode, SymbolTable> astNodeToSymbolTable = new HashMap<>();
+        SymbolTableBuilder symbolTableBuilder = new SymbolTableBuilder(astNodeToSymbolTable);
         symbolTableBuilder.build(prog);
 
         for (ClassDecl classdecl : prog.classDecls()) {
-            assertNotNull(classdecl.symbolTable);
+            assertNotNull(astNodeToSymbolTable.get(classdecl));
 
             for (VarDecl field : classdecl.fields()) {
-                assertNull(field.symbolTable);
+                assertNull(astNodeToSymbolTable.get(field));
             }
             for (MethodDecl methodDecl : classdecl.methoddecls()){
-                assertNotNull(methodDecl.symbolTable);
+                assertNotNull(astNodeToSymbolTable.get(methodDecl));
             }
         }
 

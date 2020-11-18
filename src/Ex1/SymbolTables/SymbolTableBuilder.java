@@ -2,7 +2,15 @@ package Ex1.SymbolTables;
 
 import ast.*;
 
+import java.util.HashMap;
+
 public class SymbolTableBuilder{
+    private HashMap<AstNode, SymbolTable> astNodeToSymbolTable;
+
+    public SymbolTableBuilder(HashMap<AstNode, SymbolTable> astNodeToSymbolTable){
+        this.astNodeToSymbolTable = astNodeToSymbolTable;
+    }
+
 
     public void build(Program program) {
         if (program.classDecls() != null){
@@ -27,8 +35,7 @@ public class SymbolTableBuilder{
                 }
             }
 
-            classDecl.setSymbolTable(curr);
-
+            astNodeToSymbolTable.put(classDecl, curr);
     }
 
     private void buildMethodSymbolTable(SymbolTable parent, MethodDecl methodDecl) {
@@ -46,7 +53,7 @@ public class SymbolTableBuilder{
             }
         }
 
-        methodDecl.setSymbolTable(curr);
+        astNodeToSymbolTable.put(methodDecl, curr);
     }
 
 }
