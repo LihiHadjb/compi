@@ -20,8 +20,8 @@ public class InitTargetsVisitor implements Visitor {
         return this.lastMethodSeen;
     }
 
-    public ClassDecl lastClasSeen(){
-        return this.lastClasSeen();
+    public ClassDecl lastClassSeen(){
+        return this.lastClassSeen;
     }
 
     public AstNode targetAstNode(){

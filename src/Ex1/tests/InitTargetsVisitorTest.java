@@ -1,10 +1,8 @@
 package Ex1.tests;
 
 import Ex1.InitTargetsVisitor;
-import Ex1.SearchInContext;
 import ast.*;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
@@ -18,7 +16,7 @@ public class InitTargetsVisitorTest {
     ClassDecl targetClassNode;
     MethodDecl targetMethodNode;
 
-    @BeforeClass
+    @Before
     public void setUp() {
         this.xmlSerializer = new AstXMLSerializer();
     }
@@ -28,7 +26,7 @@ public class InitTargetsVisitorTest {
         InitTargetsVisitor initTargetsVisitor = new InitTargetsVisitor(oldName, lineNumber);
         prog.accept(initTargetsVisitor);
         targetAstNode = initTargetsVisitor.targetAstNode();
-        targetClassNode = initTargetsVisitor.lastClasSeen();
+        targetClassNode = initTargetsVisitor.lastClassSeen();
         targetMethodNode = initTargetsVisitor.lastMethodSeen();
     }
 
@@ -44,7 +42,7 @@ public class InitTargetsVisitorTest {
         assertNotNull(targetMethodNode);
         assertEquals(targetAstNode, targetMethodNode);
 
-        assertEquals(targetMethodNode.lineNumber, "13");
+        assertEquals(targetMethodNode.lineNumber, (Integer)13);
         assertEquals(targetClassNode.name(), "Example");
         assertEquals(targetMethodNode.name(), "run");
     }
@@ -62,7 +60,7 @@ public class InitTargetsVisitorTest {
         assertNotEquals(targetAstNode, targetClassNode);
         assertNotEquals(targetAstNode, targetMethodNode);
 
-        assertEquals(targetAstNode.lineNumber, "10");
+        assertEquals(targetAstNode.lineNumber, (Integer)10);
         assertEquals(((VariableIntroduction)targetAstNode).name(), "e");
         assertEquals(targetClassNode.name(), "Example");
         assertEquals(targetMethodNode.name(), "run");

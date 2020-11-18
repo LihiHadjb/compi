@@ -31,7 +31,7 @@ public class SearchInContext {
         prog.accept(initTargetsVisitor);
         this.targetAstNode = initTargetsVisitor.targetAstNode();
         this.targetAstNodeMethod = initTargetsVisitor.lastMethodSeen();
-        this.targetAstNodeClass = initTargetsVisitor.lastClasSeen();
+        this.targetAstNodeClass = initTargetsVisitor.lastClassSeen();
     }
 
     //Assumes symbolTable is of type "class"!!!

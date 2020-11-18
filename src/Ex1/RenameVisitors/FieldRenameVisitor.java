@@ -3,6 +3,7 @@ package Ex1.RenameVisitors;
 import Ex1.SearchInContext;
 import Ex1.SymbolTables.VarEntry;
 import ast.*;
+import Ex1.RenameVisitors.RenameVisitor;
 
 import java.util.Set;
 
