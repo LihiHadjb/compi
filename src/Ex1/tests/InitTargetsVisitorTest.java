@@ -66,4 +66,105 @@ public class InitTargetsVisitorTest {
         assertEquals(targetMethodNode.name(), "run");
     }
 
+    @Test
+    public void forInitTargets_method_inSuper(){
+        String filePath = "/home/pc/IdeaProjects/compi/examples/ex1/forInitTargets.java.xml";
+        String oldName = "foo1";
+        String lineNumber = "3";
+        init_targets(oldName, lineNumber, filePath);
+
+        assertNotNull(targetAstNode);
+        assertNotNull(targetClassNode);
+        assertNotNull(targetMethodNode);
+        assertNotEquals(targetAstNode, targetClassNode);
+        assertEquals(targetAstNode, targetMethodNode);
+
+        assertEquals(targetAstNode.lineNumber, (Integer)3);
+        assertEquals(((MethodDecl)targetAstNode).name(), "foo1");
+        assertEquals(targetClassNode.name(), "A2");
+        assertEquals(targetMethodNode.name(), "foo1");
+
+    }
+
+    @Test
+    public void forInitTargets_method_inInherited(){
+        String filePath = "/home/pc/IdeaProjects/compi/examples/ex1/forInitTargets.java.xml";
+        String oldName = "foo1";
+        String lineNumber = "21";
+        init_targets(oldName, lineNumber, filePath);
+
+        assertNotNull(targetAstNode);
+        assertNotNull(targetClassNode);
+        assertNotNull(targetMethodNode);
+        assertNotEquals(targetAstNode, targetClassNode);
+        assertEquals(targetAstNode, targetMethodNode);
+
+        assertEquals(targetAstNode.lineNumber, (Integer)21);
+        assertEquals(((MethodDecl)targetAstNode).name(), "foo1");
+        assertEquals(targetClassNode.name(), "B2");
+        assertEquals(targetMethodNode.name(), "foo1");
+
+    }
+
+
+//    @Test
+//    public void forInitTargets_field_inSuper() {
+//        String filePath = "/home/pc/IdeaProjects/compi/examples/ex1/method.java.xml";
+//        String oldName = "Example";
+//        String lineNumber = "10";
+//        init_targets(oldName, lineNumber, filePath);
+//
+//        assertNotNull(targetAstNode);
+//        assertNotNull(targetClassNode);
+//        assertNotNull(targetMethodNode);
+//        assertNotEquals(targetAstNode, targetClassNode);
+//        assertNotEquals(targetAstNode, targetMethodNode);
+//
+//        assertEquals(targetAstNode.lineNumber, (Integer)10);
+//        assertEquals(((VariableIntroduction)targetAstNode).name(), "e");
+//        assertEquals(targetClassNode.name(), "Example");
+//        assertEquals(targetMethodNode.name(), "run");
+//    }
+
+
+
+    @Test
+    public void forInitTargets_field_Hiding() {
+        String filePath = "/home/pc/IdeaProjects/compi/examples/ex1/method.java.xml";
+        String oldName = "a2";
+        String lineNumber = "23";
+        init_targets(oldName, lineNumber, filePath);
+
+        assertNotNull(targetAstNode);
+        assertNotNull(targetClassNode);
+        assertNotNull(targetMethodNode);
+        assertNotEquals(targetAstNode, targetClassNode);
+        assertNotEquals(targetAstNode, targetMethodNode);
+
+        assertEquals(targetAstNode.lineNumber, (Integer)23);
+        assertEquals(((VariableIntroduction)targetAstNode).name(), "a2");
+        assertEquals(targetClassNode.name(), "B2");
+        assertEquals(targetMethodNode.name(), "foo1");
+    }
+
+    @Test
+    public void forInitTargets_formal() {
+        String filePath = "/home/pc/IdeaProjects/compi/examples/ex1/method.java.xml";
+        String oldName = "a";
+        String lineNumber = "22";
+        init_targets(oldName, lineNumber, filePath);
+
+        assertNotNull(targetAstNode);
+        assertNotNull(targetClassNode);
+        assertNotNull(targetMethodNode);
+        assertNotEquals(targetAstNode, targetClassNode);
+        assertNotEquals(targetAstNode, targetMethodNode);
+
+        assertEquals(targetAstNode.lineNumber, (Integer)22);
+        assertEquals(((VariableIntroduction)targetAstNode).name(), "a");
+        assertEquals(targetClassNode.name(), "B2");
+        assertEquals(targetMethodNode.name(), "foo1");
+    }
+
+
 }
