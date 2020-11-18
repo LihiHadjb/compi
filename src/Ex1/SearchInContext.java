@@ -16,8 +16,6 @@ public class SearchInContext {
 
     //____________________COMMON_______________________________________
 
-
-
     public SearchInContext(Program prog, boolean isMethod, String oldName, String lineNumber){
         SymbolTableBuilder symbolTableBuilder = new SymbolTableBuilder();
         symbolTableBuilder.build(prog);
@@ -29,7 +27,7 @@ public class SearchInContext {
     }
 
     //TODO: can there be a var and a method with the same name?
-    public void initTargetAstNodes(Program prog, String oldName, String lineNumber){
+    private void initTargetAstNodes(Program prog, String oldName, String lineNumber){
         InitTargetsVisitor initTargetsVisitor = new InitTargetsVisitor(oldName, lineNumber);
         prog.accept(initTargetsVisitor);
         this.targetAstNode = initTargetsVisitor.targetAstNode();
