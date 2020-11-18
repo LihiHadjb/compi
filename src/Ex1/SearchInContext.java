@@ -38,7 +38,10 @@ public class SearchInContext {
     private SymbolTable lookupSuperSymbolTable(SymbolTable symbolTable){
         InheritanceNode currInheritanceNode = classSymbolTable2InheritanceNode(symbolTable);
         InheritanceNode parentInheritanceNode = currInheritanceNode.parent();
-        SymbolTable parentSymbolTable = inheritanceNode2ClassSymbolTable(parentInheritanceNode);
+        SymbolTable parentSymbolTable = null;
+        if (parentInheritanceNode != null){
+            parentSymbolTable = inheritanceNode2ClassSymbolTable(parentInheritanceNode);
+        }
         return parentSymbolTable;
     }
 
@@ -121,7 +124,7 @@ public class SearchInContext {
         SymbolTable curr = initialClassSymbolTable;
         SymbolTable parent = lookupParentSymbolTable(initialClassSymbolTable);
 
-        while(parent != null && curr.hasMethodWithName(methodName)){
+        while(parent != null && parent.hasMethodWithName(methodName)){
             curr = parent;
             parent = lookupParentSymbolTable(curr);
         }
