@@ -29,19 +29,16 @@ public class Rename {
         doRename();
     }
 
-    private void doRename(){
+    private void doRename() {
         if (isMethod) {
             RenameMethod();
-        }
-
-        else {
+        } else {
             VariableIntroduction targetVarIntro = (VariableIntroduction) searchInContext.targetAstNode();
             String varIntroductionType = GetVarIntroductionType(targetVarIntro, searchInContext);
 
-            if (varIntroductionType.equals("field")){
+            if (varIntroductionType.equals("field")) {
                 RenameField();
-            }
-            else{ // in case it's formalParameter OR varDecl
+            } else { // in case it's formalParameter OR varDecl
                 RenameFormalOrVarDecl();
             }
         }
@@ -58,24 +55,31 @@ public class Rename {
         prog.accept(fieldRenameVisitor);
     }
 
-    private void RenameFormalOrVarDecl(){
+    private void RenameFormalOrVarDecl() {
         FormalAndVarDeclRenameVisitor formalAndVarDeclRenameVisitor = new FormalAndVarDeclRenameVisitor(oldName, newName, searchInContext);
         MethodDecl targetAstNodeMethod = searchInContext.targetAstNodeMethod();
         targetAstNodeMethod.accept(formalAndVarDeclRenameVisitor);
     }
 
-    private String GetVarIntroductionType(VariableIntroduction targetAstNode, SearchInContext searchInContext){
-        MethodDecl targetAstNodeMethod = searchInContext.targetAstNodeMethod();
-        if (targetAstNodeMethod.vardecls().contains(targetAstNode)){
-            return "varDecl";
-        }
-        if (targetAstNodeMethod.formals().contains(targetAstNode)){
-            return "formal";
-        }
-        else{
+    private String GetVarIntroductionType(VariableIntroduction targetAstNode, SearchInContext searchInContext) {
+
+        if (searchInContext.isTargetField()){
             return "field";
         }
+
+        MethodDecl targetAstNodeMethod = searchInContext.targetAstNodeMethod();
+        if (targetAstNodeMethod.vardecls() != null) {
+            if (targetAstNodeMethod.vardecls().contains(targetAstNode)) {
+                return "varDecl";
+            }
+        }
+
+        return "formal";
+//        if (targetAstNodeMethod.formals() != null) {
+//            if (targetAstNodeMethod.formals().contains(targetAstNode)) {
+//                return "formal";
+//            }
+//        }
     }
-
-
 }
+

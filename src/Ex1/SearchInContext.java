@@ -15,6 +15,7 @@ public class SearchInContext {
     private MethodDecl targetAstNodeMethod;
     private ClassDecl targetAstNodeClass;
     private HashMap<AstNode, SymbolTable> astNodeToSymbolTable;
+    private boolean isTargetField;
 
     //____________________COMMON_______________________________________
 
@@ -35,6 +36,7 @@ public class SearchInContext {
         this.targetAstNode = initTargetsVisitor.targetAstNode();
         this.targetAstNodeMethod = initTargetsVisitor.lastMethodSeen();
         this.targetAstNodeClass = initTargetsVisitor.lastClassSeen();
+        this.isTargetField = initTargetsVisitor.isTargetField();
     }
 
     //Assumes symbolTable is of type "class"!!!
@@ -170,6 +172,8 @@ public class SearchInContext {
     }
 
     public HashMap<AstNode, SymbolTable> astNodeToSymbolTable(){ return this.astNodeToSymbolTable; }
+
+    public boolean isTargetField(){ return this.isTargetField; }
 
 
 }

@@ -8,11 +8,13 @@ public class InitTargetsVisitor implements Visitor {
     private MethodDecl lastMethodSeen;
     private ClassDecl lastClassSeen;
     private AstNode targetAstNode;
+    private boolean isTargetField;
 
     public InitTargetsVisitor(String oldName, String lineNumber){
         this.oldName = oldName;
         this.lineNumber = Integer.parseInt(lineNumber);
         this.targetAstNode = null;
+        this.isTargetField = false;
 
     }
 
@@ -26,6 +28,10 @@ public class InitTargetsVisitor implements Visitor {
 
     public AstNode targetAstNode(){
         return this.targetAstNode;
+    }
+
+    public boolean isTargetField(){
+        return this.isTargetField;
     }
 
 
@@ -50,6 +56,7 @@ public class InitTargetsVisitor implements Visitor {
         this.lastClassSeen = classDecl;
         if (classDecl.fields() != null){
             for(VarDecl field : classDecl.fields()){
+                isTargetField = true;
                 field.accept(this);
             }
         }
@@ -57,6 +64,7 @@ public class InitTargetsVisitor implements Visitor {
         if(classDecl.methoddecls() != null){
             for(MethodDecl methodDecl : classDecl.methoddecls()){
                 if(targetAstNode == null){
+                    isTargetField = false;
                     methodDecl.accept(this);
                 }
             }
@@ -71,7 +79,7 @@ public class InitTargetsVisitor implements Visitor {
     @Override
     public void visit(MethodDecl methodDecl) {
         this.lastMethodSeen = methodDecl;
-        if(methodDecl.lineNumber.equals(this.lineNumber)){
+        if( (methodDecl.name().equals(oldName)) && (methodDecl.lineNumber.equals(this.lineNumber)) ){
             this.targetAstNode = methodDecl;
         }
 
@@ -92,14 +100,14 @@ public class InitTargetsVisitor implements Visitor {
 
     @Override
     public void visit(FormalArg formalArg) {
-        if(formalArg.lineNumber.equals(this.lineNumber)){
+        if((formalArg.name().equals(oldName)) && (formalArg.lineNumber.equals(this.lineNumber))){
             this.targetAstNode = formalArg;
         }
     }
 
     @Override
     public void visit(VarDecl varDecl) {
-        if(varDecl.lineNumber.equals(this.lineNumber)){
+        if((varDecl.name().equals(oldName)) && (varDecl.lineNumber.equals(this.lineNumber))){
             this.targetAstNode = varDecl;
         }
     }

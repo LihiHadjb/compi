@@ -1,0 +1,387 @@
+Running renaming logic...
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+
+
+Checking method renaming results against expected:
+---------------------------------
+Checking method_and_variable_with_the_same_name_renamed1.xml...
+34c34
+< <name>renamedThing</name>
+---
+> <name>theThing</name>
+62c62
+< <name>renamedThing</name>
+---
+> <name>theThing</name>
+106c106
+< <name>renamedThing</name>
+---
+> <name>theThing</name>
+136c136
+< <name>renamedThing</name>
+---
+> <name>theThing</name>
+=================================
+Checking method_related_sibling_class_renamed.xml...
+26c26
+< <name>renamedMethod</name>
+---
+> <name>theMethod</name>
+54c54
+< <name>renamedMethod</name>
+---
+> <name>theMethod</name>
+=================================
+Checking method_unrelated_sibling_class_renamed.xml...
+=================================
+Checking method_with_if_and_assign_array_statements_renamed1.xml...
+=================================
+Checking method_with_if_and_assign_array_statements_renamed2.xml...
+=================================
+Checking method_with_new_object_renamed.xml...
+=================================
+Checking method_with_ref_id_renamed1.xml...
+=================================
+Checking method_with_ref_id_renamed2.xml...
+=================================
+Checking method_with_sysout_statement_renamed.xml...
+=================================
+Checking method_with_this_renamed.xml...
+=================================
+Checking method_with_while_and_assign_statements_renamed.xml...
+=================================
+
+
+Checking variable renaming results against expected:
+---------------------------------
+Checking field_related_sibling_class_renamed.xml...
+40c40
+< <id>renamedVar</id>
+---
+> <id>theVar</id>
+68c68
+< <id>renamedVar</id>
+---
+> <id>theVar</id>
+90c90
+< <id>renamedVar</id>
+---
+> <id>theVar</id>
+=================================
+Checking field_unrelated_sibling_class_renamed.xml...
+76c76
+< <id>renamedVar</id>
+---
+> <id>theVar</id>
+=================================
+Checking field_with_formal_param_shadowing_renamed.xml...
+76c76
+< <id>renamedVar</id>
+---
+> <id>theVar</id>
+115c115
+< <id>theVar</id>
+---
+> <id>renamedVar</id>
+=================================
+Checking field_with_if_and_assign_array_statements_renamed.xml...
+76c76
+< <id>renamedVar</id>
+---
+> <id>theVar</id>
+120c120
+< <id>renamedVar</id>
+---
+> <id>theVar</id>
+143c143
+< <id>renamedVar</id>
+---
+> <id>theVar</id>
+158c158
+< <id>renamedVar</id>
+---
+> <id>theVar</id>
+168c168
+< <id>renamedVar</id>
+---
+> <id>theVar</id>
+191c191
+< <id>renamedVar</id>
+---
+> <id>theVar</id>
+=================================
+Checking field_with_local_var_shadowing_renamed.xml...
+76c76
+< <id>renamedVar</id>
+---
+> <id>theVar</id>
+121c121
+< <id>theVar</id>
+---
+> <id>renamedVar</id>
+=================================
+Checking field_with_sysout_and_array_length_statements_renamed.xml...
+82c82
+< <id>renamedVar</id>
+---
+> <id>theVar</id>
+119c119
+< <id>renamedVar</id>
+---
+> <id>theVar</id>
+126c126
+< <id>renamedVar</id>
+---
+> <id>theVar</id>
+148c148
+< <id>renamedVar</id>
+---
+> <id>theVar</id>
+=================================
+Checking field_with_while_and_assign_statements_renamed.xml...
+76c76
+< <id>renamedVar</id>
+---
+> <id>theVar</id>
+124c124
+< <id>renamedVar</id>
+---
+> <id>theVar</id>
+135c135
+< <lv>renamedVar</lv>
+---
+> <lv>theVar</lv>
+140c140
+< <id>renamedVar</id>
+---
+> <id>theVar</id>
+162c162
+< <id>renamedVar</id>
+---
+> <id>theVar</id>
+=================================
+Checking formal_param_with_if_and_assign_array_statements_renamed.xml...
+=================================
+Checking formal_param_with_sysout_and_array_length_statements_renamed.xml...
+=================================
+Checking formal_param_with_while_and_assign_statements_renamed.xml...
+=================================
+Checking local_var_with_if_and_assign_array_statements_renamed.xml...
+=================================
+Checking local_var_with_sysout_and_array_length_statements_renamed.xml...
+=================================
+Checking local_var_with_while_and_assign_statements_renamed.xml...
+=================================
+Checking variable_and_method_with_the_same_name_renamed1.xml...
+40c40
+< <id>renamedThing</id>
+---
+> <id>theThing</id>
+68c68
+< <id>renamedThing</id>
+---
+> <id>theThing</id>
+90c90
+< <id>renamedThing</id>
+---
+> <id>theThing</id>
+120c120
+< <id>theThing</id>
+---
+> <id>renamedThing</id>
+150c150
+< <id>theThing</id>
+---
+> <id>renamedThing</id>
+=================================
+Checking variable_and_method_with_the_same_name_renamed2.xml...
+=================================
+Checking variable_and_method_with_the_same_name_renamed3.xml...
+1,157d0
+< <?xmlversion="1.0"encoding="UTF-8"standalone="yes"?>
+< <program>
+< <mainclass>
+< <name>Main</name>
+< <argsName>args</argsName>
+< <mainStatement>
+< <sysout>
+< <arg>
+< <int-literal>
+< <num>1</num>
+< </int-literal>
+< </arg>
+< </sysout>
+< </mainStatement>
+< </mainclass>
+< <classdecls>
+< <classdecl>
+< <name>Shared</name>
+< <fields>
+< <field>
+< <lineNumber>10</lineNumber>
+< <type>
+< <int/>
+< </type>
+< <name>theThing</name>
+< </field>
+< </fields>
+< <methoddecls>
+< <methoddecl>
+< <lineNumber>13</lineNumber>
+< <returnType>
+< <int/>
+< </returnType>
+< <name>theThing</name>
+< <formals/>
+< <vardecls/>
+< <body/>
+< <ret>
+< <ref-id>
+< <id>theThing</id>
+< </ref-id>
+< </ret>
+< </methoddecl>
+< </methoddecls>
+< </classdecl>
+< <classdecl>
+< <name>A</name>
+< <superName>Shared</superName>
+< <fields/>
+< <methoddecls/>
+< </classdecl>
+< <classdecl>
+< <name>B</name>
+< <superName>A</superName>
+< <fields/>
+< <methoddecls>
+< <methoddecl>
+< <lineNumber>21</lineNumber>
+< <returnType>
+< <int/>
+< </returnType>
+< <name>theThing</name>
+< <formals/>
+< <vardecls/>
+< <body/>
+< <ret>
+< <ref-id>
+< <id>theThing</id>
+< </ref-id>
+< </ret>
+< </methoddecl>
+< </methoddecls>
+< </classdecl>
+< <classdecl>
+< <name>C</name>
+< <superName>A</superName>
+< <fields/>
+< <methoddecls>
+< <methoddecl>
+< <lineNumber>27</lineNumber>
+< <returnType>
+< <int/>
+< </returnType>
+< <name>theThing</name>
+< <formals/>
+< <vardecls/>
+< <body/>
+< <ret>
+< <ref-id>
+< <id>theThing</id>
+< </ref-id>
+< </ret>
+< </methoddecl>
+< </methoddecls>
+< </classdecl>
+< <classdecl>
+< <name>D</name>
+< <superName>A</superName>
+< <fields/>
+< <methoddecls>
+< <methoddecl>
+< <lineNumber>35</lineNumber>
+< <returnType>
+< <int/>
+< </returnType>
+< <name>theThing</name>
+< <formals/>
+< <vardecls>
+< <vardecl>
+< <lineNumber>33</lineNumber>
+< <type>
+< <int/>
+< </type>
+< <name>theThing</name>
+< </vardecl>
+< </vardecls>
+< <body/>
+< <ret>
+< <ref-id>
+< <id>theThing</id>
+< </ref-id>
+< </ret>
+< </methoddecl>
+< </methoddecls>
+< </classdecl>
+< <classdecl>
+< <name>E</name>
+< <superName>A</superName>
+< <fields/>
+< <methoddecls>
+< <methoddecl>
+< <lineNumber>41</lineNumber>
+< <returnType>
+< <int/>
+< </returnType>
+< <name>theThing</name>
+< <formals>
+< <formal>
+< <lineNumber>38</lineNumber>
+< <type>
+< <int/>
+< </type>
+< <name>renamedThing</name>
+< </formal>
+< </formals>
+< <vardecls/>
+< <body/>
+< <ret>
+< <ref-id>
+< <id>renamedThing</id>
+< </ref-id>
+< </ret>
+< </methoddecl>
+< </methoddecls>
+< </classdecl>
+< </classdecls>
+< </program>
+=================================
+
+
+Finishing up...  Done!
