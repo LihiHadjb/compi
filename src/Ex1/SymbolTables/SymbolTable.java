@@ -65,12 +65,10 @@ public class SymbolTable {
 
     public String GetVariableType(String varName){
         if(this.hasVariableWithName(varName)){
-            //AstType type = this.variables().get(varName).type();
             AstType type = getVariableAstTypeOfName(varName);
             if (type instanceof RefType){
                 return ((RefType) type).id();
             }
-            //TODO: what if its not a refType?(int/boolean.....) ?
         }
         return null;
     }

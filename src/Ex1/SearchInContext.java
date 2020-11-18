@@ -26,7 +26,6 @@ public class SearchInContext {
 
     }
 
-    //TODO: can there be a var and a method with the same name?
     private void initTargetAstNodes(Program prog, String oldName, String lineNumber){
         InitTargetsVisitor initTargetsVisitor = new InitTargetsVisitor(oldName, lineNumber);
         prog.accept(initTargetsVisitor);
@@ -111,7 +110,6 @@ public class SearchInContext {
         SymbolTable classSymbolTable = lookupParentSymbolTable(methodSymbolTable);
         ClassDecl classDecl = classSymbolTable2ClassDecl(classSymbolTable);
         return classDecl.name();
-        //TODO: idea: make 2 kinds of symbolTable which have something more specfic than "AstNode" in their pointer, to avoid all the castings
     }
 
     //alternative for FindAncestorClass(...)

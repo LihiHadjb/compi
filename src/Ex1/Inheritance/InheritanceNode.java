@@ -43,7 +43,7 @@ public class InheritanceNode {
     }
 
     public boolean hasChildren(){
-        return this.children.isEmpty();
+        return !this.children.isEmpty();
     }
 
 

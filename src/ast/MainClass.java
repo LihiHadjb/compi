@@ -6,7 +6,6 @@ public class MainClass extends AstNode {
     @XmlElement(required = true)
     private String name;
 
-    //TODO: can we rename the argsname??
     @XmlElement(required = true)
     private String argsName;
 

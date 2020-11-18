@@ -62,8 +62,9 @@ public class FormalAndVarDeclRenameVisitor extends RenameVisitor {
 
     @Override
     public void visit(VarDecl varDecl) {
-        // do nothing
-        //TODO: how??
+        if(varDecl.name().equals(oldName)){
+            varDecl.setName(newName);
+        }
     }
 
     @Override

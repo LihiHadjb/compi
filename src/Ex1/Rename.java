@@ -60,7 +60,8 @@ public class Rename {
 
     private void RenameFormalOrVarDecl(){
         FormalAndVarDeclRenameVisitor formalAndVarDeclRenameVisitor = new FormalAndVarDeclRenameVisitor(oldName, newName, searchInContext);
-        prog.accept(formalAndVarDeclRenameVisitor);
+        MethodDecl targetAstNodeMethod = searchInContext.targetAstNodeMethod();
+        targetAstNodeMethod.accept(formalAndVarDeclRenameVisitor);
     }
 
     private String GetVarIntroductionType(VariableIntroduction targetAstNode, SearchInContext searchInContext){

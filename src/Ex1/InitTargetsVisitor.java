@@ -12,6 +12,7 @@ public class InitTargetsVisitor implements Visitor {
     public InitTargetsVisitor(String oldName, String lineNumber){
         this.oldName = oldName;
         this.lineNumber = Integer.parseInt(lineNumber);
+        this.targetAstNode = null;
 
     }
 
@@ -34,7 +35,9 @@ public class InitTargetsVisitor implements Visitor {
         prog.mainClass().accept(this); // visit(prog.mainClass());
         if (prog.classDecls() != null){
             for (ClassDecl classDecl : prog.classDecls()){
-                classDecl.accept(this); // visit(classDecl);
+                if (targetAstNode == null){//already found target
+                    classDecl.accept(this); // visit(classDecl);
+                }
             }
         }
 
@@ -51,20 +54,22 @@ public class InitTargetsVisitor implements Visitor {
 
         if(classDecl.methoddecls() != null){
             for(MethodDecl methodDecl : classDecl.methoddecls()){
-                methodDecl.accept(this);
+                if(targetAstNode == null){
+                    methodDecl.accept(this);
+                }
             }
         }
     }
 
     @Override
     public void visit(MainClass mainClass) {
-        mainClass.mainStatement().accept(this);
+        //do nothing
     }
 
     @Override
     public void visit(MethodDecl methodDecl) {
         this.lastMethodSeen = methodDecl;
-        if(methodDecl.lineNumber == this.lineNumber){
+        if(methodDecl.lineNumber.equals(this.lineNumber)){
             this.targetAstNode = methodDecl;
         }
 
@@ -85,14 +90,14 @@ public class InitTargetsVisitor implements Visitor {
 
     @Override
     public void visit(FormalArg formalArg) {
-        if(formalArg.lineNumber == this.lineNumber){
+        if(formalArg.lineNumber.equals(this.lineNumber)){
             this.targetAstNode = formalArg;
         }
     }
 
     @Override
     public void visit(VarDecl varDecl) {
-        if(varDecl.lineNumber == this.lineNumber){
+        if(varDecl.lineNumber.equals(this.lineNumber)){
             this.targetAstNode = varDecl;
         }
     }
