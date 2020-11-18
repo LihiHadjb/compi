@@ -3,17 +3,31 @@ package Ex1;
 import ast.*;
 
 public class InitTargetsVisitor implements Visitor {
-    String oldName;
-    Integer lineNumber;
-    MethodDecl lastMethodSeen;
-    ClassDecl lastClassSeen;
-    AstNode targetAstNode;
+    private String oldName;
+    private Integer lineNumber;
+    private MethodDecl lastMethodSeen;
+    private ClassDecl lastClassSeen;
+    private AstNode targetAstNode;
 
     public InitTargetsVisitor(String oldName, String lineNumber){
         this.oldName = oldName;
         this.lineNumber = Integer.parseInt(lineNumber);
 
     }
+
+    public MethodDecl lastMethodSeen(){
+        return this.lastMethodSeen;
+    }
+
+    public ClassDecl lastClasSeen(){
+        return this.lastClasSeen();
+    }
+
+    public AstNode targetAstNode(){
+        return this.targetAstNode;
+    }
+
+
 
     @Override
     public void visit(Program prog) {

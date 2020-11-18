@@ -5,11 +5,11 @@ import ast.*;
 import java.util.HashMap;
 
 public class SymbolTable {
-    String type; //"class" or "method"
-    HashMap<String, MethodEntry> methods;
-    HashMap<String, VarEntry> variables;
-    SymbolTable parent;
-    AstNode astNodeInProgram;
+    private String type; //"class" or "method"
+    private HashMap<String, MethodEntry> methods;
+    private HashMap<String, VarEntry> variables;
+    private SymbolTable parent;
+    private AstNode astNodeInProgram;
 
     public SymbolTable(SymbolTable parent, AstNode astNode, String type){
         this.type = type;
@@ -31,16 +31,28 @@ public class SymbolTable {
         this.methods.put(name, entry);
     }
 
-    public String type(){
-        return this.type;
+//    public String type(){
+//        return this.type;
+//    }
+
+//    public HashMap<String, MethodEntry> methods(){
+//        return this.methods;
+//    }
+//
+//    public HashMap<String, VarEntry> variables(){
+//        return this.variables;
+//    }
+
+    public boolean hasMethodWithName(String methodName){
+        return this.methods.containsKey(methodName);
     }
 
-    public HashMap<String, MethodEntry> methods(){
-        return this.methods;
+    public boolean hasVariableWithName(String varName){
+        return this.variables.containsKey(varName);
     }
 
-    public HashMap<String, VarEntry> variables(){
-        return this.variables;
+    public AstType getVariableAstTypeOfName(String varName){
+        return this.variables.get(varName).type();
     }
 
     public SymbolTable parent(){
@@ -51,14 +63,24 @@ public class SymbolTable {
         return this.astNodeInProgram;
     }
 
-    public String GetVariableTypeFromSymbolTable(String varName){
-        if(this.variables().keySet().contains(varName)){
-            AstType type = this.variables().get(varName).type();
-            if (this.variables().get(varName).type() instanceof RefType){
+    public String GetVariableType(String varName){
+        if(this.hasVariableWithName(varName)){
+            //AstType type = this.variables().get(varName).type();
+            AstType type = getVariableAstTypeOfName(varName);
+            if (type instanceof RefType){
                 return ((RefType) type).id();
             }
+            //TODO: what if its not a refType?(int/boolean.....) ?
         }
         return null;
+    }
+
+    public boolean isMethodSymbolTable(){
+        return this.type.equals("method");
+    }
+
+    public boolean isClassSymbolTable(){
+        return this.type.equals("class");
     }
 
 }

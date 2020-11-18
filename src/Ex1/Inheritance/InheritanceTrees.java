@@ -30,9 +30,9 @@ public class InheritanceTrees {
         }
     }
 
-    public HashMap<String, InheritanceNode> roots(){
-        return this.roots;
-    }
+//    //public HashMap<String, InheritanceNode> roots(){
+//        return this.roots;
+//    }
 
 //    public HashMap<String, InheritanceNode> flatClasses(){
 //        return this.flatClasses;
@@ -49,7 +49,7 @@ public class InheritanceTrees {
     }
 
 
-    private Set<String> GetAllClassesUnderAncestor(InheritanceNode highestAncestor) {
+    public Set<String> GetAllClassesUnderAncestor(InheritanceNode highestAncestor) {
         Set<String> classesToCheck = new HashSet<>();
         classesToCheck.add(highestAncestor.name());
 

@@ -11,7 +11,7 @@ public class VarEntry {
 
     public VarEntry(VariableIntroduction var, String varType){
         this.type = var.type();
-        this.isFormal = varType.equals("forrmal");
+        this.isFormal = varType.equals("formal");
         this.isVarDecl = varType.equals("varDecl");
         this.isField = varType.equals("field");
     }

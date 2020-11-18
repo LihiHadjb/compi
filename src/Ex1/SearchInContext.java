@@ -3,88 +3,165 @@ package Ex1;
 import Ex1.Inheritance.InheritanceNode;
 import Ex1.Inheritance.InheritanceTrees;
 import Ex1.SymbolTables.SymbolTable;
-import ast.AstNode;
-import ast.ClassDecl;
-import ast.MethodDecl;
-import ast.VariableIntroduction;
+import ast.*;
+
+import java.util.Set;
 
 public class SearchInContext {
-    public InheritanceTrees inheritanceTrees;
+    private InheritanceTrees inheritanceTrees;
+    private AstNode targetAstNode;
+    private MethodDecl targetAstNodeMethod;
+    private ClassDecl targetAstNodeClass;
 
-    public SearchInContext(InheritanceTrees inheritanceTrees){
-        this.inheritanceTrees = inheritanceTrees;
+    //____________________COMMON_______________________________________
+
+
+
+    public SearchInContext(Program prog, boolean isMethod, String oldName, String lineNumber){
+        this.inheritanceTrees = new InheritanceTrees(prog);
+        InitTargetsVisitor initTargetsVisitor = new InitTargetsVisitor(oldName, lineNumber);
+        prog.accept(initTargetsVisitor);
+        initTargetAstNodes(prog, oldName, lineNumber);
+
     }
 
-    public String getVariableType(SymbolTable symbolTable, String varName){
-        SymbolTable currTable = symbolTable;
-        String type = currTable.GetVariableTypeFromSymbolTable(varName);
-
-        while (type == null){
-            currTable = GetParentSymbolTable(currTable);
-            type = currTable.GetVariableTypeFromSymbolTable(varName);
-        }
-
-        return type;
+    //TODO: can there be a var and a method with the same name?
+    public void initTargetAstNodes(Program prog, String oldName, String lineNumber){
+        InitTargetsVisitor initTargetsVisitor = new InitTargetsVisitor(oldName, lineNumber);
+        prog.accept(initTargetsVisitor);
+        this.targetAstNode = initTargetsVisitor.targetAstNode();
+        this.targetAstNodeMethod = initTargetsVisitor.lastMethodSeen();
+        this.targetAstNodeClass = initTargetsVisitor.lastClasSeen();
     }
-    public SymbolTable GetParentSymbolTable(SymbolTable currSymbolTable) {
+
+    //Assumes symbolTable is of type "class"!!!
+    private SymbolTable lookupSuperSymbolTable(SymbolTable symbolTable){
+        InheritanceNode currInheritanceNode = classSymbolTable2InheritanceNode(symbolTable);
+        InheritanceNode parentInheritanceNode = currInheritanceNode.parent();
+        SymbolTable parentSymbolTable = inheritanceNode2ClassSymbolTable(parentInheritanceNode);
+        return parentSymbolTable;
+    }
+
+    //find the parent of a **general** symbolTable
+    private SymbolTable lookupParentSymbolTable(SymbolTable currSymbolTable) {
         // Method case
-        if (currSymbolTable.type().equals("method")) {
+        if(currSymbolTable.isMethodSymbolTable()){
             return currSymbolTable.parent();
         }
 
         // Class case
         else {
-            String classId = ((ClassDecl) currSymbolTable.astNodeInProgram()).name();
-            InheritanceNode currInheritanceNode = inheritanceTrees.getInheritanceNodeOfClassName(classId);
-            InheritanceNode parentInheritanceNode = currInheritanceNode.parent();
-            AstNode parentAstNode = parentInheritanceNode.astNode();
-            SymbolTable parentSymbolTable = parentAstNode.symbolTable();
-
-            return parentSymbolTable;
+            return this.lookupSuperSymbolTable(currSymbolTable);
         }
     }
 
-    // TODO: verify Tslil
-    public String getContextClass(SymbolTable methodSymbolTable){
+    //Assumes symbolTable is of type "class"!!!
+    private InheritanceNode classSymbolTable2InheritanceNode(SymbolTable symbolTable){
+        ClassDecl correspondingClassAstNode = (ClassDecl)symbolTable.astNodeInProgram();
+        return inheritanceTrees.classAstNode2InheritanceNode(correspondingClassAstNode);
+    }
+
+    private SymbolTable inheritanceNode2ClassSymbolTable(InheritanceNode inheritanceNode){
+        AstNode classAstNode = inheritanceNode.astNode();
+        return classAstNode.symbolTable();
+
+    }
+
+    private ClassDecl classSymbolTable2ClassDecl(SymbolTable symbolTable){
+        return (ClassDecl)symbolTable.astNodeInProgram();
+    }
+
+
+    //____________________Stuff for VARIABLES renaming_______________________________________
+
+    public Set<String> getClassesToCheckForField(VarDecl varDecl){
+        InheritanceNode targetInheritanceNodeClass = inheritanceTrees.classAstNode2InheritanceNode(targetAstNodeClass);
+        Set<String> classesToCheck = inheritanceTrees.GetAllClassesUnderAncestor(targetInheritanceNodeClass);
+        return classesToCheck;
+    }
+
+    public String lookupVariableType(MethodDecl context, String varName){
+        SymbolTable currTable = context.symbolTable();
+        String type;
+
+        while (!currTable.hasVariableWithName(varName)){
+            currTable = lookupParentSymbolTable(currTable);
+        }
+
+        type = currTable.GetVariableType(varName);
+        return type;
+    }
+
+
+    //____________________Stuff for METHOD renaming_______________________________________
+
+    public Set<String> getClassesToCheckForMethod(MethodDecl methodDecl){
+        InheritanceNode highestAncestor = lookupHighestAncestorClassThatHasMethod(methodDecl);
+        Set<String> classesToCheck = inheritanceTrees.GetAllClassesUnderAncestor(highestAncestor);
+        return classesToCheck;
+    }
+
+    public String lookupClassNameOfMethod(MethodDecl methodDecl){
         // In order to find the class that associated with "this" expression we need to go the
         // class in which the method was declared and find out what is the name/id of the class.
         // Meaning, only need to go up once to the symbol table of the parent class --> go to the AstNode of the class
         // --> get it's name (which is basically the type of "this" that we need to find)
-
-        SymbolTable parentClassSymbolTable = methodSymbolTable.parent();
-        AstNode parentClassAstNode = parentClassSymbolTable.astNodeInProgram();
-        return ((ClassDecl)parentClassAstNode).name(); //casting from AstNode to ClassDecl so we can call name() func
+        SymbolTable methodSymbolTable = methodDecl.symbolTable();
+        SymbolTable classSymbolTable = lookupParentSymbolTable(methodSymbolTable);
+        ClassDecl classDecl = classSymbolTable2ClassDecl(classSymbolTable);
+        return classDecl.name();
+        //TODO: idea: make 2 kinds of symbolTable which have something more specfic than "AstNode" in their pointer, to avoid all the castings
     }
 
-    //TODO: verify Tslil
-    public InheritanceNode FindAncestorClass(AstNode targetAstNodeClass){
-        //In this case targetAstNode is a MethodDecl and we need to find it's highest ancestor class. So we should go
-        // to targetAstNode's parent (which is a ClassDecl node) --> find it's name --> get relevant InheritanceNode
-        // of this class from flatClasses --> go up from parent to parent until we get to null (which means we got to
-        // the highest ancestor) --> return the highestAncestor
-        InheritanceNode currClassInheritanceNode = GetInheritanceNodeOfAstNode((ClassDecl)targetAstNodeClass);
-        InheritanceNode parentClassInheritanceNode = currClassInheritanceNode.parent();
+    //alternative for FindAncestorClass(...)
+    public InheritanceNode lookupHighestAncestorClassThatHasMethod(MethodDecl methodDecl){
+        String methodName = methodDecl.name();
+        SymbolTable methodSymbolTable = methodDecl.symbolTable();
+        SymbolTable initialClassSymbolTable = lookupParentSymbolTable(methodSymbolTable);
 
-        while (parentClassInheritanceNode != null){
-            currClassInheritanceNode = parentClassInheritanceNode;
-            parentClassInheritanceNode = currClassInheritanceNode.parent();
+        SymbolTable curr = initialClassSymbolTable;
+        SymbolTable parent = lookupParentSymbolTable(initialClassSymbolTable);
+
+        while(parent != null && curr.hasMethodWithName(methodName)){
+            curr = parent;
+            parent = lookupParentSymbolTable(curr);
         }
 
-        return currClassInheritanceNode;
+        return classSymbolTable2InheritanceNode(curr);
     }
 
 
 
-    public String GetVarIntroductionType(VariableIntroduction targetAstNode, MethodDecl targetAstNodeMethod, ClassDecl targetAstNodeClass){
-        if (targetAstNodeMethod.vardecls().contains(targetAstNode)){
-            return "varDecl";
-        }
-        if (targetAstNodeMethod.formals().contains(targetAstNode)){
-            return "formal";
-        }
-        else{
-            return "field";
-        }
+
+//    //Assumes targetAstNode is a MethodDecl!!!
+//    public InheritanceNode FindAncestorClass(AstNode targetAstNodeClass){
+//        //In this case targetAstNode is a MethodDecl and we need to find it's highest ancestor class. So we should go
+//        // to targetAstNode's parent (which is a ClassDecl node) --> find it's name --> get relevant InheritanceNode
+//        // of this class from flatClasses --> go up from parent to parent until we get to null (which means we got to
+//        // the highest ancestor) --> return the highestAncestor
+//        InheritanceNode currClassInheritanceNode = GetInheritanceNodeOfAstNode((ClassDecl)targetAstNodeClass);
+//        InheritanceNode parentClassInheritanceNode = currClassInheritanceNode.parent();
+//
+//        while (parentClassInheritanceNode != null){
+//            currClassInheritanceNode = parentClassInheritanceNode;
+//            parentClassInheritanceNode = currClassInheritanceNode.parent();
+//        }
+//
+//        return currClassInheritanceNode;
+//    }
+
+
+    public AstNode targetAstNode(){
+        return this.targetAstNode;
     }
+
+    public MethodDecl targetAstNodeMethod(){
+        return this.targetAstNodeMethod;
+    }
+
+    public ClassDecl targetAstNodeClass(){
+        return this.targetAstNodeClass;
+    }
+
 
 }

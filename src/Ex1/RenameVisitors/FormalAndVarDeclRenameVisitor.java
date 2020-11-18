@@ -6,16 +6,12 @@ import ast.*;
 
 import java.util.Set;
 
-public class FormalAndVarDeclRenameVisitor implements Visitor {
-    private String oldName;
-    private String newName;
-    SearchInContext searchInContext;
+public class FormalAndVarDeclRenameVisitor extends RenameVisitor {
+
 
 
     public FormalAndVarDeclRenameVisitor(String oldName, String newName, SearchInContext searchInContext){
-        this.oldName = oldName;
-        this.newName = newName;
-        this.searchInContext = searchInContext;
+        super(oldName, newName, searchInContext);
     }
 
 
@@ -67,6 +63,7 @@ public class FormalAndVarDeclRenameVisitor implements Visitor {
     @Override
     public void visit(VarDecl varDecl) {
         // do nothing
+        //TODO: how??
     }
 
     @Override

@@ -18,13 +18,9 @@ public class Rename {
     private String oldName;
     private String lineNumber;
     private String newName;
-
-    AstNode targetAstNode;
-    MethodDecl targetAstNodeMethod;
-    ClassDecl targetAstNodeClass;
     SearchInContext searchInContext;
 
-    public RenameInAst(Program prog, Boolean isMethod, String oldName, String lineNumber, String newName) {
+    public Rename(Program prog, Boolean isMethod, String oldName, String lineNumber, String newName) {
         //this.inheritanceTrees = new InheritanceTrees(prog);
         //SymbolTableBuilder symbolTableBuilder = new SymbolTableBuilder();
         //symbolTableBuilder.build(prog);
@@ -32,16 +28,19 @@ public class Rename {
         this.oldName = oldName;
         this.lineNumber = lineNumber;
         this.newName = newName;
-        this.searchInContext = new SearchInContext(prog);
-        this.targetAstNode = searchInContext.SearchTargetAstNode(); // search for astNode using lineNumber:
-        // visit prog until you get to the right node. While searching, save last methos & last class
-        this.targetAstNodeMethod = searchInContext.getTargetAstNodeMethod();
-        this.targetAstNodeClass = searchInContext.getTargetAstNodeClass();
+        this.searchInContext = new SearchInContext(prog, isMethod, oldName, lineNumber);
 
+        doRename(prog, isMethod, oldName, lineNumber, newName);
+    }
+
+    private void doRename(Program prog, Boolean isMethod, String oldName, String lineNumber, String newName){
         if (isMethod) {
             RenameMethod();
-        } else {
-            String varIntroductionType = GetVarIntroductionType((VariableIntroduction)targetAstNode, targetAstNodeMethod, targetAstNodeClass);
+        }
+
+        else {
+            VariableIntroduction targetVarIntroduction = (VariableIntroduction) searchInContext.targetAstNode();
+            String varIntroductionType = GetVarIntroductionType(targetVarIntroduction, searchInContext);
 
             if (varIntroductionType.equals("field")){
                 RenameField();
@@ -53,7 +52,23 @@ public class Rename {
     }
 
 
-    private String GetVarIntroductionType(VariableIntroduction targetAstNode, MethodDecl targetAstNodeMethod, ClassDecl targetAstNodeClass){
+    private void RenameMethod() {
+        MethodRenameVisitor methodRenameVisitor = new MethodRenameVisitor(oldName, newName, searchInContext);
+        prog.accept(methodRenameVisitor);
+    }
+
+    private void RenameField() {
+        FieldRenameVisitor fieldRenameVisitor = new FieldRenameVisitor(oldName, newName, searchInContext);
+        prog.accept(fieldRenameVisitor);
+    }
+
+    private void RenameFormalOrVarDecl(){
+        FormalAndVarDeclRenameVisitor formalAndVarDeclRenameVisitor = new FormalAndVarDeclRenameVisitor(oldName, newName, searchInContext);
+        prog.accept(formalAndVarDeclRenameVisitor);
+    }
+
+    private String GetVarIntroductionType(VariableIntroduction targetAstNode, SearchInContext searchInContext){
+        MethodDecl targetAstNodeMethod = searchInContext.targetAstNodeMethod();
         if (targetAstNodeMethod.vardecls().contains(targetAstNode)){
             return "varDecl";
         }
@@ -66,37 +81,4 @@ public class Rename {
     }
 
 
-    private void RenameMethod() {
-        InheritanceNode highestAncestor = searchInContext.FindAncestorClass(targetAstNodeClass); //TODO: verify Tslil
-        Set<String> classesToCheck = GetAllClassesUnderAncestor(highestAncestor);
-        MethodRenameVisitor methodRenameVisitor = new MethodRenameVisitor(prog, classesToCheck, oldName, newName, searchInContext);
-        methodRenameVisitor.visit(prog);
-    }
-
-    private void RenameField() {
-        InheritanceNode targetInheritanceNodeClass = inheritanceTrees.classAstNode2InheritanceNode(targetAstNodeClass);
-        Set<String> classesToCheck = GetAllClassesUnderAncestor(targetInheritanceNodeClass);
-        FieldRenameVisitor fieldRenameVisitor = new FieldRenameVisitor(prog, classesToCheck, oldName, newName, searchInContext);
-        fieldRenameVisitor.visit(prog);
-    }
-
-    private void RenameFormalOrVarDecl(){
-        FormalAndVarDeclRenameVisitor formalAndVarDeclRenameVisitor = new FormalAndVarDeclRenameVisitor(oldName, newName, searchInContext);
-        formalAndVarDeclRenameVisitor.visit(targetAstNodeMethod);
-    }
-
-    private Set<String> GetAllClassesUnderAncestor(InheritanceNode highestAncestor) {
-        Set<String> classesToCheck = new HashSet<>();
-        classesToCheck.add(highestAncestor.name());
-
-        if (highestAncestor.children().isEmpty()) {
-            return classesToCheck;
-        }
-
-        for (InheritanceNode child : highestAncestor.children()) {
-            classesToCheck.addAll(GetAllClassesUnderAncestor(child));
-        }
-
-        return classesToCheck;
-    }
 }

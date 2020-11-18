@@ -5,22 +5,17 @@ import ast.*;
 
 import java.util.Set;
 
-public class MethodRenameVisitor implements Visitor {
-    private Program prog;
+public class MethodRenameVisitor extends RenameVisitor {
     private Set<String> classesToCheck;
-    private String oldName;
-    private String newName;
     private MethodDecl lastMethodSeen;
     private boolean isLastOwnerInClassesToCheck;
-    SearchInContext searchInContext;
+    private MethodDecl targetAstNode;
 
 
-    public MethodRenameVisitor(Program prog, Set<String> classesToCheck, String oldName, String newName, SearchInContext searchInContext){
-        this.prog = prog;
-        this.classesToCheck = classesToCheck;
-        this.oldName = oldName;
-        this.newName = newName;
-        this.searchInContext = searchInContext;
+    public MethodRenameVisitor(String oldName, String newName, SearchInContext searchInContext){
+        super(oldName, newName, searchInContext);
+        this.targetAstNode = (MethodDecl)searchInContext.targetAstNode();
+        this.classesToCheck = searchInContext.getClassesToCheckForMethod(targetAstNode);
     }
 
     @Override
@@ -189,13 +184,13 @@ public class MethodRenameVisitor implements Visitor {
 
     @Override
     public void visit(IdentifierExpr e) {
-        String type = searchInContext.getVariableType(lastMethodSeen.symbolTable(), e.id());
+        String type = searchInContext.lookupVariableType(lastMethodSeen, e.id());
         isLastOwnerInClassesToCheck = classesToCheck.contains(type);
     }
 
     @Override
     public void visit(ThisExpr e) {
-        String type = searchInContext.getContextClass(lastMethodSeen.symbolTable()); // TODO: verify Tslil
+        String type = searchInContext.lookupClassNameOfMethod(lastMethodSeen); // TODO: verify Tslil
         isLastOwnerInClassesToCheck = classesToCheck.contains(type);
     }
 

@@ -6,23 +6,19 @@ import ast.*;
 
 import java.util.Set;
 
-//TODO: currently only for field case
-public class FieldRenameVisitor implements Visitor {
-    private Program prog;
-    private Set<String> classesToCheck;
-    private String oldName;
-    private String newName;
+public class FieldRenameVisitor extends RenameVisitor {
+
+
     private MethodDecl lastMethodSeen;
     private boolean isLastOwnerInClassesToCheck;
-    SearchInContext searchInContext;
+    private VarDecl targetAstNode;
+    private Set<String> classesToCheck;
 
 
-    public FieldRenameVisitor(Program prog, Set<String> classesToCheck, String oldName, String newName, SearchInContext searchInContext){
-        this.prog = prog;
-        this.classesToCheck = classesToCheck;
-        this.oldName = oldName;
-        this.newName = newName;
-        this.searchInContext = searchInContext;
+    public FieldRenameVisitor(String oldName, String newName, SearchInContext searchInContext){
+        super(oldName, newName, searchInContext);
+        this.targetAstNode = (VarDecl)searchInContext.targetAstNode();
+        this.classesToCheck = searchInContext.getClassesToCheckForField(targetAstNode);
     }
 
     @Override
@@ -40,8 +36,8 @@ public class FieldRenameVisitor implements Visitor {
         if (classesToCheck.contains(classDecl.name())){
             if (classDecl.fields() != null){
                 for (VarDecl field : classDecl.fields()){
-                    if (field.name().equals(oldName)){
-                        field.setName(newName);
+                    if (field.name().equals(this.oldName)){
+                        field.setName(this.newName);
                     }
                 }
             }
@@ -64,7 +60,9 @@ public class FieldRenameVisitor implements Visitor {
         this.lastMethodSeen = methodDecl;
         boolean isHidingVarExists = false;
 
-        isHidingVarExists = !methodDecl.symbolTable().variables().containsKey(oldName);
+        //isHidingVarExists = !methodDecl.symbolTable().variables().containsKey(oldName);
+        isHidingVarExists = !methodDecl.symbolTable().hasVariableWithName(oldName);
+
 
         if (!isHidingVarExists){
             if (methodDecl.body() != null){
