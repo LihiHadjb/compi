@@ -32,7 +32,9 @@ public class InitTargetsVisitor implements Visitor {
 
     @Override
     public void visit(Program prog) {
-        prog.mainClass().accept(this); // visit(prog.mainClass());
+        if (prog.mainClass() != null){
+            prog.mainClass().accept(this); // visit(prog.mainClass());
+        }
         if (prog.classDecls() != null){
             for (ClassDecl classDecl : prog.classDecls()){
                 if (targetAstNode == null){//already found target

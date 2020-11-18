@@ -18,7 +18,7 @@ public class SymbolTableTest {
     public void myExample1Test(){
         Program prog;
         AstXMLSerializer xmlSerializer = new AstXMLSerializer();
-        prog = xmlSerializer.deserialize(new File("/home/pc/IdeaProjects/compi/src/Ex1/tests/myExample1.java.xml"));
+        prog = xmlSerializer.deserialize(new File("/home/pc/IdeaProjects/compi/examples/ex1/testExamples/myExample1.java.xml"));
         SymbolTableBuilder symbolTableBuilder = new SymbolTableBuilder();
         symbolTableBuilder.build(prog);
 

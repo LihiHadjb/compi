@@ -29,11 +29,12 @@ public class SearchInContextTest {
 
     @Test
     public void forClassesToCheck_method_inB(){
-        String filePath = "/home/pc/IdeaProjects/compi/examples/ex1/forClassesToCheck.java.xml";
+        String filePath = "/home/pc/IdeaProjects/compi/examples/ex1/testExamples/forClassesToCheck.java.xml";
         String oldName = "foo";
         String lineNumber = "35";
         prog = xmlSerializer.deserialize(new File(filePath));
         InitTargetsVisitor initTargetsVisitor = new InitTargetsVisitor(oldName, lineNumber);
+        prog.accept(initTargetsVisitor);
 
         SearchInContext searchInContext = new SearchInContext(prog, true, oldName, lineNumber);
         Set<String> classesToCheck = searchInContext.getClassesToCheckForMethod((MethodDecl)initTargetsVisitor.targetAstNode());
@@ -48,11 +49,12 @@ public class SearchInContextTest {
 
     @Test
     public void forClassesToCheck_method_inF(){
-        String filePath = "/home/pc/IdeaProjects/compi/examples/ex1/forClassesToCheck.java.xml";
+        String filePath = "/home/pc/IdeaProjects/compi/examples/ex1/testExamples/forClassesToCheck.java.xml";
         String oldName = "foo";
         String lineNumber = "25";
         prog = xmlSerializer.deserialize(new File(filePath));
         InitTargetsVisitor initTargetsVisitor = new InitTargetsVisitor(oldName, lineNumber);
+        prog.accept(initTargetsVisitor);
 
         SearchInContext searchInContext = new SearchInContext(prog, true, oldName, lineNumber);
         Set<String> classesToCheck = searchInContext.getClassesToCheckForMethod((MethodDecl)initTargetsVisitor.targetAstNode());
@@ -65,11 +67,12 @@ public class SearchInContextTest {
 
     @Test
     public void forClassesToCheck_field_inE(){
-        String filePath = "/home/pc/IdeaProjects/compi/examples/ex1/forClassesToCheck.java.xml";
+        String filePath = "/home/pc/IdeaProjects/compi/examples/ex1/testExamples/forClassesToCheck.java.xml";
         String oldName = "field1";
         String lineNumber = "5";
         prog = xmlSerializer.deserialize(new File(filePath));
         InitTargetsVisitor initTargetsVisitor = new InitTargetsVisitor(oldName, lineNumber);
+        prog.accept(initTargetsVisitor);
 
         SearchInContext searchInContext = new SearchInContext(prog, true, oldName, lineNumber);
         Set<String> classesToCheck = searchInContext.getClassesToCheckForField((VarDecl) initTargetsVisitor.targetAstNode());
@@ -86,11 +89,12 @@ public class SearchInContextTest {
 
     @Test
     public void forClassesToCheck_field_inA(){
-        String filePath = "/home/pc/IdeaProjects/compi/examples/ex1/forClassesToCheck.java.xml";
+        String filePath = "/home/pc/IdeaProjects/compi/examples/ex1/testExamples/forClassesToCheck.java.xml";
         String oldName = "field2";
         String lineNumber = "10";
         prog = xmlSerializer.deserialize(new File(filePath));
         InitTargetsVisitor initTargetsVisitor = new InitTargetsVisitor(oldName, lineNumber);
+        prog.accept(initTargetsVisitor);
 
         SearchInContext searchInContext = new SearchInContext(prog, true, oldName, lineNumber);
         Set<String> classesToCheck = searchInContext.getClassesToCheckForField((VarDecl) initTargetsVisitor.targetAstNode());

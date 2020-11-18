@@ -68,7 +68,7 @@ public class InitTargetsVisitorTest {
 
     @Test
     public void forInitTargets_method_inSuper(){
-        String filePath = "/home/pc/IdeaProjects/compi/examples/ex1/forInitTargets.java.xml";
+        String filePath = "/home/pc/IdeaProjects/compi/examples/ex1/testExamples/forInitTargets.java.xml";
         String oldName = "foo1";
         String lineNumber = "3";
         init_targets(oldName, lineNumber, filePath);
@@ -88,7 +88,7 @@ public class InitTargetsVisitorTest {
 
     @Test
     public void forInitTargets_method_inInherited(){
-        String filePath = "/home/pc/IdeaProjects/compi/examples/ex1/forInitTargets.java.xml";
+        String filePath = "/home/pc/IdeaProjects/compi/examples/ex1/testExamples/forInitTargets.java.xml";
         String oldName = "foo1";
         String lineNumber = "21";
         init_targets(oldName, lineNumber, filePath);
@@ -130,7 +130,7 @@ public class InitTargetsVisitorTest {
 
     @Test
     public void forInitTargets_field_Hiding() {
-        String filePath = "/home/pc/IdeaProjects/compi/examples/ex1/method.java.xml";
+        String filePath = "/home/pc/IdeaProjects/compi/examples/ex1/testExamples/forInitTargets.java.xml";
         String oldName = "a2";
         String lineNumber = "23";
         init_targets(oldName, lineNumber, filePath);
@@ -149,7 +149,7 @@ public class InitTargetsVisitorTest {
 
     @Test
     public void forInitTargets_formal() {
-        String filePath = "/home/pc/IdeaProjects/compi/examples/ex1/method.java.xml";
+        String filePath = "/home/pc/IdeaProjects/compi/examples/ex1/testExamples/forInitTargets.java.xml";
         String oldName = "a";
         String lineNumber = "22";
         init_targets(oldName, lineNumber, filePath);

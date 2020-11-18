@@ -24,12 +24,6 @@ public class InheritanceNode {
         this.children.add(newChild);
     }
 
-    public String toString(){
-        return "parent: " + parent.toString() + "\n" +
-                "children: " + children.toString() + "\n" +
-                "name: " + name + "\n";
-    }
-
     public String name(){
         return this.name;
     }

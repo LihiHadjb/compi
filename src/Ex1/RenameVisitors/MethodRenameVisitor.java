@@ -20,7 +20,9 @@ public class MethodRenameVisitor extends RenameVisitor {
 
     @Override
     public void visit(Program prog) {
-        prog.mainClass().accept(this); // visit(prog.mainClass());
+        if (prog.mainClass() != null){
+            prog.mainClass().accept(this); // visit(prog.mainClass());
+        }
         if (prog.classDecls() != null){
             for (ClassDecl classDecl : prog.classDecls()){
                 classDecl.accept(this); // visit(classDecl);

@@ -51,9 +51,10 @@ public class InheritanceTrees {
 
     public Set<String> GetAllClassesUnderAncestor(InheritanceNode highestAncestor) {
         Set<String> classesToCheck = new HashSet<>();
-        classesToCheck.add(highestAncestor.name());
+        String name = highestAncestor.name();
+        classesToCheck.add(name);
 
-        if (highestAncestor.hasChildren()) {
+        if (!(highestAncestor.hasChildren())) {
             return classesToCheck;
         }
 

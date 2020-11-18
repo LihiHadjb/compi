@@ -18,7 +18,7 @@ public class InheritanceTest {
     public void myExample2Test(){
         Program prog;
         AstXMLSerializer xmlSerializer = new AstXMLSerializer();
-        prog = xmlSerializer.deserialize(new File("/home/pc/IdeaProjects/compi/src/Ex1/tests/myExample2.java.xml"));
+        prog = xmlSerializer.deserialize(new File("/home/pc/IdeaProjects/compi/examples/ex1/testExamples/myExample2.java.xml"));
         InheritanceTrees trees = new InheritanceTrees(prog);
 
 //        //check flatmap
