@@ -3,6 +3,7 @@ package Ex1;
 import Ex1.Inheritance.InheritanceNode;
 import Ex1.Inheritance.InheritanceTrees;
 import Ex1.SymbolTables.SymbolTable;
+import Ex1.SymbolTables.SymbolTableBuilder;
 import ast.*;
 
 import java.util.Set;
@@ -18,6 +19,8 @@ public class SearchInContext {
 
 
     public SearchInContext(Program prog, boolean isMethod, String oldName, String lineNumber){
+        SymbolTableBuilder symbolTableBuilder = new SymbolTableBuilder();
+        symbolTableBuilder.build(prog);
         this.inheritanceTrees = new InheritanceTrees(prog);
         InitTargetsVisitor initTargetsVisitor = new InitTargetsVisitor(oldName, lineNumber);
         prog.accept(initTargetsVisitor);

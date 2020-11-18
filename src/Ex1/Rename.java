@@ -1,11 +1,8 @@
 package Ex1;
 
-import Ex1.Inheritance.InheritanceNode;
-import Ex1.Inheritance.InheritanceTrees;
 import Ex1.RenameVisitors.FormalAndVarDeclRenameVisitor;
 import Ex1.RenameVisitors.MethodRenameVisitor;
 import Ex1.RenameVisitors.FieldRenameVisitor;
-//import Ex1.SymbolTables.SymbolTableBuilder;
 import ast.*;
 
 
@@ -18,29 +15,28 @@ public class Rename {
     private String oldName;
     private String lineNumber;
     private String newName;
-    SearchInContext searchInContext;
+    private boolean isMethod;
+    private SearchInContext searchInContext;
 
     public Rename(Program prog, Boolean isMethod, String oldName, String lineNumber, String newName) {
-        //this.inheritanceTrees = new InheritanceTrees(prog);
-        //SymbolTableBuilder symbolTableBuilder = new SymbolTableBuilder();
-        //symbolTableBuilder.build(prog);
         this.prog = prog;
         this.oldName = oldName;
         this.lineNumber = lineNumber;
         this.newName = newName;
+        this.isMethod = isMethod;
         this.searchInContext = new SearchInContext(prog, isMethod, oldName, lineNumber);
 
-        doRename(prog, isMethod, oldName, lineNumber, newName);
+        doRename();
     }
 
-    private void doRename(Program prog, Boolean isMethod, String oldName, String lineNumber, String newName){
+    private void doRename(){
         if (isMethod) {
             RenameMethod();
         }
 
         else {
-            VariableIntroduction targetVarIntroduction = (VariableIntroduction) searchInContext.targetAstNode();
-            String varIntroductionType = GetVarIntroductionType(targetVarIntroduction, searchInContext);
+            VariableIntroduction targetVarIntro = (VariableIntroduction) searchInContext.targetAstNode();
+            String varIntroductionType = GetVarIntroductionType(targetVarIntro, searchInContext);
 
             if (varIntroductionType.equals("field")){
                 RenameField();

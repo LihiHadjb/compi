@@ -12,7 +12,7 @@ public class SymbolTableBuilder{
         }
     }
 
-    public void buildClassSymbolTable(ClassDecl classDecl) {
+    private void buildClassSymbolTable(ClassDecl classDecl) {
             SymbolTable curr = new SymbolTable(null, classDecl, "class");
             if (classDecl.fields() != null){
                 for (VarDecl field : classDecl.fields()) {
@@ -31,7 +31,7 @@ public class SymbolTableBuilder{
 
     }
 
-    public void buildMethodSymbolTable(SymbolTable parent, MethodDecl methodDecl) {
+    private void buildMethodSymbolTable(SymbolTable parent, MethodDecl methodDecl) {
         SymbolTable curr = new SymbolTable(parent, methodDecl, "method");
 
         if (methodDecl.formals() != null){
