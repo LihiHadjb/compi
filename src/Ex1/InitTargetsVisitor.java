@@ -9,13 +9,14 @@ public class InitTargetsVisitor implements Visitor {
     private ClassDecl lastClassSeen;
     private AstNode targetAstNode;
     private boolean isTargetField;
+    boolean isMethod;
 
-    public InitTargetsVisitor(String oldName, String lineNumber){
+    public InitTargetsVisitor(String oldName, String lineNumber, boolean isMethod){
         this.oldName = oldName;
         this.lineNumber = Integer.parseInt(lineNumber);
         this.targetAstNode = null;
         this.isTargetField = false;
-
+        this.isMethod = isMethod;
     }
 
     public MethodDecl lastMethodSeen(){
@@ -79,7 +80,7 @@ public class InitTargetsVisitor implements Visitor {
     @Override
     public void visit(MethodDecl methodDecl) {
         this.lastMethodSeen = methodDecl;
-        if( (methodDecl.name().equals(oldName)) && (methodDecl.lineNumber.equals(this.lineNumber)) ){
+        if(isMethod && (methodDecl.name().equals(oldName)) && (methodDecl.lineNumber.equals(this.lineNumber)) ){
             this.targetAstNode = methodDecl;
         }
 
@@ -100,14 +101,14 @@ public class InitTargetsVisitor implements Visitor {
 
     @Override
     public void visit(FormalArg formalArg) {
-        if((formalArg.name().equals(oldName)) && (formalArg.lineNumber.equals(this.lineNumber))){
+        if(!isMethod && (formalArg.name().equals(oldName)) && (formalArg.lineNumber.equals(this.lineNumber))){
             this.targetAstNode = formalArg;
         }
     }
 
     @Override
     public void visit(VarDecl varDecl) {
-        if((varDecl.name().equals(oldName)) && (varDecl.lineNumber.equals(this.lineNumber))){
+        if(!isMethod && (varDecl.name().equals(oldName)) && (varDecl.lineNumber.equals(this.lineNumber))){
             this.targetAstNode = varDecl;
         }
     }

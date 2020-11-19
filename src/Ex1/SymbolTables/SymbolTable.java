@@ -44,7 +44,7 @@ public class SymbolTable {
 //    }
 
     public boolean hasMethodWithName(String methodName){
-        return this.methods.containsKey(methodName);
+        return (this.methods.containsKey(methodName));
     }
 
     public boolean hasVariableWithName(String varName){

@@ -65,7 +65,7 @@ public class FieldRenameVisitor extends RenameVisitor {
         boolean isHidingVarExists = false;
 
         SymbolTable methodSymbolTable = searchInContext.astNodeToSymbolTable().get(methodDecl);
-        isHidingVarExists = !methodSymbolTable.hasVariableWithName(oldName);
+        isHidingVarExists = methodSymbolTable.hasVariableWithName(oldName);
 
 
         if (!isHidingVarExists){

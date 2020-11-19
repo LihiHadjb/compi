@@ -24,14 +24,12 @@ public class SearchInContext {
         SymbolTableBuilder symbolTableBuilder = new SymbolTableBuilder(astNodeToSymbolTable);
         symbolTableBuilder.build(prog);
         this.inheritanceTrees = new InheritanceTrees(prog);
-        InitTargetsVisitor initTargetsVisitor = new InitTargetsVisitor(oldName, lineNumber);
-        prog.accept(initTargetsVisitor);
-        initTargetAstNodes(prog, oldName, lineNumber);
+        initTargetAstNodes(prog, oldName, lineNumber, isMethod);
 
     }
 
-    private void initTargetAstNodes(Program prog, String oldName, String lineNumber){
-        InitTargetsVisitor initTargetsVisitor = new InitTargetsVisitor(oldName, lineNumber);
+    private void initTargetAstNodes(Program prog, String oldName, String lineNumber, boolean isMethod){
+        InitTargetsVisitor initTargetsVisitor = new InitTargetsVisitor(oldName, lineNumber, isMethod);
         prog.accept(initTargetsVisitor);
         this.targetAstNode = initTargetsVisitor.targetAstNode();
         this.targetAstNodeMethod = initTargetsVisitor.lastMethodSeen();
@@ -130,7 +128,7 @@ public class SearchInContext {
         SymbolTable curr = initialClassSymbolTable;
         SymbolTable parent = lookupParentSymbolTable(initialClassSymbolTable);
 
-        while(parent != null && parent.hasMethodWithName(methodName)){
+        while(parent != null && hasMethodOrInheritedWithName(methodName, parent)){
             curr = parent;
             parent = lookupParentSymbolTable(curr);
         }
@@ -174,6 +172,19 @@ public class SearchInContext {
     public HashMap<AstNode, SymbolTable> astNodeToSymbolTable(){ return this.astNodeToSymbolTable; }
 
     public boolean isTargetField(){ return this.isTargetField; }
+
+    public boolean hasMethodOrInheritedWithName(String methodName, SymbolTable classSymbolTable){
+        if (classSymbolTable.hasMethodWithName(methodName)){
+            return true;
+        }
+
+        SymbolTable parentClassSymbolTable = lookupParentSymbolTable(classSymbolTable);
+        if (parentClassSymbolTable != null){
+            return hasMethodOrInheritedWithName(methodName, parentClassSymbolTable);
+        }
+
+        return false;
+    }
 
 
 }
