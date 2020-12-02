@@ -35,9 +35,9 @@ public class SymbolTable {
 //        return this.type;
 //    }
 
-//    public HashMap<String, MethodEntry> methods(){
-//        return this.methods;
-//    }
+    public HashMap<String, MethodEntry> methods(){
+        return this.methods;
+    }
 //
 //    public HashMap<String, VarEntry> variables(){
 //        return this.variables;

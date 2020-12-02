@@ -4,9 +4,11 @@ import Ex1.Inheritance.InheritanceNode;
 import Ex1.Inheritance.InheritanceTrees;
 import Ex1.SymbolTables.SymbolTable;
 import Ex1.SymbolTables.SymbolTableBuilder;
+import Ex2.Vtable;
 import ast.*;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class SearchInContext {
@@ -18,12 +20,19 @@ public class SearchInContext {
     private boolean isTargetField;
 
     //____________________COMMON_______________________________________
-
-    public SearchInContext(Program prog, boolean isMethod, String oldName, String lineNumber){
+    public SearchInContext(Program prog){
         this.astNodeToSymbolTable = new HashMap<>();
         SymbolTableBuilder symbolTableBuilder = new SymbolTableBuilder(astNodeToSymbolTable);
         symbolTableBuilder.build(prog);
         this.inheritanceTrees = new InheritanceTrees(prog);
+
+    }
+
+    public SearchInContext(Program prog, boolean isMethod, String oldName, String lineNumber){
+        this(prog);
+        InitTargetsVisitor initTargetsVisitor = new InitTargetsVisitor(oldName, lineNumber);
+        prog.accept(initTargetsVisitor);
+        initTargetAstNodes(prog, oldName, lineNumber);
         initTargetAstNodes(prog, oldName, lineNumber, isMethod);
 
     }
@@ -38,7 +47,7 @@ public class SearchInContext {
     }
 
     //Assumes symbolTable is of type "class"!!!
-    private SymbolTable lookupSuperSymbolTable(SymbolTable symbolTable){
+    public SymbolTable lookupSuperSymbolTable(SymbolTable symbolTable){
         InheritanceNode currInheritanceNode = classSymbolTable2InheritanceNode(symbolTable);
         InheritanceNode parentInheritanceNode = currInheritanceNode.parent();
         SymbolTable parentSymbolTable = null;
@@ -49,7 +58,7 @@ public class SearchInContext {
     }
 
     //find the parent of a **general** symbolTable
-    private SymbolTable lookupParentSymbolTable(SymbolTable currSymbolTable) {
+    public SymbolTable lookupParentSymbolTable(SymbolTable currSymbolTable) {
         // Method case
         if(currSymbolTable.isMethodSymbolTable()){
             return currSymbolTable.parent();
@@ -62,19 +71,19 @@ public class SearchInContext {
     }
 
     //Assumes symbolTable is of type "class"!!!
-    private InheritanceNode classSymbolTable2InheritanceNode(SymbolTable symbolTable){
+    public InheritanceNode classSymbolTable2InheritanceNode(SymbolTable symbolTable){
         ClassDecl correspondingClassAstNode = (ClassDecl)symbolTable.astNodeInProgram();
         return inheritanceTrees.classAstNode2InheritanceNode(correspondingClassAstNode);
     }
 
-    private SymbolTable inheritanceNode2ClassSymbolTable(InheritanceNode inheritanceNode){
+    public SymbolTable inheritanceNode2ClassSymbolTable(InheritanceNode inheritanceNode){
         AstNode classAstNode = inheritanceNode.astNode();
         SymbolTable classSymbolTable =  this.astNodeToSymbolTable.get(classAstNode);
         return classSymbolTable;
 
     }
 
-    private ClassDecl classSymbolTable2ClassDecl(SymbolTable symbolTable){
+    public ClassDecl classSymbolTable2ClassDecl(SymbolTable symbolTable){
         return (ClassDecl)symbolTable.astNodeInProgram();
     }
 
@@ -173,6 +182,10 @@ public class SearchInContext {
 
     public boolean isTargetField(){ return this.isTargetField; }
 
+    public InheritanceTrees inheritanceTrees(){
+        return this.inheritanceTrees;
+    }
+
     public boolean hasMethodOrInheritedWithName(String methodName, SymbolTable classSymbolTable){
         if (classSymbolTable.hasMethodWithName(methodName)){
             return true;
@@ -186,5 +199,7 @@ public class SearchInContext {
         return false;
     }
 
-
 }
+
+
+

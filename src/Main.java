@@ -1,4 +1,5 @@
 import Ex1.Rename;
+import Ex2.CodeGenerator;
 import ast.*;
 
 import java.io.*;
@@ -37,7 +38,9 @@ public class Main {
                     throw new UnsupportedOperationException("TODO - Ex. 3");
 
                 } else if (action.equals("compile")) {
-                    throw new UnsupportedOperationException("TODO - Ex. 2");
+                    CodeGenerator codeGenerator = new CodeGenerator(prog, outfilename);
+                    codeGenerator.generate();
+                    //throw new UnsupportedOperationException("TODO - Ex. 2");
 
                 } else if (action.equals("rename")) {
                     var type = args[2];

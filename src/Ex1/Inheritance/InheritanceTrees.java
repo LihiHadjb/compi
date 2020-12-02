@@ -65,6 +65,10 @@ public class InheritanceTrees {
         return classesToCheck;
     }
 
+    public HashMap<String, InheritanceNode> roots(){
+        return this.roots;
+    }
+
 
 
 //
