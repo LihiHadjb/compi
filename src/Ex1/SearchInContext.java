@@ -30,7 +30,7 @@ public class SearchInContext {
 
     public SearchInContext(Program prog, boolean isMethod, String oldName, String lineNumber){
         this(prog);
-        InitTargetsVisitor initTargetsVisitor = new InitTargetsVisitor(oldName, lineNumber);
+        InitTargetsVisitor initTargetsVisitor = new InitTargetsVisitor(oldName, lineNumber, isMethod);
         prog.accept(initTargetsVisitor);
         initTargetAstNodes(prog, oldName, lineNumber, isMethod);
 
