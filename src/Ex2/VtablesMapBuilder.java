@@ -14,7 +14,7 @@ public class VtablesMapBuilder {
     }
 
 
-    public HashMap<String, Vtable> createVtables(){
+    public HashMap<String, Vtable> build(){
         HashMap<String, Vtable> result = new HashMap();
         for(Map.Entry<String, InheritanceNode> entry: searchInContext.inheritanceTrees().roots().entrySet()){
             HashMap<String, Vtable> rootResult = new HashMap();
