@@ -40,7 +40,6 @@ public class Main {
                 } else if (action.equals("compile")) {
                     CodeGenerator codeGenerator = new CodeGenerator(prog, outfilename);
                     codeGenerator.generate();
-                    //throw new UnsupportedOperationException("TODO - Ex. 2");
 
                 } else if (action.equals("rename")) {
                     var type = args[2];
@@ -59,7 +58,6 @@ public class Main {
                     Rename rename = new Rename(prog, isMethod, originalName, originalLine, newName);
                     AstXMLSerializer xmlSerializer = new AstXMLSerializer();
                     xmlSerializer.serialize(prog, outfilename);
-                    //throw new UnsupportedOperationException("TODO - Ex. 1");
 
                 } else {
                     throw new IllegalArgumentException("unknown command line action " + action);
