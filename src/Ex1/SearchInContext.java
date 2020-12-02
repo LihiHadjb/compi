@@ -32,7 +32,6 @@ public class SearchInContext {
         this(prog);
         InitTargetsVisitor initTargetsVisitor = new InitTargetsVisitor(oldName, lineNumber);
         prog.accept(initTargetsVisitor);
-        initTargetAstNodes(prog, oldName, lineNumber);
         initTargetAstNodes(prog, oldName, lineNumber, isMethod);
 
     }
