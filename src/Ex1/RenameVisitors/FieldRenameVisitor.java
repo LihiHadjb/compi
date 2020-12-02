@@ -201,7 +201,7 @@ public class FieldRenameVisitor extends RenameVisitor {
     }
 
     @Override
-    public void visit(IdentifierExpr e) { //TODO: VERIFY!!!
+    public void visit(IdentifierExpr e) {
         if (e.id().equals(oldName)){
            e.setId(newName);
         }

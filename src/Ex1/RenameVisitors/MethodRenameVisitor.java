@@ -192,7 +192,7 @@ public class MethodRenameVisitor extends RenameVisitor {
 
     @Override
     public void visit(ThisExpr e) {
-        String type = searchInContext.lookupClassNameOfMethod(lastMethodSeen); // TODO: verify Tslil
+        String type = searchInContext.lookupClassNameOfMethod(lastMethodSeen);
         isLastOwnerInClassesToCheck = classesToCheck.contains(type);
     }
 
