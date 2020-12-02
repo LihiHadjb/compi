@@ -8,9 +8,6 @@ package Ex1.tests;
 
 class E{
     int field1;
-    public int foo(int a){
-        return a+a;
-    }
 
 }
 
@@ -22,12 +19,16 @@ class A extends E{
 }
 
 class F extends E{
-
+    public int foo(int a){
+        return a+a;
+    }
 
 }
 
 class B extends A{
-
+    public int foo(int a){
+        return a+a;
+    }
 
 }
 
