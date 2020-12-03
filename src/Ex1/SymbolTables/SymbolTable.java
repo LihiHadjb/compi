@@ -38,10 +38,10 @@ public class SymbolTable {
     public HashMap<String, MethodEntry> methods(){
         return this.methods;
     }
-//
-//    public HashMap<String, VarEntry> variables(){
-//        return this.variables;
-//    }
+
+    public HashMap<String, VarEntry> variables(){
+        return this.variables;
+    }
 
     public boolean hasMethodWithName(String methodName){
         return (this.methods.containsKey(methodName));

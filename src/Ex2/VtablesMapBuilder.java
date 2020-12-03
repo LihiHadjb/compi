@@ -36,17 +36,29 @@ public class VtablesMapBuilder {
         Vtable result;
         if(parentVtable == null){
             result = new Vtable();
+
         }
         else{
             result = parentVtable.clone();
         }
-        updateVtable(searchInContext.inheritanceNode2ClassSymbolTable(inheritanceNode), result, inheritanceNode.name());
+        updateImplementingClasses(searchInContext.inheritanceNode2ClassSymbolTable(inheritanceNode), result, inheritanceNode.name());
+        updateIndex(searchInContext.inheritanceNode2ClassSymbolTable(inheritanceNode), result, parentVtable);
         return result;
     }
 
-    public void updateVtable(SymbolTable symbolTable, Vtable vtable, String className){
+    public void updateImplementingClasses(SymbolTable symbolTable, Vtable vtable, String className){
         for(String methodName : symbolTable.methods().keySet()){
             vtable.setImplementingClassName(methodName, className);
         }
     }
+
+    public void updateIndex(SymbolTable symbolTable, Vtable vtable, Vtable parentVtable){
+        for(String methodName : symbolTable.methods().keySet()){
+            if(parentVtable.getImplementingClassName(methodName) == null){
+                vtable.setLast_index(vtable.getLast_index() + 1);
+                vtable.setIndex(methodName, vtable.getLast_index());
+            }
+        }
+    }
+
 }
