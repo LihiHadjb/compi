@@ -151,13 +151,15 @@
         <classdecl>
             <name>C</name>
             <superName>A</superName>
-            <field>
-                <lineNumber>41</lineNumber>
-                <type>
-                    <int/>
-                </type>
-                <name>field4</name>
-            </field>
+            <fields>
+                <field>
+                    <lineNumber>41</lineNumber>
+                    <type>
+                        <int/>
+                    </type>
+                    <name>field4</name>
+                </field>
+            </fields>
             <methoddecls>
                 <methoddecl>
                     <lineNumber>45</lineNumber>

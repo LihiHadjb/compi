@@ -54,10 +54,10 @@ public class VtablesMapBuilder {
 
     public void updateIndex(SymbolTable symbolTable, Vtable vtable, Vtable parentVtable){
         for(String methodName : symbolTable.methods().keySet()){
-            if(parentVtable.getImplementingClassName(methodName) == null){
-                vtable.setLast_index(vtable.getLast_index() + 1);
-                vtable.setIndex(methodName, vtable.getLast_index());
-            }
+                if(parentVtable == null || parentVtable.getImplementingClassName(methodName) == null){
+                    vtable.setLast_index(vtable.getLast_index() + 1);
+                    vtable.setIndex(methodName, vtable.getLast_index());
+                }
         }
     }
 
