@@ -277,4 +277,73 @@ public class VtablesTest {
         Assert.assertEquals(0, class2vtable.entrySet().size());
 
     }
+
+    @Test
+    public void forClassesToCheck_methodIndices(){
+        String filePath = "/home/pc/IdeaProjects/compi/examples/ex1/testExamples/forClassesToCheck_methodIndices.java.xml";
+        prog = xmlSerializer.deserialize(new File(filePath));
+        SearchInContext searchInContext = new SearchInContext(this.prog);
+        VtablesMapBuilder vtablesMapBuilder = new VtablesMapBuilder(searchInContext);
+        HashMap<String, Vtable> class2vtable = vtablesMapBuilder.build();
+
+        Vtable A_vtable = class2vtable.get("A");
+        Vtable B_vtable = class2vtable.get("B");
+        Vtable C_vtable = class2vtable.get("C");
+        Vtable D_vtable = class2vtable.get("D");
+        Vtable E_vtable = class2vtable.get("E");
+        Vtable F_vtable = class2vtable.get("F");
+
+        //A
+        Assert.assertEquals((Integer)0, A_vtable.getIndex("foo"));
+        Assert.assertEquals((Integer)1, A_vtable.getIndex("foo2"));
+        Assert.assertEquals("A", A_vtable.getImplementingClassName("foo"));
+        Assert.assertEquals("A", A_vtable.getImplementingClassName("foo2"));
+
+
+        //B
+        Assert.assertEquals((Integer)0, B_vtable.getIndex("foo"));
+        Assert.assertEquals((Integer)1, B_vtable.getIndex("foo2"));
+        Assert.assertEquals("B", B_vtable.getImplementingClassName("foo"));
+        Assert.assertEquals("A", B_vtable.getImplementingClassName("foo2"));
+
+        //C
+        Assert.assertEquals((Integer)0, C_vtable.getIndex("foo"));
+        Assert.assertEquals((Integer)1, C_vtable.getIndex("foo2"));
+        Assert.assertEquals((Integer)2, C_vtable.getIndex("foo3"));
+        Assert.assertEquals("C", C_vtable.getImplementingClassName("foo"));
+        Assert.assertEquals("A", C_vtable.getImplementingClassName("foo2"));
+        Assert.assertEquals("C", C_vtable.getImplementingClassName("foo3"));
+
+        //D
+        Assert.assertEquals((Integer)0, D_vtable.getIndex("foo"));
+        Assert.assertEquals((Integer)1, D_vtable.getIndex("foo2"));
+        Assert.assertEquals((Integer)2, D_vtable.getIndex("foo4"));
+        Assert.assertNull(D_vtable.getIndex("foo3"));
+        Assert.assertEquals("B", D_vtable.getImplementingClassName("foo"));
+        Assert.assertEquals("A", D_vtable.getImplementingClassName("foo2"));
+        Assert.assertEquals("D", D_vtable.getImplementingClassName("foo4"));
+
+        //E
+        Assert.assertNull(E_vtable.getIndex("foo"));
+        Assert.assertNull(E_vtable.getIndex("foo1"));
+        Assert.assertNull(E_vtable.getIndex("foo2"));
+        Assert.assertNull(E_vtable.getIndex("foo3"));
+        Assert.assertNull(E_vtable.getIndex("foo4"));
+
+        //F
+        Assert.assertEquals((Integer)0, F_vtable.getIndex("foo"));
+        Assert.assertEquals("F", F_vtable.getImplementingClassName("foo"));
+
+
+
+
+
+
+
+
+
+
+
+
+    }
 }

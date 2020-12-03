@@ -3,13 +3,17 @@ package Ex2;
 import Ex1.Inheritance.InheritanceNode;
 import Ex1.SearchInContext;
 import Ex1.SymbolTables.SymbolTable;
+import ast.AstType;
+import ast.BoolAstType;
+import ast.IntArrayAstType;
+import ast.IntAstType;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class FieldOffsetsBuilder {
+public class FieldOffsetsMapBuilder {
     SearchInContext searchInContext;
-    public FieldOffsetsBuilder(SearchInContext searchInContext){
+    public FieldOffsetsMapBuilder(SearchInContext searchInContext){
         this.searchInContext = searchInContext;
     }
 
@@ -46,9 +50,24 @@ public class FieldOffsetsBuilder {
     }
 
     public void updateIndex(SymbolTable symbolTable, FieldOffsets fieldOffsets){
+        int size;
         for(String fieldName : symbolTable.variables().keySet()){
-            fieldOffsets.setLast_index(fieldOffsets.getLast_index() + 1);
+            AstType astType = symbolTable.getVariableAstTypeOfName(fieldName);
+            if(astType instanceof IntAstType){
+                size = fieldOffsets.INT_SIZE;
+            }
+            else if(astType instanceof BoolAstType){
+                size = fieldOffsets.BOOLEAN_SIZE;
+            }
+            else if(astType instanceof IntArrayAstType){
+                size = fieldOffsets.PTR_SIZE;
+            }
+            else{
+                size = fieldOffsets.PTR_SIZE;
+            }
+
             fieldOffsets.setIndex(fieldName, fieldOffsets.getLast_index());
+            fieldOffsets.setLast_index(fieldOffsets.getLast_index() + size);
         }
     }
 }

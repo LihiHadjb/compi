@@ -3,12 +3,18 @@ package Ex2;
 import java.util.HashMap;
 
 public class FieldOffsets {
+
     HashMap<String, Integer> fieldName2Index;
     int last_index;
 
+    int PTR_SIZE = 8;
+    int INT_SIZE= 4;
+    int BOOLEAN_SIZE = 1;
+
+
     public FieldOffsets(){
         this.fieldName2Index = new HashMap<>();
-        this.last_index = -1;
+        this.last_index = 8;
     }
 
     public HashMap<String, Integer> getFieldName2Index() {

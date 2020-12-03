@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<program>
+    <classdecls>
+        <classdecl>
+            <name>E</name>
+            <fields>
+                <field>
+                    <lineNumber>5</lineNumber>
+                    <type>
+                        <int/>
+                    </type>
+                    <name>field1</name>
+                </field>
+            </fields>
+            <methoddecls/>
+        </classdecl>
+        <classdecl>
+            <name>A</name>
+            <superName>E</superName>
+            <fields>
+                <field>
+                    <lineNumber>10</lineNumber>
+                    <type>
+                        <int/>
+                    </type>
+                    <name>field2</name>
+                </field>
+            </fields>
+            <methoddecls>
+                <methoddecl>
+                    <lineNumber>15</lineNumber>
+                    <returnType>
+                        <int/>
+                    </returnType>
+                    <name>foo</name>
+                    <formals>
+                        <formal>
+                            <lineNumber>20</lineNumber>
+                            <type>
+<int/>
+                            </type>
+                            <name>a</name>
+                        </formal>
+                    </formals>
+                    <vardecls/>
+                    <body/>
+                    <ret>
+                        <add>
+                            <e1>
+<ref-id>
+    <id>a</id>
+</ref-id>
+                            </e1>
+                            <e2>
+<ref-id>
+    <id>a</id>
+</ref-id>
+                            </e2>
+                        </add>
+                    </ret>
+                </methoddecl>
+                <methoddecl>
+                    <lineNumber>16</lineNumber>
+                    <returnType>
+                        <int/>
+                    </returnType>
+                    <name>foo2</name>
+                    <formals>
+                        <formal>
+                            <lineNumber>17</lineNumber>
+                            <type>
+                                <int/>
+                            </type>
+                            <name>a</name>
+                        </formal>
+                    </formals>
+                    <vardecls/>
+                    <body/>
+                    <ret>
+                        <add>
+                            <e1>
+                                <ref-id>
+                                    <id>a</id>
+                                </ref-id>
+                            </e1>
+                            <e2>
+                                <ref-id>
+                                    <id>a</id>
+                                </ref-id>
+                            </e2>
+                        </add>
+                    </ret>
+                </methoddecl>
+            </methoddecls>
+        </classdecl>
+        <classdecl>
+            <name>F</name>
+            <superName>E</superName>
+            <fields/>
+            <methoddecls>
+                <methoddecl>
+                    <lineNumber>25</lineNumber>
+                    <returnType>
+                        <int/>
+                    </returnType>
+                    <name>foo</name>
+                    <formals>
+                        <formal>
+                            <lineNumber>30</lineNumber>
+                            <type>
+<int/>
+                            </type>
+                            <name>a</name>
+                        </formal>
+                    </formals>
+                    <vardecls/>
+                    <body/>
+                    <ret>
+                        <add>
+                            <e1>
+<ref-id>
+    <id>a</id>
+</ref-id>
+                            </e1>
+                            <e2>
+<ref-id>
+    <id>a</id>
+</ref-id>
+                            </e2>
+                        </add>
+                    </ret>
+                </methoddecl>
+            </methoddecls>
+        </classdecl>
+        <classdecl>
+            <name>B</name>
+            <superName>A</superName>
+            <fields/>
+            <methoddecls>
+                <methoddecl>
+                    <lineNumber>35</lineNumber>
+                    <returnType>
+                        <int/>
+                    </returnType>
+                    <name>foo</name>
+                    <formals>
+                        <formal>
+                            <lineNumber>40</lineNumber>
+                            <type>
+<int/>
+                            </type>
+                            <name>a</name>
+                        </formal>
+                    </formals>
+                    <vardecls/>
+                    <body/>
+                    <ret>
+                        <add>
+                            <e1>
+<ref-id>
+    <id>a</id>
+</ref-id>
+                            </e1>
+                            <e2>
+<ref-id>
+    <id>a</id>
+</ref-id>
+                            </e2>
+                        </add>
+                    </ret>
+                </methoddecl>
+            </methoddecls>
+        </classdecl>
+        <classdecl>
+            <name>C</name>
+            <superName>A</superName>
+            <fields/>
+            <methoddecls>
+                <methoddecl>
+                    <lineNumber>45</lineNumber>
+                    <returnType>
+                        <int/>
+                    </returnType>
+                    <name>foo</name>
+                    <formals>
+                        <formal>
+                            <lineNumber>50</lineNumber>
+                            <type>
+<int/>
+                            </type>
+                            <name>a</name>
+                        </formal>
+                    </formals>
+                    <vardecls/>
+                    <body/>
+                    <ret>
+                        <add>
+                            <e1>
+<ref-id>
+    <id>a</id>
+</ref-id>
+                            </e1>
+                            <e2>
+<ref-id>
+    <id>a</id>
+</ref-id>
+                            </e2>
+                        </add>
+                    </ret>
+                </methoddecl>
+                <methoddecl>
+                    <lineNumber>51</lineNumber>
+                    <returnType>
+                        <int/>
+                    </returnType>
+                    <name>foo3</name>
+                    <formals>
+                        <formal>
+                            <lineNumber>52</lineNumber>
+                            <type>
+                                <int/>
+                            </type>
+                            <name>a</name>
+                        </formal>
+                    </formals>
+                    <vardecls/>
+                    <body/>
+                    <ret>
+                        <add>
+                            <e1>
+                                <ref-id>
+                                    <id>a</id>
+                                </ref-id>
+                            </e1>
+                            <e2>
+                                <ref-id>
+                                    <id>a</id>
+                                </ref-id>
+                            </e2>
+                        </add>
+                    </ret>
+                </methoddecl>
+            </methoddecls>
+        </classdecl>
+        <classdecl>
+            <name>D</name>
+            <superName>B</superName>
+            <fields/>
+            <methoddecls>
+                <methoddecl>
+                    <lineNumber>55</lineNumber>
+                    <returnType>
+                        <int/>
+                    </returnType>
+                    <name>foo4</name>
+                    <formals>
+                        <formal>
+                            <lineNumber>60</lineNumber>
+                            <type>
+<int/>
+                            </type>
+                            <name>a</name>
+                        </formal>
+                    </formals>
+                    <vardecls/>
+                    <body/>
+                    <ret>
+                        <add>
+                            <e1>
+<ref-id>
+    <id>a</id>
+</ref-id>
+                            </e1>
+                            <e2>
+<ref-id>
+    <id>a</id>
+</ref-id>
+                            </e2>
+                        </add>
+                    </ret>
+                </methoddecl>
+            </methoddecls>
+        </classdecl>
+    </classdecls>
+</program>
