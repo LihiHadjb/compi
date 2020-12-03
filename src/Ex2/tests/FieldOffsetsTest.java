@@ -3,6 +3,8 @@ package Ex2.tests;
 import Ex1.SearchInContext;
 import Ex2.FieldOffsets;
 import Ex2.FieldOffsetsMapBuilder;
+import Ex2.Vtable;
+import Ex2.VtablesMapBuilder;
 import ast.AstXMLSerializer;
 import ast.Program;
 import org.junit.Assert;
@@ -74,19 +76,17 @@ public class FieldOffsetsTest {
         Assert.assertEquals((Integer)12, F_fieldOffsets.getIndex("field3"));
         Assert.assertNull(F_fieldOffsets.getIndex("field2"));
         Assert.assertEquals(13, F_fieldOffsets.getLast_index());
+    }
 
+    @Test
+    public void onlyMain(){
+        String filePath = "/home/pc/IdeaProjects/compi/examples/ex1/testExamples/onlyMain.java.xml";
+        prog = xmlSerializer.deserialize(new File(filePath));
+        SearchInContext searchInContext = new SearchInContext(this.prog);
+        FieldOffsetsMapBuilder fieldOffsetsMapBuilder = new FieldOffsetsMapBuilder(searchInContext);
+        HashMap<String, FieldOffsets> class2fieldOffsets = fieldOffsetsMapBuilder.build();
 
-
-
-
-
-
-
-
-
-
-
-
+        Assert.assertEquals(0, class2fieldOffsets.entrySet().size());
 
     }
 }
