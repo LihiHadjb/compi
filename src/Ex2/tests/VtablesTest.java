@@ -9,7 +9,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 //import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+//import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -118,7 +118,7 @@ public class VtablesTest {
 
     @Test
     public void forClassesToCheck_EhasFooBDFDont() {
-        String filePath = "/home/pc/IdeaProjects/compi/examples/ex1/testExamples/forClassesToCheck_EhasFooBDFFDont.java.xml";
+        String filePath = "/home/pc/IdeaProjects/compi/examples/ex1/testExamples/forClassesToCheck_EhasFooBDFDont.java.xml";
         prog = xmlSerializer.deserialize(new File(filePath));
         SearchInContext searchInContext = new SearchInContext(this.prog);
         VtablesMapBuilder vtablesMapBuilder = new VtablesMapBuilder(searchInContext);
@@ -164,7 +164,7 @@ public class VtablesTest {
 
     @Test
     public void forClassesToCheck_FdoesntHaveFoo() {
-        String filePath = "/home/pc/IdeaProjects/compi/examples/ex1/testExamples/forClassesToCheck_EhasFooFAndBFDont.java.xml";
+        String filePath = "/home/pc/IdeaProjects/compi/examples/ex1/testExamples/forClassesToCheck_FDoesntHaveFoo.java.xml";
         prog = xmlSerializer.deserialize(new File(filePath));
         SearchInContext searchInContext = new SearchInContext(this.prog);
         VtablesMapBuilder vtablesMapBuilder = new VtablesMapBuilder(searchInContext);
@@ -210,7 +210,7 @@ public class VtablesTest {
 
     @Test
     public void forClassesToCheck_2roots() {
-        String filePath = "/home/pc/IdeaProjects/compi/examples/ex1/testExamples/forClassesToCheck.java.xml";
+        String filePath = "/home/pc/IdeaProjects/compi/examples/ex1/testExamples/forClassesToCheck_2roots.java.xml";
         prog = xmlSerializer.deserialize(new File(filePath));
         SearchInContext searchInContext = new SearchInContext(this.prog);
         VtablesMapBuilder vtablesMapBuilder = new VtablesMapBuilder(searchInContext);
@@ -227,6 +227,7 @@ public class VtablesTest {
         classNames.add("H");
 
         for(String className : classNames){
+            System.out.println(className);
             Assert.assertNotNull(class2vtable.get(className));
         }
 
@@ -257,11 +258,11 @@ public class VtablesTest {
 
         //G
         Vtable G_vtable = class2vtable.get("G");
-        Assert.assertEquals("G", F_vtable.getImplementingClassName("foo"));
+        Assert.assertEquals("G", G_vtable.getImplementingClassName("foo"));
 
         //H
         Vtable H_vtable = class2vtable.get("H");
-        Assert.assertEquals("G", F_vtable.getImplementingClassName("foo"));
+        Assert.assertEquals("G", H_vtable.getImplementingClassName("foo"));
 
     }
 

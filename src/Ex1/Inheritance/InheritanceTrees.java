@@ -15,18 +15,20 @@ public class InheritanceTrees {
         InheritanceNode currNode;
         this.roots = new HashMap<>();
         this.flatClasses = new HashMap<>();
-        for (ClassDecl classdecl : prog.classDecls()){
-            if (classdecl.superName() == null){
-                currNode = new InheritanceNode(null, classdecl);
-                roots.put(classdecl.name(), currNode);
-            }
+        if (prog.classDecls() != null){
+            for (ClassDecl classdecl : prog.classDecls()){
+                if (classdecl.superName() == null){
+                    currNode = new InheritanceNode(null, classdecl);
+                    roots.put(classdecl.name(), currNode);
+                }
 
-            else{
-                InheritanceNode parent = flatClasses.get(classdecl.superName());
-                currNode = new InheritanceNode(parent, classdecl);
-                parent.addToChildren(currNode);
+                else{
+                    InheritanceNode parent = flatClasses.get(classdecl.superName());
+                    currNode = new InheritanceNode(parent, classdecl);
+                    parent.addToChildren(currNode);
+                }
+                flatClasses.put(classdecl.name(), currNode);
             }
-            flatClasses.put(classdecl.name(), currNode);
         }
     }
 
