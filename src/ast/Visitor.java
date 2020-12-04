@@ -3,7 +3,7 @@ package ast;
 import java.io.IOException;
 
 public interface Visitor {
-    public void visit(Program program) throws IOException;
+    public void visit(Program program);
     public void visit(ClassDecl classDecl);
     public void visit(MainClass mainClass);
     public void visit(MethodDecl methodDecl);

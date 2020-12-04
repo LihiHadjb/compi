@@ -3,6 +3,7 @@ package Ex2;
 import Ex1.Inheritance.InheritanceNode;
 import Ex1.SearchInContext;
 import Ex1.SymbolTables.SymbolTable;
+import ast.MethodDecl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,12 +44,20 @@ public class VtablesMapBuilder {
         }
         updateImplementingClasses(searchInContext.inheritanceNode2ClassSymbolTable(inheritanceNode), result, inheritanceNode.name());
         updateIndex(searchInContext.inheritanceNode2ClassSymbolTable(inheritanceNode), result, parentVtable);
+        updateMethodDecls(searchInContext.inheritanceNode2ClassSymbolTable(inheritanceNode), result);
         return result;
     }
 
     public void updateImplementingClasses(SymbolTable symbolTable, Vtable vtable, String className){
         for(String methodName : symbolTable.methods().keySet()){
             vtable.setImplementingClassName(methodName, className);
+        }
+    }
+
+    public void updateMethodDecls(SymbolTable symbolTable, Vtable vtable){
+        for(String methodName : symbolTable.methods().keySet()){
+            MethodDecl methodDecl = symbolTable.methods().get(methodName).getMethodDecl();
+            vtable.setMethodDecl(methodName, methodDecl);
         }
     }
 

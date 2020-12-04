@@ -26,7 +26,7 @@ public class SymbolTable {
     }
 
     public void addMethodEntry(MethodDecl methodDecl){
-        MethodEntry entry = new MethodEntry();
+        MethodEntry entry = new MethodEntry(methodDecl);
         String name = methodDecl.name();
         this.methods.put(name, entry);
     }

@@ -43,7 +43,7 @@ public class writeVtableTest {
         prog = xmlSerializer.deserialize(new File(filePath));
 
         CodeGenerator codeGenerator = new CodeGenerator(prog, "");
-        FileWriter fileWriter = codeGenerator.createOutFile(outName);
+        FileWriter fileWriter = codeGenerator.createOutFile("/home/pc/IdeaProjects/compi/examples/ex1/testExamples/" + outName);
 
         SearchInContext searchInContext = new SearchInContext(this.prog);
         VtablesMapBuilder vtablesMapBuilder = new VtablesMapBuilder(searchInContext);
@@ -53,11 +53,11 @@ public class writeVtableTest {
 
         CodeGenerationVisitor codeGenerationVisitor = new CodeGenerationVisitor(fileWriter, class2vtable, class2FieldOffsets);
         codeGenerationVisitor.writeVtable(prog.classDecls().get(index));
+        fileWriter.close();
 
-        String actual = stringFromFile(outName);
-        String expected = stringFromFile(expectedName);
+        String actual = stringFromFile("/home/pc/IdeaProjects/compi/examples/ex1/testExamples/" + outName + ".ll");
+        String expected = stringFromFile("/home/pc/IdeaProjects/compi/examples/ex1/testExamples/" + expectedName + ".ll");
         Assert.assertEquals(expected, actual);
-
     }
 
     @Test
@@ -65,6 +65,5 @@ public class writeVtableTest {
         test_vtable("Classes_out", "Classes_out_expected", 0);
         test_vtable("Base_out", "Base_out_expected", 1);
         test_vtable("Derived_out", "Derived_out_expected", 2);
-
     }
 }

@@ -1,0 +1,3 @@
+@.Classes_vtable = global [1 x i8*] [
+	i8* bitcast (i32 (i8*)* @Classes.run to i8*)
+]

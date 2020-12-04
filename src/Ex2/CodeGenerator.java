@@ -25,8 +25,8 @@ public class CodeGenerator {
 
     public FileWriter createOutFile(String outFileName){
         try {
-            File outFile = new File(outFileName);
-            FileWriter fileWriter = new FileWriter(outFileName);
+            File outFile = new File(outFileName + ".ll");
+            FileWriter fileWriter = new FileWriter(outFileName + ".ll");
             return fileWriter;
 //            if (outFile.createNewFile()) {
 //                System.out.println("File created: " + myObj.getName());

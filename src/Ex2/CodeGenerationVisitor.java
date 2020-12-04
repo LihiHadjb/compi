@@ -33,7 +33,7 @@ public class CodeGenerationVisitor implements Visitor {
 
     public void writeToFile(String text) throws IOException {
         this.fileWriter.write(text);
-        this.fileWriter.close();
+//        this.fileWriter.close();
 
     }
 
@@ -88,43 +88,42 @@ public class CodeGenerationVisitor implements Visitor {
         return size;
     }
 
-    public HashMap<String, String> createMethodName2ReturnString(ClassDecl classDecl){
+    public HashMap<String, String> createMethodName2ReturnString(Vtable classVtable){
         HashMap<String, String> result = new HashMap<>();
-        if(classDecl.methoddecls() != null) {
-            for (MethodDecl methodDecl : classDecl.methoddecls()) {
-                result.put(methodDecl.name(), getSizeString(methodDecl.returnType()));
-            }
+
+        for(Map.Entry<String, MethodDecl> entry : classVtable.getMethodName2MethodDecl().entrySet()){
+            MethodDecl methodDecl = entry.getValue();
+            result.put(methodDecl.name(), getSizeString(methodDecl.returnType()));
         }
         return result;
-
     }
 
 
-    public HashMap<String, String> createMethodName2FormalsString(ClassDecl classDecl){
+    public HashMap<String, String> createMethodName2FormalsString(Vtable classVtable){
         HashMap<String, String> result = new HashMap<>();
-        if(classDecl.methoddecls() != null){
-            for(MethodDecl methodDecl : classDecl.methoddecls()){
-                StringBuilder methodFormalsString = new StringBuilder();
-                methodFormalsString.append("(" + PTR_SIZE);
-                if(methodDecl.formals() != null){
-                    for(FormalArg formalArg : methodDecl.formals()){
-                        methodFormalsString.append(", " + getFormalString(formalArg));
-                    }
+        for(Map.Entry<String, MethodDecl> entry : classVtable.getMethodName2MethodDecl().entrySet()){
+            StringBuilder methodFormalsString = new StringBuilder();
+            methodFormalsString.append("(" + PTR_SIZE);
+            MethodDecl methodDecl = entry.getValue();
+            if(methodDecl.formals() != null){
+                for(FormalArg formalArg : methodDecl.formals()){
+                    methodFormalsString.append(", " + getFormalString(formalArg));
                 }
-                methodFormalsString.append(")");
-                result.put(methodDecl.name(), methodFormalsString.toString());
             }
+            methodFormalsString.append(")*");
+            result.put(methodDecl.name(), methodFormalsString.toString());
         }
         return result;
     }
 
     public void writeVtable(ClassDecl classDecl) throws IOException {
-        String intro = "@." + classDecl.name() + "_vtable = global [" + classDecl.methoddecls().size() + "x i8*] [\n";
+        Vtable classVtable = this.class2vtable.get(classDecl.name());
+
+        String intro = "@." + classDecl.name() + "_vtable = global [" + classVtable.methodName2Index.size() + " x i8*] [\n";
         writeToFile(intro);
 
-        Vtable classVtable = this.class2vtable.get(classDecl.name());
-        HashMap<String, String> methodName2FormalsString = createMethodName2FormalsString(classDecl);
-        HashMap<String, String> methodName2ReturnString = createMethodName2ReturnString(classDecl);
+        HashMap<String, String> methodName2FormalsString = createMethodName2FormalsString(classVtable);
+        HashMap<String, String> methodName2ReturnString = createMethodName2ReturnString(classVtable);
 
         HashMap<Integer, String> index2methodName = reverseMap(classVtable.methodName2Index);
         for(int i=0; i<index2methodName.size(); i++){
@@ -132,7 +131,7 @@ public class CodeGenerationVisitor implements Visitor {
             String formalString = methodName2FormalsString.get(methodName);
             String returnTypeString = methodName2ReturnString.get(methodName);
             String nameString = "@" + classVtable.getImplementingClassName(methodName) + "." + methodName;
-            String methodLine = "\t" + PTR_SIZE + " bitcast" + " (" + returnTypeString + " " + formalString + " " + nameString  + "to " + PTR_SIZE +")";
+            String methodLine = "\t" + PTR_SIZE + " bitcast" + " (" + returnTypeString + " " + formalString + " " + nameString  + " to " + PTR_SIZE +")";
             if(i<=index2methodName.size()-2){
                 methodLine = methodLine + ",";
             }
@@ -144,14 +143,22 @@ public class CodeGenerationVisitor implements Visitor {
     }
 
     @Override
-    public void visit(Program prog) throws IOException {
-        writeGeneralMethods();
+    public void visit(Program prog){
+        try{
+            writeGeneralMethods();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         if (prog.mainClass() != null){
             prog.mainClass().accept(this); // visit(prog.mainClass());
         }
         if (prog.classDecls() != null){
             for (ClassDecl classDecl : prog.classDecls()){
-                writeVtable(classDecl);
+                try{
+                    writeVtable(classDecl);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             for (ClassDecl classDecl : prog.classDecls()){
                 classDecl.accept(this); // visit(classDecl);
