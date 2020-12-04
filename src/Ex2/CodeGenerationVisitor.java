@@ -2,17 +2,171 @@ package Ex2;
 
 import ast.*;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
+
 public class CodeGenerationVisitor implements Visitor {
-    int currRegister = 0;
+    String GENERAL_METHODS_PATH = "generalMethods";
+    String INT_SIZE = "i32";
+    String PTR_SIZE = "i8*";
+    String INT_ARRAY_SIZE = "i32*";
+    String BOOLEAN_SIZE = "i1";
+
+
+    Integer currRegister;
+    FileWriter fileWriter;
+    ClassDecl lastClassSeen;
+    HashMap<String, Vtable> class2vtable;
+    HashMap<String, FieldOffsets> class2FieldOffsets;
+
+
+    public CodeGenerationVisitor(FileWriter fileWriter, HashMap<String, Vtable> class2vtable, HashMap<String, FieldOffsets> class2FieldOffsets){
+        this.fileWriter = fileWriter;
+        this.currRegister = 0;
+        this.class2vtable = class2vtable;
+        this.class2FieldOffsets = class2FieldOffsets;
+    }
+
+    public void writeToFile(String text) throws IOException {
+        this.fileWriter.write(text);
+        this.fileWriter.close();
+
+    }
+
+
+    public String getNextRegister(){
+        String result = "%_" + this.currRegister.toString();
+        this.currRegister++;
+        return result;
+    }
+
+    public void writeGeneralMethods() throws IOException {
+        String content = "";
+        try
+        {
+            content = new String ( Files.readAllBytes( Paths.get(GENERAL_METHODS_PATH)));
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        writeToFile(content);
+    }
+
+
+    public HashMap<Integer, String> reverseMap(HashMap<String, Integer> map){
+        HashMap<Integer, String> result = new HashMap<>();
+        for(Map.Entry<String, Integer> entry : map.entrySet()){
+            result.put(entry.getValue(), entry.getKey());
+        }
+        return result;
+    }
+
+    public String getFormalString(FormalArg formalArg){
+        AstType astType = formalArg.type();
+        return getSizeString(astType);
+    }
+
+    public String getSizeString(AstType astType){
+        String size;
+        if(astType instanceof IntAstType){
+            size = INT_SIZE;
+        }
+        else if(astType instanceof BoolAstType){
+            size = BOOLEAN_SIZE;
+        }
+        else if(astType instanceof IntArrayAstType){
+            size = INT_ARRAY_SIZE;
+        }
+        else{
+            size = PTR_SIZE;
+        }
+        return size;
+    }
+
+    public HashMap<String, String> createMethodName2ReturnString(ClassDecl classDecl){
+        HashMap<String, String> result = new HashMap<>();
+        if(classDecl.methoddecls() != null) {
+            for (MethodDecl methodDecl : classDecl.methoddecls()) {
+                result.put(methodDecl.name(), getSizeString(methodDecl.returnType()));
+            }
+        }
+        return result;
+
+    }
+
+
+    public HashMap<String, String> createMethodName2FormalsString(ClassDecl classDecl){
+        HashMap<String, String> result = new HashMap<>();
+        if(classDecl.methoddecls() != null){
+            for(MethodDecl methodDecl : classDecl.methoddecls()){
+                StringBuilder methodFormalsString = new StringBuilder();
+                methodFormalsString.append("(" + PTR_SIZE);
+                if(methodDecl.formals() != null){
+                    for(FormalArg formalArg : methodDecl.formals()){
+                        methodFormalsString.append(", " + getFormalString(formalArg));
+                    }
+                }
+                methodFormalsString.append(")");
+                result.put(methodDecl.name(), methodFormalsString.toString());
+            }
+        }
+        return result;
+    }
+
+    public void writeVtable(ClassDecl classDecl) throws IOException {
+        String intro = "@." + classDecl.name() + "_vtable = global [" + classDecl.methoddecls().size() + "x i8*] [\n";
+        writeToFile(intro);
+
+        Vtable classVtable = this.class2vtable.get(classDecl.name());
+        HashMap<String, String> methodName2FormalsString = createMethodName2FormalsString(classDecl);
+        HashMap<String, String> methodName2ReturnString = createMethodName2ReturnString(classDecl);
+
+        HashMap<Integer, String> index2methodName = reverseMap(classVtable.methodName2Index);
+        for(int i=0; i<index2methodName.size(); i++){
+            String methodName = index2methodName.get(i);
+            String formalString = methodName2FormalsString.get(methodName);
+            String returnTypeString = methodName2ReturnString.get(methodName);
+            String nameString = "@" + classVtable.getImplementingClassName(methodName) + "." + methodName;
+            String methodLine = "\t" + PTR_SIZE + " bitcast" + " (" + returnTypeString + " " + formalString + " " + nameString  + "to " + PTR_SIZE +")";
+            if(i<=index2methodName.size()-2){
+                methodLine = methodLine + ",";
+            }
+            methodLine = methodLine + "\n";
+            writeToFile(methodLine);
+        }
+        String ending = "]\n";
+        writeToFile(ending);
+    }
 
     @Override
-    public void visit(Program program) {
-
+    public void visit(Program prog) throws IOException {
+        writeGeneralMethods();
+        if (prog.mainClass() != null){
+            prog.mainClass().accept(this); // visit(prog.mainClass());
+        }
+        if (prog.classDecls() != null){
+            for (ClassDecl classDecl : prog.classDecls()){
+                writeVtable(classDecl);
+            }
+            for (ClassDecl classDecl : prog.classDecls()){
+                classDecl.accept(this); // visit(classDecl);
+            }
+        }
     }
 
     @Override
     public void visit(ClassDecl classDecl) {
-
+        this.lastClassSeen = classDecl;
+        if (classDecl.methoddecls() != null){
+            for (MethodDecl methodDecl : classDecl.methoddecls()){
+                methodDecl.accept(this);
+            }
+        }
     }
 
     @Override
