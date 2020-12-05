@@ -87,6 +87,7 @@ public class SearchInContext {
     }
 
 
+
     //____________________Stuff for VARIABLES renaming_______________________________________
 
     public Set<String> getClassesToCheckForField(VarDecl varDecl){
@@ -105,6 +106,20 @@ public class SearchInContext {
 
         type = currTable.GetVariableType(varName);
         return type;
+    }
+
+    //TODO: verify Lihi!!
+    public AstType lookupVarAstType(MethodDecl methodDecl, String varName){
+        SymbolTable currTable = this.astNodeToSymbolTable.get(methodDecl);
+        AstType type;
+        while (!currTable.hasVariableWithName(varName)){
+            currTable = lookupParentSymbolTable(currTable);
+        }
+
+        type = currTable.getVariableAstTypeOfName(varName);
+        return type;
+
+
     }
 
 

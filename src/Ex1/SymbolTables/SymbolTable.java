@@ -73,6 +73,7 @@ public class SymbolTable {
         return null;
     }
 
+
     public boolean isMethodSymbolTable(){
         return this.type.equals("method");
     }

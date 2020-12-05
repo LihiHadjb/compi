@@ -47,7 +47,7 @@ public class CodeGenerator {
         HashMap<String, Vtable> class2vtable = vtablesMapBuilder.build();
         FieldOffsetsMapBuilder fieldOffsetsMapBuilder = new FieldOffsetsMapBuilder(searchInContext);
         HashMap<String, FieldOffsets> class2FieldOffsets = fieldOffsetsMapBuilder.build();
-        CodeGenerationVisitor codeGenerationVisitor = new CodeGenerationVisitor(this.fileWriter, class2vtable, class2FieldOffsets);
+        CodeGenerationVisitor codeGenerationVisitor = new CodeGenerationVisitor(this.fileWriter, class2vtable, class2FieldOffsets, searchInContext);
         prog.accept(codeGenerationVisitor);
     }
 
