@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CodeGenerationVisitor implements Visitor {
@@ -238,12 +239,30 @@ public class CodeGenerationVisitor implements Visitor {
         writeToFile(ending);
     }
 
+    public String createMethodFormalsString(String className, String methodName){
+        Vtable classVtable = this.class2vtable.get(className);
+
+        //TODO: we dont really need the whole map
+        HashMap<String, String> methodName2FormalsString = createMethodName2FormalsString(classVtable);
+        String formalString = methodName2FormalsString.get(methodName);
+        return formalString;
+    }
+
+    public String createMethodReturnTypeString(String className, String methodName){
+        Vtable classVtable = this.class2vtable.get(className);
+
+        //TODO: we dont really need the whole map
+        HashMap<String, String> methodName2ReturnString = createMethodName2ReturnString(classVtable);
+        String returnTypeString = methodName2ReturnString.get(methodName);
+        return returnTypeString;
+    }
+
     public String createMethodSignatureString(String className, String methodName){
         Vtable classVtable = this.class2vtable.get(className);
-        HashMap<String, String> methodName2FormalsString = createMethodName2FormalsString(classVtable);
-        HashMap<String, String> methodName2ReturnString = createMethodName2ReturnString(classVtable);
-        String formalString = methodName2FormalsString.get(methodName);
-        String returnTypeString = methodName2ReturnString.get(methodName);
+        //HashMap<String, String> methodName2FormalsString = createMethodName2FormalsString(classVtable);
+        //HashMap<String, String> methodName2ReturnString = createMethodName2ReturnString(classVtable);
+        String formalString = createMethodFormalsString(className, methodName);
+        String returnTypeString = createMethodReturnTypeString(className, methodName);
         return returnTypeString + " " + formalString;
     }
 
@@ -322,6 +341,33 @@ public class CodeGenerationVisitor implements Visitor {
             result = searchInContext.lookupVariableType(this.lastMethodSeen, ((IdentifierExpr)this.lastOwnerSeen).id());
         }
         return result;
+    }
+
+    //(i8* %_6, i32 1)
+    public String createActualsString(String ownerReg, String ownerClassName, String methodName, List<Expr> actuals){
+        StringBuilder result = new StringBuilder();
+        result.append("(");
+        result.append("i8* ");
+        result.append(ownerReg);
+        result.append(", ");
+
+        Vtable ownerVtable = this.class2vtable.get(ownerClassName);
+        MethodDecl methodDecl = ownerVtable.methodName2MethodDecl.get(methodName);
+
+        String actualVal;
+        int i = 0;
+        if(methodDecl.formals() != null){
+            for(FormalArg formalArg : methodDecl.formals()){
+                actualVal = getValueOfExpr(actuals.get(i));
+                result.append(", ");
+                result.append(getSizeString(formalArg.type()));
+                result.append(" ");
+                result.append(actualVal);
+            }
+        }
+        result.append(")");
+        return result.toString();
+
     }
 
 
@@ -804,6 +850,8 @@ public class CodeGenerationVisitor implements Visitor {
 
     @Override
     public void visit(ArrayLengthExpr e) {
+        //TODO: verify Lihi
+
         e.arrayExpr().accept(this);
         //verify the index
         String varSizeString = PTR_SIZE;
@@ -861,6 +909,8 @@ public class CodeGenerationVisitor implements Visitor {
         String vtablePtrReg = getNextRegister();
         writeToFile(vtablePtrReg + " = load i8**, i8*** " + ownerRegCasted + "\n");
 
+        //The next line is in order to know which "className.methodName" should be called.
+        //We called ownerExpr.accept, so now this.lastOwnerSeen is set to this call's owner.
         String ownerClassName = getLastOwnerSeenClassName();
         Vtable ownerVtable = this.class2vtable.get(ownerClassName);
         Integer methodIndex = ownerVtable.getIndex(e.methodId());
@@ -874,15 +924,13 @@ public class CodeGenerationVisitor implements Visitor {
         String methodPtrCasted = getNextRegister();
 
         String methodName = e.methodId();
-        writeToFile(methodPtrCasted + " = bitcast i8* " + methodPtr + " to " + createMethodSignatureString(ownerClassName, methodName));
+        writeToFile(methodPtrCasted + " = bitcast i8* " + methodPtr + " to " + createMethodSignatureString(ownerClassName, methodName) + "\n");
 
         String returnReg = getNextRegister();
         //Stopped here. should fix last line!
-        writeToFile(returnReg + " = call i32 " + methodPtrCasted + " i8* " + ownerReg + ", i32 1)");
-
-
-
-
+        String returnSize = createMethodReturnTypeString(ownerClassName, methodName);
+        String actualsString = createActualsString(ownerReg, ownerClassName, methodName, e.actuals());
+        writeToFile(returnReg + " = call " + returnSize + " " + methodPtrCasted + actualsString + "\n");
     }
 
     @Override
@@ -909,6 +957,8 @@ public class CodeGenerationVisitor implements Visitor {
         //TODO: verify Lihi!!
         String varSizeString = getSizeString(searchInContext.lookupVarAstType(this.lastMethodSeen, e.id()));
         //TODO: maybe getting the size should be inside getVarRegisterString()
+
+        //TODO: this is probably wrong!
         String identifierPtrReg = getVarRegisterString(e.id(), varSizeString);
         String resultReg = getUndottedName(e);
         writeToFile(resultReg + " = load " + varSizeString + ", " + varSizeString + "* " + identifierPtrReg);
