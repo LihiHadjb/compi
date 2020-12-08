@@ -25,18 +25,7 @@ public class writeVtableTest {
         this.xmlSerializer = new AstXMLSerializer();
     }
 
-    public String stringFromFile(String path){
-        String content = "";
-        try
-        {
-            content = new String ( Files.readAllBytes( Paths.get(path)));
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        return content;
-    }
+
 
     public void test_vtable(String outName, String expectedName, int index) throws IOException {
         String filePath = "/home/pc/IdeaProjects/compi/examples/ex1/testExamples/Classes.java.xml";
@@ -51,12 +40,13 @@ public class writeVtableTest {
         FieldOffsetsMapBuilder fieldOffsetsMapBuilder = new FieldOffsetsMapBuilder(searchInContext);
         HashMap<String, FieldOffsets> class2FieldOffsets = fieldOffsetsMapBuilder.build();
 
-        CodeGenerationVisitor codeGenerationVisitor = new CodeGenerationVisitor(fileWriter, class2vtable, class2FieldOffsets);
+
+        CodeGenerationVisitor codeGenerationVisitor = new CodeGenerationVisitor(fileWriter, class2vtable, class2FieldOffsets, searchInContext);
         codeGenerationVisitor.writeVtable(prog.classDecls().get(index));
         fileWriter.close();
 
-        String actual = stringFromFile("/home/pc/IdeaProjects/compi/examples/ex1/testExamples/" + outName + ".ll");
-        String expected = stringFromFile("/home/pc/IdeaProjects/compi/examples/ex1/testExamples/" + expectedName + ".ll");
+        String actual = Utils.stringFromFile("/home/pc/IdeaProjects/compi/examples/ex1/testExamples/" + outName + ".ll");
+        String expected = Utils.stringFromFile("/home/pc/IdeaProjects/compi/examples/ex1/testExamples/" + expectedName + ".ll");
         Assert.assertEquals(expected, actual);
     }
 
