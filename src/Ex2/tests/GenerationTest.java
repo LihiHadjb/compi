@@ -48,11 +48,44 @@ public class GenerationTest {
     public void test_2_vars_type(){
         doTest("2_vars_type/VarType.java.xml");
     }
+    //TODO: what did he say about VarTypeBad?
 
     @Test
     public void test_3_simple_expr(){
         doTest("3_simple_expr/SimpleExpr.java.xml");
     }
+
+    @Test
+    public void test_4_compound_expr(){
+        doTest("4_compound_expr/CompoundExpr.java.xml");
+    }
+
+    @Test
+    public void test_5_if(){
+        doTest("5_if/If.java.xml");
+    }
+
+    @Test
+    public void test_6_and(){
+        doTest("6_and/And.java.xml");
+    }
+
+    @Test
+    public void test_6_lowering_oo_Arrays(){
+        doTest("6_lowering_oo/Arrays.java.xml");
+    }
+
+    @Test
+    public void test_6_lowering_oo_Classes(){
+        doTest("6_lowering_oo/Classes.java.xml");
+    }
+
+    @Test
+    public void test_7_arrays(){
+        doTest("7_arrays/Arrays.java.xml");
+    }
+
+
 
 
 
