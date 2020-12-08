@@ -174,11 +174,11 @@ public class CodeGenerationVisitor implements Visitor {
         SymbolTable currentSymbolTable = this.searchInContext.astNodeToSymbolTable().get(this.lastMethodSeen);
         String lvString;
 
-        if(currentSymbolTable.hasVariableWithName(varName)){
+        if(currentSymbolTable.hasVariableWithName(varName)){//formal or varDecl in method
             lvString = "%" + varName;
         }
 
-        else{
+        else{//field
             String elementPtrReg = getNextRegister();
             String fieldOffsetString = getFieldOffsetString(varName);
             writeToFile(elementPtrReg + " = getelementptr " + PTR_SIZE + ", i8* %this, " + varSizeString + " " + fieldOffsetString + "\n");
@@ -335,6 +335,7 @@ public class CodeGenerationVisitor implements Visitor {
         }
         else if(this.lastOwnerSeen instanceof NewObjectExpr){
             result = (((NewObjectExpr) this.lastOwnerSeen).classId());
+            //"New B().foo()"
         }
 
         else{//field or local var
@@ -957,57 +958,169 @@ public class CodeGenerationVisitor implements Visitor {
         //TODO: verify Lihi!!
         String varSizeString = getSizeString(searchInContext.lookupVarAstType(this.lastMethodSeen, e.id()));
         //TODO: maybe getting the size should be inside getVarRegisterString()
-
-        //TODO: this is probably wrong!
         String identifierPtrReg = getVarRegisterString(e.id(), varSizeString);
-        String resultReg = getUndottedName(e);
+        String resultReg = getNextRegister();
         writeToFile(resultReg + " = load " + varSizeString + ", " + varSizeString + "* " + identifierPtrReg);
-
     }
 
     @Override
     public void visit(ThisExpr e) {
         //TODO: verify that its not possible to do "this.field" (only "this.foo(...)")
-        //TODO
         this.lastOwnerSeen = e;
 
     }
 
+
+
+
+//    ; Check that the size of the array is not negative
+//	%_0 = icmp slt i32 2, 0
+//    br i1 %_0, label %arr_alloc0, label %arr_alloc1
+//
+//    arr_alloc0:
+//    ; Size was negative, throw negative size exception
+//    call void @throw_oob()
+//
+//    br label %arr_alloc1
+//
+//    arr_alloc1:
+//    ; All ok, we can proceed with the allocation
+//
+//    ; Calculate size bytes to be allocated for the array (new arr[sz] -> add i32 1, sz)
+//    ; -> We need an additional int worth of space, to store the size of the array.
+//        %_1 = add i32 2, 1
+//
+//    ; Allocate sz + 1 integers (4 bytes each)
+//	%_2 = call i8* @calloc(i32 4, i32 %_1)
+//
+//    ; Cast the returned pointer
+//	%_3 = bitcast i8* %_2 to i32*
+//
+//    ; Store the size of the array in the first position of the array
+//    store i32 2, i32* %_3
+//
+//    ; This concludes the array allocation (new int[2])
+//
+//        ; Assign the array pointer to x
+//    store i32* %_3, i32** %x
     @Override
     public void visit(NewIntArrayExpr e) {
-        //TODO
+        //Check that the size of the array is not negative
+        String sizeCheckReg = getNextRegister();
+        writeToFile(sizeCheckReg + " = icmp slt i32 " + e.lengthExpr() + " , 0\n");
 
+        String checkTrueLabel = getNextArrLabelString();
+        String checkFalseLabel = getNextArrLabelString();
+        writeToFile("br i1 "+ sizeCheckReg + ", label %" + checkTrueLabel + ", label %" + checkFalseLabel + "\n");
+
+        writeToFile(checkTrueLabel + ":\n");
+        writeToFile("call void @throw_oob()\n");
+
+        writeToFile("br label %" + checkFalseLabel + "\n");
+
+        writeToFile(checkFalseLabel + ":\n");
+
+        //calculate the length
+        String lengthReg = getValueOfExpr(e.lengthExpr());
+        String lengthWithExtra = getNextRegister();
+        writeToFile(lengthWithExtra + " = add i32 " + lengthReg + ", 1\n");
+
+        //allocate
+        String arrReg = getNextRegister();
+        writeToFile(arrReg + " = call i8* @calloc(i32 4, i32 " + lengthWithExtra + ")\n");
+        String arrRegCasted = getNextRegister();
+        writeToFile(arrRegCasted + " = bitcast i8* " + arrReg + " to i32*\n");
+
+        //Store the size of the array in the first position of the array
+        writeToFile("store i32 " + lengthReg + ", i32* " + arrRegCasted + "\n");
     }
 
+
+
+//    ; The following sequence of instructions creates a new Base object
+//
+//        ; First, we allocate the required memory on heap for our object.
+//    ; We call calloc to achieve this:
+//    ;   * The first argument is the amount of objects we want to allocate
+//        ;     (always 1 for object allocation, but handy in arrays)
+//    ;   * The second argument is the size of the object. This is calculated as the sum of the
+//        ;     size of the fields of the class and all the super classes PLUS 8 bytes, to account for
+//    ;     the vtable pointer.
+//    ; In our case, we have a single int field so it's 4 + 8 = 12 bytes
+//        %_0 = call i8* @calloc(i32 1, i32 12)
+//
+//    ; Next we need to set the vtable pointer to point to the correct vtable (Base_vtable)
+//        ; First we bitcast the object pointer from i8* to i8***
+//    ; This is done because:
+//    ;   -> The vtable stores values of type i8*.
+//    ;   -> Thus, a pointer that points to the start of the vtable (equivalently at the first entry
+//        ;      of the vtable) must have type i8**.
+//    ;   -> Thus, to set the vtable pointer at the start of the object, we need to have its address
+//        ;      (first byte of the object) in a register of type i8***
+//    ;		- it's a pointer to a location where we will be storing i8**.
+//        %_1 = bitcast i8* %_0 to i8***
+//
+//    ; Get the address of the first element of the Base_vtable
+//        ; The getelementptr arguments are as follows:
+//    ;   * The first argument is the type of elements our Base_vtable ptr points to.
+//    ;   * The second argument is the Base_vtable ptr.
+//    ;   * The third and fourth arguments are indexes
+//    ;; (alternative to getelementpr: %_2 = bitcast [2 x i8*]* @.Base_vtable to i8**)
+//        %_2 = getelementptr [2 x i8*], [2 x i8*]* @.Base_vtable, i32 0, i32 0
+
+//
+//    ; Set the vtable to the correct address.
+//    store i8** %_2, i8*** %_1
+//
     @Override
     public void visit(NewObjectExpr e) {
-        //TODO
         this.lastOwnerSeen = e;
+        //%_0 = call i8* @calloc(i32 1, i32 12)
+        String locReg = getNextRegister();
+        Vtable vtable = this.class2vtable.get(e.classId());
+        int objectSize = vtable.getLast_index();
+        writeToFile(locReg + " = call i8* @calloc(i32 1, i32 "+ objectSize + ")\n");
+
+        //%_1 = bitcast i8* %_0 to i8***
+        String locRegCasted = getNextRegister();
+        writeToFile(locRegCasted + " = bitcast i8* " + locReg + " to i8***\n");
+
+        //%_2 = getelementptr [2 x i8*], [2 x i8*]* @.Base_vtable, i32 0, i32 0
+        String vtableReg = getNextRegister();
+        String sizes = "[" + vtable.methodName2Index.size() + " x i8*]";
+        String vtableName = "@." + e.classId();
+        writeToFile(vtableReg + " = getelementptr " + sizes + ", " + sizes + "* " + vtableName + ", i32 0, i32 0\n");
+
+        // Set the vtable to the correct address.
+        // store i8** %_2, i8*** %_1
+        writeToFile("store i8** " + vtableReg + ", i8*** " + locRegCasted + "\n");
     }
 
     @Override
     public void visit(NotExpr e) {
-        //TODO
-
+        e.e().accept(this);
+        String exprReg = getLastUsedRegister();
+        String resultReg = getNextRegister();
+        writeToFile(resultReg + " = xor i1 1" + ", " + exprReg + "\n");
     }
 
     @Override
     public void visit(IntAstType t) {
-        //TODO
+        //do nothing
     }
 
     @Override
     public void visit(BoolAstType t) {
-        //TODO
+        //do nothing
     }
 
     @Override
     public void visit(IntArrayAstType t) {
-        //TODO
+        //do nothing
     }
 
     @Override
     public void visit(RefType t) {
-        //TODO
+        //do nothing
     }
 }
