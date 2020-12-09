@@ -31,6 +31,7 @@ public class CodeGenerationVisitor implements Visitor {
     HashMap<String, Vtable> class2vtable;
     HashMap<String, FieldOffsets> class2FieldOffsets;
     SearchInContext searchInContext;
+    String lastOwnerRegister;
 
 
 
@@ -368,10 +369,13 @@ public class CodeGenerationVisitor implements Visitor {
         result.append("(");
         result.append("i8* ");
         result.append(ownerReg);
-        result.append(", ");
 
         Vtable ownerVtable = this.class2vtable.get(ownerClassName);
         MethodDecl methodDecl = ownerVtable.methodName2MethodDecl.get(methodName);
+
+        if(methodDecl.formals() != null){
+            result.append(", ");
+        }
 
         String actualVal;
         int i = 0;
@@ -929,7 +933,7 @@ public class CodeGenerationVisitor implements Visitor {
     public void visit(MethodCallExpr e) {
         //TODO:verify Lihi
         e.ownerExpr().accept(this);
-        String ownerReg = getLastUsedRegister();
+        String ownerReg = this.lastOwnerRegister;
         String ownerRegCasted = getNextRegister();
         writeToFile(ownerRegCasted + " = bitcast i8* " + ownerReg + " to i8***" + "\n");
 
@@ -987,12 +991,14 @@ public class CodeGenerationVisitor implements Visitor {
         String identifierPtrReg = getVarRegisterString(e.id(), varSizeString);
         String resultReg = getNextRegister();
         writeToFile(resultReg + " = load " + varSizeString + ", " + varSizeString + "* " + identifierPtrReg + "\n");
+        this.lastOwnerRegister = resultReg;
     }
 
     @Override
     public void visit(ThisExpr e) {
         //TODO: verify that its not possible to do "this.field" (only "this.foo(...)")
         this.lastOwnerSeen = e;
+        this.lastOwnerRegister = "%this";
 
     }
 
@@ -1103,6 +1109,7 @@ public class CodeGenerationVisitor implements Visitor {
         this.lastOwnerSeen = e;
         //%_0 = call i8* @calloc(i32 1, i32 12)
         String locReg = getNextRegister();
+        this.lastOwnerRegister = locReg;
         Vtable vtable = this.class2vtable.get(e.classId());
         int objectSize = vtable.getLast_index();
         writeToFile(locReg + " = call i8* @calloc(i32 1, i32 "+ objectSize + ")\n");
