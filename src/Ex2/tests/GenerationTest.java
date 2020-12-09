@@ -38,6 +38,10 @@ public class GenerationTest {
 
         String actual = Utils.stringFromFile(outPath);
         String expected = Utils.stringFromFile(expectedOutPath);
+
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.command("lli " + outPath);
+
         Assert.assertEquals(expected, actual);
 
     }
@@ -87,6 +91,50 @@ public class GenerationTest {
     public void test_7_arrays(){
         doTest("7_arrays/Arrays.java.xml");
     }
+
+    @Test
+    public void BinarySearch(){
+        doTest("ex2/BinarySearch.java.xml");
+    }
+
+    @Test
+    public void BinaryTree(){
+        doTest("ex2/BinaryTree.java.xml");
+    }
+
+    @Test
+    public void BubbleSort(){
+        doTest("ex2/BubbleSort.java.xml");
+    }
+
+    @Test
+    public void Factorial(){
+        doTest("ex2/Factorial.java.xml");
+    }
+
+    @Test
+    public void LinearSearch(){
+        doTest("ex2/LinearSearch.java.xml");
+    }
+
+    @Test
+    public void LinkedList(){
+        doTest("ex2/LinkedList.java.xml");
+    }
+
+    @Test
+    public void QuickSort(){
+        doTest("ex2/QuickSort.java.xml");
+    }
+
+    @Test
+    public void TreeVisitor(){
+        doTest("ex2/TreeVisitor.java.xml");
+    }
+
+
+
+
 
 
 
