@@ -25,8 +25,8 @@ public class CodeGenerator {
 
     public FileWriter createOutFile(String outFileName){
         try {
-            File outFile = new File(outFileName + ".ll");
-            FileWriter fileWriter = new FileWriter(outFileName + ".ll");
+            File outFile = new File(outFileName);
+            FileWriter fileWriter = new FileWriter(outFileName);
             return fileWriter;
 //            if (outFile.createNewFile()) {
 //                System.out.println("File created: " + myObj.getName());
@@ -41,6 +41,15 @@ public class CodeGenerator {
 
     }
 
+    public void closeWriter(){
+        try {
+            this.fileWriter.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+
     public void generate(){
         SearchInContext searchInContext = new SearchInContext(this.prog);
         VtablesMapBuilder vtablesMapBuilder = new VtablesMapBuilder(searchInContext);
@@ -49,6 +58,9 @@ public class CodeGenerator {
         HashMap<String, FieldOffsets> class2FieldOffsets = fieldOffsetsMapBuilder.build();
         CodeGenerationVisitor codeGenerationVisitor = new CodeGenerationVisitor(this.fileWriter, class2vtable, class2FieldOffsets, searchInContext);
         prog.accept(codeGenerationVisitor);
+        closeWriter();
+
+
     }
 
 

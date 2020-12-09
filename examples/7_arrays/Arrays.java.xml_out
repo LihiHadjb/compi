@@ -1,4 +1,6 @@
-@.Simple_vtable = global [1 x i8*] [i8* bitcast (i32 (i8*)* @Simple.bar to i8*)]
+@.Simple_vtable = global [1 x i8*] [
+	i8* bitcast (i32 (i8*)* @Simple.bar to i8*)
+]
 
 declare i8* @calloc(i32, i32)
 declare i32 @printf(i8*, ...)
@@ -35,7 +37,7 @@ define i32 @main() {
 	ret i32 0
 }
 
-define i32 @Simple.bar(i8* %this) {
+define i32 @Simple.bar(i8* %this){
 	%x = alloca i32*
 	%_0 = icmp slt i32 2, 0
 	br i1 %_0, label %arr_alloc0, label %arr_alloc1
@@ -122,6 +124,6 @@ arr_alloc17:
 	%_33 = load i32, i32* %_32
 	%_34 = add i32 %_25, %_33
 	call void (i32) @print_int(i32 %_34)
-	ret i32 0	
+	ret i32 0
 }
 

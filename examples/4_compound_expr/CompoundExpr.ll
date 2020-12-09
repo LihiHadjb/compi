@@ -21,7 +21,7 @@ define void @throw_oob() {
 
 
 define i32 @main() {
-	%_0 = call i8* @calloc(i32 8, i32 8)
+	%_0 = call i8* @calloc(i32 1, i32 8)
 	%_1 = bitcast i8* %_0 to i8***
 	%_2 = getelementptr [1 x i8*], [1 x i8*]* @.Simple_vtable, i32 0, i32 0
 	store i8** %_2, i8*** %_1
@@ -37,18 +37,11 @@ define i32 @main() {
 
 define i32 @Simple.bar(i8* %this) {
 	%x = alloca i32	
-	store i32 10, i32* %x	
-	; 10 + x * (x + 7)
-	; no command to "load" 10 to a register, inlined in the addition below
-	; x * ...
+	store i32 10, i32* %x
 	%_0 = load i32, i32* %x
-	; x + ...
 	%_1 = load i32, i32* %x
-	; x + 7
 	%_2 = add i32 %_1, 7
-	; x * (x + 7)
 	%_3 = mul i32 %_0, %_2
-	; 10 + x * (x + 7)
 	%_4 = add i32 10, %_3
 	call void (i32) @print_int(i32 %_4)
 	ret i32 0	
