@@ -222,7 +222,7 @@ public class CodeGenerationVisitor implements Visitor {
         else{//field
             String elementPtrReg = getNextRegister();
             String fieldOffsetString = getFieldOffsetString(varName);
-            writeToFile(elementPtrReg + " = getelementptr i8" + ", i8* %this, " + varSizeString + " " + fieldOffsetString + "\n");
+            writeToFile(elementPtrReg + " = getelementptr i8" + ", i8* %this, i32 " + fieldOffsetString + "\n");
 
             String castedElementPtrReg = getNextRegister();
             writeToFile(castedElementPtrReg + " = bitcast i8* " + elementPtrReg + " to " + varSizeString + "*\n");
@@ -244,6 +244,10 @@ public class CodeGenerationVisitor implements Visitor {
 
         else if(expr instanceof FalseExpr){
             result = "0";
+        }
+
+        else if(expr instanceof ThisExpr){ //debug!!
+            result = "%this";
         }
 
         else if(expr instanceof NewObjectExpr){
@@ -459,10 +463,10 @@ public class CodeGenerationVisitor implements Visitor {
     //    ; And store 1 to that address *%_10 = 1
     //    store i32 1, i32* %_10
 
-    public String verifyArrayAccess(String lvString, String arrayReg, Expr index){
+    public String verifyArrayAccess(String arrayReg, Expr index){
         //Check that the index is greater than zero
-        String indexGTZeroReg = getNextRegister();
         String indexReg = getValueOfExpr(index);
+        String indexGTZeroReg = getNextRegister();
         writeToFile(indexGTZeroReg + " = icmp slt i32 " + indexReg + ", 0\n");
         String gtzTrueLabel = getNextArrLabelString();
         String gtzFalseLabel = getNextArrLabelString();
@@ -558,10 +562,10 @@ public class CodeGenerationVisitor implements Visitor {
     @Override
     public void visit(MethodDecl methodDecl) {
         this.currRegister = 0;
-        this.currIfIndex = 0;
-        this.currArrIndex = 0;
-        this.currAndIndex = 0;
-        this.currLoopIndex = 0;
+//        this.currIfIndex = 0;
+//        this.currArrIndex = 0;
+//        this.currAndIndex = 0;
+//        this.currLoopIndex = 0;
         this.lastMethodSeen = methodDecl;
         String intro = "define " + getSizeString(methodDecl.returnType()) + " " + getMethodDeclName(methodDecl) + getMethodDeclFormals(methodDecl) + "{\n";
         writeToFileWithoutTab(intro);
@@ -631,9 +635,6 @@ public class CodeGenerationVisitor implements Visitor {
 //    br label %if2
 //    if2:
 //    ret i32 0
-
-
-
     @Override
     public void visit(IfStatement ifStatement) {
         ifStatement.cond().accept(this);
@@ -682,14 +683,12 @@ public class CodeGenerationVisitor implements Visitor {
 //
 //    br label %loop0
 //    loop2:
-
-
     @Override
     public void visit(WhileStatement whileStatement) {
         String condLabel = getNextLoopLabelString();
         String trueLabel = getNextLoopLabelString();
         String falseLabel = getNextLoopLabelString();
-        writeToFile("br label "+ condLabel + "\n");
+        writeToFile("br label %"+ condLabel + "\n");
         writeToFileWithoutTab(condLabel + ":\n");
         whileStatement.cond().accept(this);
         writeToFile("br "+ BOOLEAN_SIZE + " " + getLastUsedRegister() + ", label %" + trueLabel + ", label %" + falseLabel + "\n");
@@ -702,8 +701,6 @@ public class CodeGenerationVisitor implements Visitor {
         writeToFile("br label %" + condLabel + "\n");
 
         writeToFileWithoutTab(falseLabel + ":\n");
-
-
     }
 
 
@@ -745,13 +742,11 @@ public class CodeGenerationVisitor implements Visitor {
     public void visit(AssignArrayStatement assignArrayStatement) {
 
 //        //verify the index
-        String varSizeString = PTR_SIZE;
-        //TODO: verify its always PTR_SIZE!!!
-        //String varSizeString = getSizeString(searchInContext.lookupVarAstType(this.lastMethodSeen, assignArrayStatement.lv()));
+        String varSizeString = INT_ARRAY_SIZE;
         String lvString = getVarRegisterString(assignArrayStatement.lv(), varSizeString);
         String arrayReg = getNextRegister();
         writeToFile(arrayReg + " = load i32*, i32** " + lvString + "\n");
-        String indexReg = verifyArrayAccess(lvString, arrayReg, assignArrayStatement.index());
+        String indexReg = verifyArrayAccess(arrayReg, assignArrayStatement.index()); //debug!
 
         String realElemPtrReg = getRealElemPtrReg(indexReg, arrayReg);
         String rvString = getValueOfExpr(assignArrayStatement.rv());
@@ -886,22 +881,26 @@ public class CodeGenerationVisitor implements Visitor {
 
         e.arrayExpr().accept(this);
         //verify the index
-        String varSizeString = PTR_SIZE;
-        String lvString = getVarRegisterString(this.lastIdentifierExprSeen.id(), varSizeString);
+//        String varSizeString = PTR_SIZE;
+//        String lvString = getVarRegisterString(this.lastIdentifierExprSeen.id(), varSizeString);
 //        String arrayReg = getNextRegister();
         String arrayReg = getLastUsedRegister();
-        String indexReg = verifyArrayAccess(lvString, arrayReg, e.indexExpr());
+        String indexReg = verifyArrayAccess(arrayReg, e.indexExpr());
 
         //assign
         String realElemPtrReg = getRealElemPtrReg(indexReg, arrayReg);
         String resultReg = getNextRegister();
         writeToFile(resultReg + " = load i32, i32* " + realElemPtrReg + "\n");
+
+//        %_5 = getelementptr i8, i8* %this, i32 8
+//                %_6 = bitcast i8* %_5 to i32**
+//	%_7 = load i32*, i32** %_6
+//                %_8 = getelementptr i8, i8* %this, i32 8 ----NO!
+//                %_9 = bitcast i8* %_8 to i8**       ---- NO!
     }
 
     @Override
     public void visit(ArrayLengthExpr e) {
-        //TODO: verify Lihi
-
         e.arrayExpr().accept(this);
         //verify the index
         String varSizeString = PTR_SIZE;
@@ -976,10 +975,10 @@ public class CodeGenerationVisitor implements Visitor {
         String methodName = e.methodId();
         writeToFile(methodPtrCasted + " = bitcast i8* " + methodPtr + " to " + createMethodSignatureString(ownerClassName, methodName) + "\n");
 
-        String returnReg = getNextRegister();
         //Stopped here. should fix last line!
         String returnSize = createMethodReturnTypeString(ownerClassName, methodName);
         String actualsString = createActualsString(ownerReg, ownerClassName, methodName, e.actuals());
+        String returnReg = getNextRegister();
         writeToFile(returnReg + " = call " + returnSize + " " + methodPtrCasted + actualsString + "\n");
     }
 
@@ -1018,7 +1017,6 @@ public class CodeGenerationVisitor implements Visitor {
         //TODO: verify that its not possible to do "this.field" (only "this.foo(...)")
         this.lastOwnerSeen = e;
         this.lastOwnerRegister = "%this";
-
     }
 
 
@@ -1057,8 +1055,8 @@ public class CodeGenerationVisitor implements Visitor {
     @Override
     public void visit(NewIntArrayExpr e) {
         //Check that the size of the array is not negative
-        String sizeCheckReg = getNextRegister();
         String lengthString = getValueOfExpr(e.lengthExpr());
+        String sizeCheckReg = getNextRegister();
         writeToFile(sizeCheckReg + " = icmp slt i32 " + lengthString + ", 0\n");
 
         String checkTrueLabel = getNextArrLabelString();
@@ -1073,9 +1071,9 @@ public class CodeGenerationVisitor implements Visitor {
         writeToFileWithoutTab(checkFalseLabel + ":\n");
 
         //calculate the length
-        String lengthReg = getValueOfExpr(e.lengthExpr());
+//        String lengthReg = getValueOfExpr(e.lengthExpr());
         String lengthWithExtra = getNextRegister();
-        writeToFile(lengthWithExtra + " = add i32 " + lengthReg + ", 1\n");
+        writeToFile(lengthWithExtra + " = add i32 " + lengthString + ", 1\n");
 
         //allocate
         String arrReg = getNextRegister();
@@ -1084,7 +1082,7 @@ public class CodeGenerationVisitor implements Visitor {
         writeToFile(arrRegCasted + " = bitcast i8* " + arrReg + " to i32*\n");
 
         //Store the size of the array in the first position of the array
-        writeToFile("store i32 " + lengthReg + ", i32* " + arrRegCasted + "\n");
+        writeToFile("store i32 " + lengthString + ", i32* " + arrRegCasted + "\n");
     }
 
 
@@ -1123,7 +1121,6 @@ public class CodeGenerationVisitor implements Visitor {
 //
 //    ; Set the vtable to the correct address.
 //    store i8** %_2, i8*** %_1
-//
     @Override
     public void visit(NewObjectExpr e) {
         this.lastOwnerSeen = e;
@@ -1155,7 +1152,7 @@ public class CodeGenerationVisitor implements Visitor {
         e.e().accept(this);
         String exprReg = getLastUsedRegister();
         String resultReg = getNextRegister();
-        writeToFile(resultReg + " = xor i1 1" + ", " + exprReg + "\n");
+        writeToFile(resultReg + " = sub i1 1" + ", " + exprReg + "\n");
     }
 
     @Override

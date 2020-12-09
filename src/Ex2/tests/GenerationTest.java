@@ -132,16 +132,10 @@ public class GenerationTest {
         doTest("ex2/TreeVisitor.java.xml");
     }
 
-
-
-
-
-
-
-
-
-
-
-
+    @Test
+    public void shouldFail(){
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.command("lli " + "/home/pc/IdeaProjects/compi/examples/ex2/HartaFile.ll");
+    }
 
 }
