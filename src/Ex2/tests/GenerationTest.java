@@ -24,13 +24,16 @@ public class GenerationTest {
 
     public void doTest(String xmlPath){
         String allPath = xmlsFolder + xmlPath;
-        String outPath = xmlPath+"_out";
+        String outPath = xmlsFolder + xmlPath + "_out";
 
         //remove ".java.xml"
-        String expectedOutPath = allPath.substring(0, allPath.lastIndexOf('.')).substring(0, allPath.lastIndexOf('.')) + ".ll";
+        String expectedOutPath = allPath;
+        expectedOutPath = expectedOutPath.substring(0, expectedOutPath.lastIndexOf('.'));
+        expectedOutPath = expectedOutPath.substring(0, expectedOutPath.lastIndexOf('.'));
+        expectedOutPath = expectedOutPath + ".ll";
 
         prog = xmlSerializer.deserialize(new File(allPath));
-        codeGenerator = new CodeGenerator(prog, xmlPath+"_out");
+        codeGenerator = new CodeGenerator(prog, outPath);
         codeGenerator.generate();
 
         String actual = Utils.stringFromFile(outPath);

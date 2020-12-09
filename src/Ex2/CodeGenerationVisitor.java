@@ -97,14 +97,32 @@ public class CodeGenerationVisitor implements Visitor {
 
     public void writeGeneralMethods() {
         String content = "";
-        try
-        {
-            content = new String ( Files.readAllBytes( Paths.get(GENERAL_METHODS_PATH)));
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+        content = "declare i8* @calloc(i32, i32)\n" +
+                "declare i32 @printf(i8*, ...)\n" +
+                "declare void @exit(i32)\n" +
+                "\n" +
+                "@_cint = constant [4 x i8] c\"%d\\0a\\00\"\n" +
+                "@_cOOB = constant [15 x i8] c\"Out of bounds\\0a\\00\"\n" +
+                "define void @print_int(i32 %i) {\n" +
+                "\t%_str = bitcast [4 x i8]* @_cint to i8*\n" +
+                "\tcall i32 (i8*, ...) @printf(i8* %_str, i32 %i)\n" +
+                "\tret void\n" +
+                "}\n" +
+                "\n" +
+                "define void @throw_oob() {\n" +
+                "\t%_str = bitcast [15 x i8]* @_cOOB to i8*\n" +
+                "\tcall i32 (i8*, ...) @printf(i8* %_str)\n" +
+                "\tcall void @exit(i32 1)\n" +
+                "\tret void\n" +
+                "}\n";
+//        try
+//        {
+//            content = new String ( Files.readAllBytes( Paths.get(GENERAL_METHODS_PATH)));
+//        }
+//        catch (IOException e)
+//        {
+//            e.printStackTrace();
+//        }
         writeToFile(content);
     }
 
@@ -166,7 +184,7 @@ public class CodeGenerationVisitor implements Visitor {
 
 
     public String getFieldOffsetString(String fieldId){
-        FieldOffsets currFieldOffsets = this.class2FieldOffsets.get(this.lastClassSeen);
+        FieldOffsets currFieldOffsets = this.class2FieldOffsets.get(this.lastClassSeen.name());
         return currFieldOffsets.getIndex(fieldId).toString();
     }
 
@@ -476,16 +494,21 @@ public class CodeGenerationVisitor implements Visitor {
 
     @Override
     public void visit(Program prog){
-        writeGeneralMethods();
-        if (prog.mainClass() != null){
-            prog.mainClass().accept(this); // visit(prog.mainClass());
-        }
+
         if (prog.classDecls() != null){
             for (ClassDecl classDecl : prog.classDecls()){
                 writeVtable(classDecl);
 
             }
-            for (ClassDecl classDecl : prog.classDecls()){
+        }
+
+        writeGeneralMethods();
+
+        if (prog.mainClass() != null){
+            prog.mainClass().accept(this); // visit(prog.mainClass());
+        }
+        if (prog.classDecls() != null){
+             for (ClassDecl classDecl : prog.classDecls()){
                 classDecl.accept(this); // visit(classDecl);
             }
         }
@@ -507,7 +530,7 @@ public class CodeGenerationVisitor implements Visitor {
         writeToFile("define i32 @main() {\n");
         mainClass.mainStatement().accept(this);
         writeToFile("ret i32 0\n");
-        writeToFile("}");
+        writeToFile("}\n\n");
     }
 
     @Override
@@ -535,8 +558,11 @@ public class CodeGenerationVisitor implements Visitor {
 
         if(methodDecl.ret() != null){
             methodDecl.ret().accept(this);
+            String returnValue = getValueOfExpr(methodDecl.ret());
+            String returnSizeString = getSizeString(methodDecl.returnType());
+            writeToFile("ret " + returnSizeString + " " + returnValue + "\n");
         }
-        writeToFile("}\n");
+        writeToFile("}\n\n");
     }
 
 
@@ -920,7 +946,7 @@ public class CodeGenerationVisitor implements Visitor {
         writeToFile(vtableMethodEntryPtr + " = getelementptr i8*, i8** " + vtablePtrReg + ", i32 " + methodIndex + "\n");
 
         String methodPtr = getNextRegister();
-        writeToFile(methodPtr + " = load i8*, i8** " + vtableMethodEntryPtr);
+        writeToFile(methodPtr + " = load i8*, i8** " + vtableMethodEntryPtr + "\n");
 
         String methodPtrCasted = getNextRegister();
 
@@ -960,7 +986,7 @@ public class CodeGenerationVisitor implements Visitor {
         //TODO: maybe getting the size should be inside getVarRegisterString()
         String identifierPtrReg = getVarRegisterString(e.id(), varSizeString);
         String resultReg = getNextRegister();
-        writeToFile(resultReg + " = load " + varSizeString + ", " + varSizeString + "* " + identifierPtrReg);
+        writeToFile(resultReg + " = load " + varSizeString + ", " + varSizeString + "* " + identifierPtrReg + "\n");
     }
 
     @Override
@@ -1088,7 +1114,7 @@ public class CodeGenerationVisitor implements Visitor {
         //%_2 = getelementptr [2 x i8*], [2 x i8*]* @.Base_vtable, i32 0, i32 0
         String vtableReg = getNextRegister();
         String sizes = "[" + vtable.methodName2Index.size() + " x i8*]";
-        String vtableName = "@." + e.classId();
+        String vtableName = "@." + e.classId() + "_vtable";
         writeToFile(vtableReg + " = getelementptr " + sizes + ", " + sizes + "* " + vtableName + ", i32 0, i32 0\n");
 
         // Set the vtable to the correct address.
