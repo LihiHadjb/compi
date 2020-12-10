@@ -38,7 +38,7 @@ lli /home/pc/IdeaProjects/compi/examples/6_lowering_oo/Arrays.ll > /home/pc/Idea
 lli /home/pc/IdeaProjects/compi/examples/6_lowering_oo/Arrays_out.ll > /home/pc/IdeaProjects/compi/examples/6_lowering_oo/Arrays_actual_outputs.txt
 diff /home/pc/IdeaProjects/compi/examples/6_lowering_oo/Arrays_expected_outputs.txt /home/pc/IdeaProjects/compi/examples/6_lowering_oo/Arrays_actual_outputs.txt
 echo "6_lowering_oo/Classes"
-java -jar mjavac.jar unmarshal compile /home/pc/IdeaProjects/compi/examples/6_lowering_oo/Classes.java.xml /home/pc/IdeaProjects/compi/examples/6_lowering_oo/Classes_out.ll
+java -jar mjavac.jar unmarshal compile /home/pc/IdeaProjects/compi/examples/6_lowering_oo/Classes.xml /home/pc/IdeaProjects/compi/examples/6_lowering_oo/Classes_out.ll
 lli /home/pc/IdeaProjects/compi/examples/6_lowering_oo/Classes.ll > /home/pc/IdeaProjects/compi/examples/6_lowering_oo/Classes_expected_outputs.txt
 lli /home/pc/IdeaProjects/compi/examples/6_lowering_oo/Classes_out.ll > /home/pc/IdeaProjects/compi/examples/6_lowering_oo/Classes_actual_outputs.txt
 diff /home/pc/IdeaProjects/compi/examples/6_lowering_oo/Classes_expected_outputs.txt /home/pc/IdeaProjects/compi/examples/6_lowering_oo/Classes_actual_outputs.txt
