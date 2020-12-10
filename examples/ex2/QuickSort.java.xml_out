@@ -70,15 +70,16 @@ define i32 @QS.Start(i8* %this, i32 %.sz){
 	%_19 = getelementptr i8*, i8** %_18, i32 3
 	%_20 = load i8*, i8** %_19
 	%_21 = bitcast i8* %_20 to i32 (i8*, i32, i32)*
-	%_22 = call i32 %_21(i8* %this, i32 0, i32 0)
-	store i32 %_22, i32* %aux01
-	%_23 = bitcast i8* %this to i8***
-	%_24 = load i8**, i8*** %_23
-	%_25 = getelementptr i8*, i8** %_24, i32 0
-	%_26 = load i8*, i8** %_25
-	%_27 = bitcast i8* %_26 to i32 (i8*)*
-	%_28 = call i32 %_27(i8* %this)
-	store i32 %_28, i32* %aux01
+	%_22 = load i32, i32* %aux01
+	%_23 = call i32 %_21(i8* %this, i32 0, i32 %_22)
+	store i32 %_23, i32* %aux01
+	%_24 = bitcast i8* %this to i8***
+	%_25 = load i8**, i8*** %_24
+	%_26 = getelementptr i8*, i8** %_25, i32 0
+	%_27 = load i8*, i8** %_26
+	%_28 = bitcast i8* %_27 to i32 (i8*)*
+	%_29 = call i32 %_28(i8* %this)
+	store i32 %_29, i32* %aux01
 	ret i32 0
 }
 
@@ -436,19 +437,19 @@ arr_alloc47:
 	%_157 = load i8*, i8** %_156
 	%_158 = bitcast i8* %_157 to i32 (i8*, i32, i32)*
 	%_159 = load i32, i32* %left
-	%_160 = load i32, i32* %left
-	%_161 = call i32 %_158(i8* %this, i32 %_159, i32 %_160)
-	store i32 %_161, i32* %nt
-	%_162 = bitcast i8* %this to i8***
-	%_163 = load i8**, i8*** %_162
-	%_164 = getelementptr i8*, i8** %_163, i32 3
-	%_165 = load i8*, i8** %_164
-	%_166 = bitcast i8* %_165 to i32 (i8*, i32, i32)*
-	%_167 = load i32, i32* %i
-	%_168 = add i32 %_167, 1
-	%_169 = load i32, i32* %i
-	%_170 = add i32 %_169, 1
-	%_171 = call i32 %_166(i8* %this, i32 %_168, i32 %_170)
+	%_160 = load i32, i32* %i
+	%_161 = sub i32 %_160, 1
+	%_162 = call i32 %_158(i8* %this, i32 %_159, i32 %_161)
+	store i32 %_162, i32* %nt
+	%_163 = bitcast i8* %this to i8***
+	%_164 = load i8**, i8*** %_163
+	%_165 = getelementptr i8*, i8** %_164, i32 3
+	%_166 = load i8*, i8** %_165
+	%_167 = bitcast i8* %_166 to i32 (i8*, i32, i32)*
+	%_168 = load i32, i32* %i
+	%_169 = add i32 %_168, 1
+	%_170 = load i32, i32* %right
+	%_171 = call i32 %_167(i8* %this, i32 %_169, i32 %_170)
 	store i32 %_171, i32* %nt
 	br label %if2
 if1:

@@ -415,6 +415,7 @@ public class CodeGenerationVisitor implements Visitor {
                 result.append(getSizeString(formalArg.type()));
                 result.append(" ");
                 result.append(actualVal);
+                i++;
             }
         }
         result.append(")");
@@ -904,14 +905,14 @@ public class CodeGenerationVisitor implements Visitor {
         e.arrayExpr().accept(this);
         //verify the index
         String varSizeString = PTR_SIZE;
-        String lvString = getVarRegisterString(this.lastIdentifierExprSeen.id(), varSizeString);
-        String arrayReg = getNextRegister();
+//        String lvString = getVarRegisterString(this.lastIdentifierExprSeen.id(), varSizeString);
+        String arrayReg = getLastUsedRegister();
 
         //get the length
-        String lenPtrReg = getNextRegister();
-        writeToFile(lenPtrReg + " = getelementptr i32, i32* " + arrayReg + "i32 0");
+//        String lenPtrReg = getNextRegister();
+//        writeToFile(lenPtrReg + " = getelementptr i32, i32* " + arrayReg + "i32 0");
         String resultReg = getNextRegister();
-        writeToFile(resultReg + " = load i32, i32* " + lenPtrReg + "\n");
+        writeToFile(resultReg + " = load i32, i32* " + arrayReg + "\n");
     }
 
 

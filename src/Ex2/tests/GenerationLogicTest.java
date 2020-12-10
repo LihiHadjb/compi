@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import java.io.File;
 
-public class GenerationTest {
+public class GenerationLogicTest {
     String xmlsFolder = "/home/pc/IdeaProjects/compi/examples/";
     CodeGenerator codeGenerator;
 
@@ -36,13 +36,26 @@ public class GenerationTest {
         codeGenerator = new CodeGenerator(prog, outPath);
         codeGenerator.generate();
 
+        String expectedOutputs = expectedOutPath;
+        expectedOutputs = expectedOutputs.substring(0, expectedOutputs.lastIndexOf('.'));
+        expectedOutputs = expectedOutputs + "_outputs.txt";
+
+        String actualOutputs = outPath;
+        actualOutputs = actualOutputs.substring(0, actualOutputs.lastIndexOf('.'));
+        actualOutputs = actualOutputs.substring(0, actualOutputs.lastIndexOf('.'));
+        actualOutputs = actualOutputs + "_outputs.txt";
+
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        //compile expected llvm file
+        processBuilder.command("lli " + expectedOutPath + " > " +  expectedOutputs);
+
+        //compile actual llvm file
+        processBuilder.command("lli " + outPath + " > " + actualOutputs);
+
         String actual = Utils.stringFromFile(outPath);
         String expected = Utils.stringFromFile(expectedOutPath);
 
-        ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command("lli " + outPath);
-
-        Assert.assertEquals(expected, actual);
+        Assert.assertEquals(expectedOutputs, actualOutputs);
 
     }
 
@@ -132,10 +145,10 @@ public class GenerationTest {
         doTest("ex2/TreeVisitor.java.xml");
     }
 
-    @Test
-    public void shouldFail(){
-        ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command("lli " + "/home/pc/IdeaProjects/compi/examples/ex2/HartaFile.ll");
-    }
+//    @Test
+////    public void shouldFail(){
+////        ProcessBuilder processBuilder = new ProcessBuilder();
+////        processBuilder.command("lli " + "/home/pc/IdeaProjects/compi/examples/ex2/HartaFile.ll");
+////    }
 
 }
