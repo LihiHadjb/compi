@@ -3,8 +3,7 @@
 echo "Running generation logic test..."
 
 echo "1"
-/home/pc/IdeaProjects/compi/examples/1_vars/Simple.java.xml
-java -jar mjavac.jar unmarshal compile /home/pc/IdeaProjects/compi/examples/1_vars/Simple.java.xml /home/pc/IdeaProjects/compi/examples/1_vars/Simple_out.ll
+java -jar mjavac.jar unmarshal compile /home/pc/IdeaProjects/compi/examples/1_vars/Simple.xml /home/pc/IdeaProjects/compi/examples/1_vars/Simple_out.ll
 lli /home/pc/IdeaProjects/compi/examples/1_vars/Simple.ll > /home/pc/IdeaProjects/compi/examples/1_vars/Simple_expected_outputs.txt
 lli /home/pc/IdeaProjects/compi/examples/1_vars/Simple_out.ll > /home/pc/IdeaProjects/compi/examples/1_vars/Simple_actual_outputs.txt
 diff /home/pc/IdeaProjects/compi/examples/1_vars/Simple_expected_outputs.txt /home/pc/IdeaProjects/compi/examples/1_vars/Simple_actual_outputs.txt
@@ -21,7 +20,7 @@ diff /home/pc/IdeaProjects/compi/examples/3_simple_expr/SimpleExpr_expected_outp
 echo "4"
 java -jar mjavac.jar unmarshal compile /home/pc/IdeaProjects/compi/examples/4_compound_expr/CompoundExpr.java.xml /home/pc/IdeaProjects/compi/examples/4_compound_expr/CompoundExpr_out.ll
 lli /home/pc/IdeaProjects/compi/examples/4_compound_expr/CompoundExpr.ll > /home/pc/IdeaProjects/compi/examples/4_compound_expr/CompoundExpr_expected_outputs.txt
-lli /home/pc/IdeaProjects/compi/examples/4_compound_expr/CompoundExpr_out.ll > /home/pc/IdeaProjects/compi/examples/4_compound_expr/CompoundExprr_actual_outputs.txt
+lli /home/pc/IdeaProjects/compi/examples/4_compound_expr/CompoundExpr_out.ll > /home/pc/IdeaProjects/compi/examples/4_compound_expr/CompoundExpr_actual_outputs.txt
 diff /home/pc/IdeaProjects/compi/examples/4_compound_expr/CompoundExpr_expected_outputs.txt /home/pc/IdeaProjects/compi/examples/4_compound_expr/CompoundExpr_actual_outputs.txt
 echo "5"
 java -jar mjavac.jar unmarshal compile /home/pc/IdeaProjects/compi/examples/5_if/If.java.xml /home/pc/IdeaProjects/compi/examples/5_if/If_out.ll
@@ -39,7 +38,7 @@ lli /home/pc/IdeaProjects/compi/examples/6_lowering_oo/Arrays.ll > /home/pc/Idea
 lli /home/pc/IdeaProjects/compi/examples/6_lowering_oo/Arrays_out.ll > /home/pc/IdeaProjects/compi/examples/6_lowering_oo/Arrays_actual_outputs.txt
 diff /home/pc/IdeaProjects/compi/examples/6_lowering_oo/Arrays_expected_outputs.txt /home/pc/IdeaProjects/compi/examples/6_lowering_oo/Arrays_actual_outputs.txt
 echo "6_lowering_oo/Classes"
-java -jar mjavac.jar unmarshal compile /home/pc/IdeaProjects/compi/examples/6_lowering_oo/Classes.java.xml /home/pc/IdeaProjects/compi/examples/6_lowering_oo/Classes_out.ll
+java -jar mjavac.jar unmarshal compile /home/pc/IdeaProjects/compi/examples/6_lowering_oo/Classes.xml /home/pc/IdeaProjects/compi/examples/6_lowering_oo/Classes_out.ll
 lli /home/pc/IdeaProjects/compi/examples/6_lowering_oo/Classes.ll > /home/pc/IdeaProjects/compi/examples/6_lowering_oo/Classes_expected_outputs.txt
 lli /home/pc/IdeaProjects/compi/examples/6_lowering_oo/Classes_out.ll > /home/pc/IdeaProjects/compi/examples/6_lowering_oo/Classes_actual_outputs.txt
 diff /home/pc/IdeaProjects/compi/examples/6_lowering_oo/Classes_expected_outputs.txt /home/pc/IdeaProjects/compi/examples/6_lowering_oo/Classes_actual_outputs.txt
