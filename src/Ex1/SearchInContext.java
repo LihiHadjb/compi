@@ -2,6 +2,7 @@ package Ex1;
 
 import Ex1.Inheritance.InheritanceNode;
 import Ex1.Inheritance.InheritanceTrees;
+import Ex1.SymbolTables.MethodEntry;
 import Ex1.SymbolTables.SymbolTable;
 import Ex1.SymbolTables.SymbolTableBuilder;
 import Ex2.Vtable;
@@ -85,6 +86,7 @@ public class SearchInContext {
     public ClassDecl classSymbolTable2ClassDecl(SymbolTable symbolTable){
         return (ClassDecl)symbolTable.astNodeInProgram();
     }
+
 
 
 
@@ -213,6 +215,88 @@ public class SearchInContext {
         return false;
     }
 
+    public MethodEntry getMethodEntryOfClosestAncestorThatHasMethod(String methodName, SymbolTable classSymbolTable){
+        if (classSymbolTable.hasMethodWithName(methodName)){
+            return classSymbolTable.methods().get(methodName);
+        }
+
+        SymbolTable parentClassSymbolTable = lookupParentSymbolTable(classSymbolTable);
+        if (parentClassSymbolTable != null){
+            return getMethodEntryOfClosestAncestorThatHasMethod(methodName, parentClassSymbolTable);
+        }
+
+        return null;
+    }
+
+    public boolean verifyOverridingMethod(MethodDecl methodDecl, ClassDecl currClass){
+        SymbolTable currClassSymbolTable = astNodeToSymbolTable.get(currClass);
+        SymbolTable parentClassSymbolTable = lookupParentSymbolTable(currClassSymbolTable);
+        MethodEntry overridenMethodEntry = getMethodEntryOfClosestAncestorThatHasMethod(methodDecl.name(), parentClassSymbolTable);
+        MethodEntry overridingMethodEntry = currClassSymbolTable.methods().get(methodDecl.name());
+        MethodDecl overridingDecl = overridingMethodEntry.getMethodDecl();
+        MethodDecl overridenDecl = overridenMethodEntry.getMethodDecl();
+
+        if (checkMethodsArgumentsSize(overridingDecl, overridenDecl) &&
+                checkMethodsArguments(overridingDecl, overridenDecl) &&
+                checkMethodsReturnValues(overridingDecl, overridenDecl)){
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean checkMethodsArgumentsSize(MethodDecl overridingDecl, MethodDecl overridenDecl){
+        //both not null
+        if(overridenDecl.formals() != null && overridingDecl.formals() != null && overridenDecl.formals().size() != overridingDecl.formals().size()){
+            return false;
+        }
+
+        //only one of them is null
+        else if(overridingDecl.formals() == null || overridenDecl.formals() != null){
+            if (overridenDecl.formals().size() > 0){
+                return false;
+            }
+        }
+        else if(overridingDecl.formals() != null || overridenDecl.formals() == null){
+            if (overridingDecl.formals().size() > 0){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public boolean checkMethodsArguments(MethodDecl overridingDecl, MethodDecl overridenDecl){
+        if (overridenDecl.formals() != null){
+            for (int i=0 ; i < overridenDecl.formals().size() ; i++){
+                if (overridenDecl.formals().get(i).type().equals(overridingDecl.formals().get(i).type())){ //TODO: make sure equals works as expected
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean checkMethodsReturnValues(MethodDecl overridingDecl, MethodDecl overridenDecl){
+        if (overridenDecl.ret() != null){
+            if (!(overridenDecl.returnType() instanceof RefType)){
+                if (overridenDecl.returnType().equals(overridingDecl.returnType())){ //TODO: make sure equals works as expected
+                    return false;
+                }
+            }
+            else{
+                SymbolTable overridenMethodSymbolTable = astNodeToSymbolTable.get(overridenDecl);
+                SymbolTable overridenClassSymbolTable = lookupParentSymbolTable(overridenMethodSymbolTable);
+                InheritanceNode overriddenClassInheritanceNode = classSymbolTable2InheritanceNode(overridenClassSymbolTable);
+                Set<String> allPossibleSubTypes = this.inheritanceTrees.GetAllClassesUnderAncestor(overriddenClassInheritanceNode);
+                RefType overridenRetType = (RefType)overridenDecl.returnType();
+                if (!allPossibleSubTypes.contains(overridenRetType.id())){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }
 
 

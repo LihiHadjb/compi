@@ -1,5 +1,6 @@
 import Ex1.Rename;
 import Ex2.CodeGenerator;
+import Ex3.SemanticChecker;
 import ast.*;
 
 import java.io.*;
@@ -35,7 +36,8 @@ public class Main {
                     outFile.write(astPrinter.getString());
 
                 } else if (action.equals("semantic")) {
-                    throw new UnsupportedOperationException("TODO - Ex. 3");
+                    SemanticChecker semanticChekcer = new SemanticChecker(prog, outfilename);
+                    //throw new UnsupportedOperationException("TODO - Ex. 3");
 
                 } else if (action.equals("compile")) {
                     CodeGenerator codeGenerator = new CodeGenerator(prog, outfilename);
