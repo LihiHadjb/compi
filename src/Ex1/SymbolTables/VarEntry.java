@@ -6,6 +6,19 @@ import ast.VariableIntroduction;
 public class VarEntry {
     AstType type;
     boolean isFormal;
+
+    public boolean isFormal() {
+        return isFormal;
+    }
+
+    public boolean isVarDecl() {
+        return isVarDecl;
+    }
+
+    public boolean isField() {
+        return isField;
+    }
+
     boolean isVarDecl;
     boolean isField;
 

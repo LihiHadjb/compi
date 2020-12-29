@@ -71,6 +71,10 @@ public class InheritanceTrees {
         return this.roots;
     }
 
+    public HashMap<String, InheritanceNode> getFlatClasses(){
+        return flatClasses;
+    }
+
 
 
 //
