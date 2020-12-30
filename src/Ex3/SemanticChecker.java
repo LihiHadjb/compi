@@ -50,7 +50,7 @@ public class SemanticChecker {
         }
         else{
             prog.accept(initializationVisitor);
-            if(initializationVisitor.isErrorFound){
+            if(initializationVisitor.isErrorFound()){
                 writeToFile("ERROR\n", fileWriter);
             }
             else{
