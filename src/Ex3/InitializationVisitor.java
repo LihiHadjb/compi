@@ -19,8 +19,6 @@ public class InitializationVisitor implements Visitor {
     }
 
     public HashMap<String, Boolean> joinIsInitialized(HashMap<String, Boolean> map1, HashMap<String, Boolean> map2) {
-//        System.out.println("map1 is: "+map1.toString());
-//        System.out.println("map2 is: "+map2.toString());
         HashMap<String, Boolean> result = new HashMap<>();
         for (String var : map1.keySet()) {
             result.put(var, (map1.get(var) && map2.get(var)));
@@ -50,9 +48,6 @@ public class InitializationVisitor implements Visitor {
         if (program.classDecls() != null) {
             for (ClassDecl classDecl : program.classDecls()) {
                 classDecl.accept(this);
-                if(isErrorFound){
-                    System.out.println("error in class " + classDecl.name());
-                }
             }
         }
 
@@ -64,9 +59,6 @@ public class InitializationVisitor implements Visitor {
         if (classDecl.methoddecls() != null) {
             for (MethodDecl methodDecl : classDecl.methoddecls()) {
                 methodDecl.accept(this);
-                if(isErrorFound){
-                    System.out.println("error in method "+ methodDecl.name());
-                }
             }
         }
     }
@@ -95,9 +87,6 @@ public class InitializationVisitor implements Visitor {
 
         if (methodDecl.body() != null) {
             for (Statement statement : methodDecl.body()) {
-                if (statement instanceof IfStatement) {
-                    System.out.println("if");
-                }
                 statement.accept(this);
             }
         }
@@ -132,17 +121,13 @@ public class InitializationVisitor implements Visitor {
         ifStatement.cond().accept(this);
 
         HashMap<String, Boolean> originalIsInitialized = new HashMap<>();
-        HashMap<String, Boolean> thenIsInitialized = new HashMap<>();
-        HashMap<String, Boolean> elseIsInitialized = new HashMap<>();
-        originalIsInitialized.putAll(this.lastIsInitialized);
-
+        originalIsInitialized.putAll(lastIsInitialized);
         ifStatement.thencase().accept(this);
-        thenIsInitialized.putAll(this.lastIsInitialized);
-
+        HashMap<String, Boolean> thenIsInitialized = this.lastIsInitialized;
         this.lastIsInitialized = originalIsInitialized;
-
         ifStatement.elsecase().accept(this);
-        elseIsInitialized.putAll(this.lastIsInitialized);
+        HashMap<String, Boolean> elseIsInitialized = new HashMap<>();
+        elseIsInitialized.putAll(lastIsInitialized);
 
         this.lastIsInitialized = joinIsInitialized(thenIsInitialized, elseIsInitialized);
     }
@@ -166,7 +151,7 @@ public class InitializationVisitor implements Visitor {
     @Override
     public void visit(AssignStatement assignStatement) {
         assignStatement.rv().accept(this);
-        if(lastIsInitialized.containsKey(assignStatement.lv())){
+        if (lastIsInitialized.containsKey(assignStatement.lv())){
             lastIsInitialized.put(assignStatement.lv(), true);
         }
     }

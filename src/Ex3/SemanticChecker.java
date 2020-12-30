@@ -44,13 +44,11 @@ public class SemanticChecker {
 
         FileWriter fileWriter = createOutFile(outFileName);
         if(semanticCheckerVisitor.isErrorFound()){
-            System.out.println("____ failed in semanticCheckerVisitor _____");
             writeToFile("ERROR\n", fileWriter);
         }
         else{
             prog.accept(initializationVisitor);
             if(initializationVisitor.isErrorFound()){
-                System.out.println("____ failed in initializationVisitor _____");
                 writeToFile("ERROR\n", fileWriter);
             }
             else{

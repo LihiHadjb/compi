@@ -288,10 +288,42 @@ public class SearchInContext {
     public boolean checkMethodsArguments(MethodDecl overridingDecl, MethodDecl overridenDecl){
         if (overridenDecl.formals() != null){
             for (int i=0 ; i < overridenDecl.formals().size() ; i++){
-                if (overridenDecl.formals().get(i).type().equals(overridingDecl.formals().get(i).type())){ //TODO: make sure equals works as expected
+                if (!isSameType(overridenDecl.formals().get(i).type(), overridingDecl.formals().get(i).type())){
                     return false;
                 }
             }
+        }
+        return true;
+    }
+
+    public boolean isSameType(AstType actual, AstType expected){
+        if((expected == null && actual != null) ||
+                (expected != null && actual == null)){
+            return false;
+        }
+
+        if(actual instanceof IntAstType){
+            return (expected instanceof IntAstType);
+        }
+
+        if(actual instanceof BoolAstType){
+            return (expected instanceof BoolAstType);
+        }
+
+        if(actual instanceof IntArrayAstType){
+            return (expected instanceof IntArrayAstType);
+        }
+
+        if(actual instanceof RefType){
+            if(!(expected instanceof RefType)){
+                return false;
+            }
+        }
+
+        RefType expectedRefType = (RefType)expected;
+        RefType actualRefType = (RefType)actual;
+        if(!(actualRefType.id().equals(expectedRefType.id()))){
+            return false;
         }
         return true;
     }
@@ -353,30 +385,6 @@ public class SearchInContext {
 
     public boolean checkMethodsReturnValues(MethodDecl overridingDecl, MethodDecl overridenDecl){
         return isSubType(overridingDecl.returnType(), overridenDecl.returnType());
-//        if((overridenDecl.returnType() == null && overridingDecl.returnType() != null) ||
-//                (overridenDecl.returnType() != null && overridingDecl.returnType() == null)){
-//            return false;
-//        }
-//
-//        if (overridenDecl.ret() != null){
-//            if (!(overridenDecl.returnType() instanceof RefType)){
-//                if (overridenDecl.returnType().equals(overridingDecl.returnType())){ //TODO: make sure equals works as expected
-//                    return false;
-//                }
-////            }
-////            else{
-//                SymbolTable overridenMethodSymbolTable = astNodeToSymbolTable.get(overridenDecl);
-//                SymbolTable overridenClassSymbolTable = lookupParentSymbolTable(overridenMethodSymbolTable);
-//                InheritanceNode overriddenClassInheritanceNode = classSymbolTable2InheritanceNode(overridenClassSymbolTable);
-//                RefType overridingRetType = (RefType)overridingDecl.returnType();
-//                RefType overriddenRetType =
-//                Set<String> allPossibleSubTypes = this.inheritanceTrees.GetAllClassesUnderAncestor(overriddenClassInheritanceNode);
-//                if (!allPossibleSubTypes.contains(overridingRetType.id())){
-//                    return false;
-//                }
-//            }
-//        }
-
     }
 }
 
