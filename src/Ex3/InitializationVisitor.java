@@ -166,7 +166,9 @@ public class InitializationVisitor implements Visitor {
     @Override
     public void visit(AssignStatement assignStatement) {
         assignStatement.rv().accept(this);
-        lastIsInitialized.put(assignStatement.lv(), true);
+        if(lastIsInitialized.containsKey(assignStatement.lv())){
+            lastIsInitialized.put(assignStatement.lv(), true);
+        }
     }
 
     @Override
