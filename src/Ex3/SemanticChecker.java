@@ -41,6 +41,7 @@ public class SemanticChecker {
     public SemanticChecker(Program prog, String outFileName){
         SearchInContext searchInContext = new SearchInContext(prog);
         SemanticCheckerVisitor semanticCheckerVisitor = new SemanticCheckerVisitor(searchInContext);
+        InitializationVisitor initializationVisitor = new InitializationVisitor(searchInContext);
         prog.accept(semanticCheckerVisitor);
 
         FileWriter fileWriter = createOutFile(outFileName);
@@ -48,7 +49,13 @@ public class SemanticChecker {
             writeToFile("ERROR\n", fileWriter);
         }
         else{
-            writeToFile("OK\n", fileWriter);
+            prog.accept(initializationVisitor);
+            if(initializationVisitor.isErrorFound){
+                writeToFile("ERROR\n", fileWriter);
+            }
+            else{
+                writeToFile("OK\n", fileWriter);
+            }
         }
 
         try{
