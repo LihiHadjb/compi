@@ -20,14 +20,17 @@ public class InheritanceTrees {
                 if (classdecl.superName() == null){
                     currNode = new InheritanceNode(null, classdecl);
                     roots.put(classdecl.name(), currNode);
+                    flatClasses.put(classdecl.name(), currNode);
                 }
 
                 else{
                     InheritanceNode parent = flatClasses.get(classdecl.superName());
-                    currNode = new InheritanceNode(parent, classdecl);
-                    parent.addToChildren(currNode);
+                    if (parent != null){
+                        currNode = new InheritanceNode(parent, classdecl);
+                        parent.addToChildren(currNode);
+                        flatClasses.put(classdecl.name(), currNode);
+                    }
                 }
-                flatClasses.put(classdecl.name(), currNode);
             }
         }
     }

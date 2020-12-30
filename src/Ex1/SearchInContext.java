@@ -174,27 +174,6 @@ public class SearchInContext {
         return classSymbolTable2InheritanceNode(curr);
     }
 
-
-
-
-//    //Assumes targetAstNode is a MethodDecl!!!
-//    public InheritanceNode FindAncestorClass(AstNode targetAstNodeClass){
-//        //In this case targetAstNode is a MethodDecl and we need to find it's highest ancestor class. So we should go
-//        // to targetAstNode's parent (which is a ClassDecl node) --> find it's name --> get relevant InheritanceNode
-//        // of this class from flatClasses --> go up from parent to parent until we get to null (which means we got to
-//        // the highest ancestor) --> return the highestAncestor
-//        InheritanceNode currClassInheritanceNode = GetInheritanceNodeOfAstNode((ClassDecl)targetAstNodeClass);
-//        InheritanceNode parentClassInheritanceNode = currClassInheritanceNode.parent();
-//
-//        while (parentClassInheritanceNode != null){
-//            currClassInheritanceNode = parentClassInheritanceNode;
-//            parentClassInheritanceNode = currClassInheritanceNode.parent();
-//        }
-//
-//        return currClassInheritanceNode;
-//    }
-
-
     public AstNode targetAstNode(){
         return this.targetAstNode;
     }
@@ -228,6 +207,23 @@ public class SearchInContext {
         return false;
     }
 
+    public boolean isOverridingField(String fieldName, ClassDecl classOfField){
+        SymbolTable classOfFieldSymbolTable = astNodeToSymbolTable().get(classOfField);
+        SymbolTable parentClassSymbolTable = lookupParentSymbolTable(classOfFieldSymbolTable);
+        if (parentClassSymbolTable == null){
+            return false;
+        }
+
+        while (parentClassSymbolTable != null){
+            if (parentClassSymbolTable.hasVariableWithName(fieldName)){
+                return true;
+            }
+            parentClassSymbolTable = lookupParentSymbolTable(parentClassSymbolTable);
+        }
+
+        return false;
+    }
+
     public MethodEntry getMethodEntryOfClosestAncestorThatHasMethod(String methodName, SymbolTable classSymbolTable){
         if (classSymbolTable.hasMethodWithName(methodName)){
             return classSymbolTable.methods().get(methodName);
@@ -244,6 +240,11 @@ public class SearchInContext {
     public boolean verifyOverridingMethod(MethodDecl methodDecl, ClassDecl currClass){
         SymbolTable currClassSymbolTable = astNodeToSymbolTable.get(currClass);
         SymbolTable parentClassSymbolTable = lookupParentSymbolTable(currClassSymbolTable);
+
+        if(parentClassSymbolTable == null){//first time this method is declared in hierarchy
+            return true;
+        }
+
         MethodEntry overridenMethodEntry = getMethodEntryOfClosestAncestorThatHasMethod(methodDecl.name(), parentClassSymbolTable);
 
         if(overridenMethodEntry == null){//first time this method is declared in hierarchy
@@ -302,21 +303,16 @@ public class SearchInContext {
         }
 
         if(actual instanceof IntAstType){
-            if(!(expected instanceof IntAstType)){
-                return false;
-            }
+            return (expected instanceof IntAstType);
         }
 
         if(actual instanceof BoolAstType){
-            if(!(expected instanceof BoolAstType)){
-                return false;
-            }
+            return (expected instanceof BoolAstType);
+
         }
 
         if(actual instanceof IntArrayAstType){
-            if(!(expected instanceof IntArrayAstType)){
-                return false;
-            }
+            return (expected instanceof IntArrayAstType);
         }
 
         if(actual instanceof RefType){
@@ -341,10 +337,12 @@ public class SearchInContext {
         InheritanceNode parentInheritanceNode = inheritanceTrees.className2InheritanceNode(parent.id());
         InheritanceNode childInheritanceNode = inheritanceTrees.className2InheritanceNode(child.id());
 
-        Set<String> allPossibleSubTypes = this.inheritanceTrees.GetAllClassesUnderAncestor(parentInheritanceNode);
-        return allPossibleSubTypes.contains(childInheritanceNode.name());
+        if (parentInheritanceNode != null && childInheritanceNode != null){
+            Set<String> allPossibleSubTypes = this.inheritanceTrees.GetAllClassesUnderAncestor(parentInheritanceNode);
+            return allPossibleSubTypes.contains(childInheritanceNode.name());
+        }
 
-
+        return false;
     }
 
     public boolean checkMethodsReturnValues(MethodDecl overridingDecl, MethodDecl overridenDecl){

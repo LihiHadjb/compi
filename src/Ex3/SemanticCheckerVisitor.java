@@ -72,6 +72,10 @@ public class SemanticCheckerVisitor implements Visitor {
                     this.isErrorFound = true;
                     return;
                 }
+                if(searchInContext.isOverridingField(field.name(), lastClassSeen)){
+                    this.isErrorFound = true;
+                    return;
+                }
                 currClassFields.add(field.name());
                 field.accept(this);
             }
@@ -145,6 +149,12 @@ public class SemanticCheckerVisitor implements Visitor {
                 }
             }
         }
+
+        if (methodDecl.body() != null){
+            for (Statement statement : methodDecl.body()){
+                statement.accept(this);
+            }
+        }
     }
 
     @Override
@@ -174,9 +184,13 @@ public class SemanticCheckerVisitor implements Visitor {
             isErrorFound = true;
         }
 
-        ifStatement.thencase().accept(this);
-        ifStatement.elsecase().accept(this);
+        if (ifStatement.thencase() != null){
+            ifStatement.thencase().accept(this);
+        }
 
+        if (ifStatement.elsecase() != null){
+            ifStatement.elsecase().accept(this);
+        }
     }
 
     @Override
@@ -194,6 +208,7 @@ public class SemanticCheckerVisitor implements Visitor {
     @Override
     public void visit(SysoutStatement sysoutStatement) {
         sysoutStatement.arg().accept(this);
+
         if(!(actualType instanceof IntAstType)){
             isErrorFound = true;
         }
@@ -204,7 +219,7 @@ public class SemanticCheckerVisitor implements Visitor {
         assignStatement.rv().accept(this);
 
         AstType expectedAstType = searchInContext.lookupVarAstType(lastMethodSeen, assignStatement.lv());
-        if(!searchInContext.isSubType(actualType, expectedAstType)){
+        if(!(searchInContext.isSubType(actualType, expectedAstType))){
             isErrorFound = true;
         }
     }
@@ -334,6 +349,13 @@ public class SemanticCheckerVisitor implements Visitor {
 
     @Override
     public void visit(MethodCallExpr e) {
+        // Check that ownerExpr is one of the following: this, new Expr, ref to a local var, formal or field
+        if (!(e.ownerExpr() instanceof ThisExpr || e.ownerExpr() instanceof NewObjectExpr ||
+                e.ownerExpr() instanceof IdentifierExpr)){
+            isErrorFound = true;
+            return;
+        }
+
         e.ownerExpr().accept(this);
         if(!(actualType instanceof RefType)){
             isErrorFound = true;
@@ -345,7 +367,11 @@ public class SemanticCheckerVisitor implements Visitor {
             isErrorFound = true;
         }
 
-        MethodEntry methodEntry = classSymbolTable.methods().get(e.methodId());
+        MethodEntry methodEntry = searchInContext.getMethodEntryOfClosestAncestorThatHasMethod(e.methodId(), classSymbolTable);
+        if (methodEntry == null){
+            isErrorFound = true;
+            return;
+        }
         MethodDecl methodDecl = methodEntry.getMethodDecl();
         if(e.actuals().size() != methodEntry.getMethodDecl().formals().size()){
             isErrorFound = true;
@@ -363,6 +389,8 @@ public class SemanticCheckerVisitor implements Visitor {
                 i++;
             }
         }
+
+        actualType = methodDecl.returnType();
     }
 
     @Override

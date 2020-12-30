@@ -92,7 +92,7 @@ public class InitializationVisitor implements Visitor {
         }
 
         if (methodDecl.ret() != null) {
-            methodDecl.accept(this);
+            methodDecl.ret().accept(this);
         }
     }
 
