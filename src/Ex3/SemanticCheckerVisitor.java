@@ -38,7 +38,13 @@ public class SemanticCheckerVisitor implements Visitor {
         }
         if(program.classDecls() != null){
             for(ClassDecl classDecl : program.classDecls()){
+                if (isErrorFound){
+                    return;
+                }
                 classDecl.accept(this);
+                if (isErrorFound){
+                    System.out.println("____ failed in class: " + classDecl.name());
+                }
             }
         }
 
@@ -96,6 +102,9 @@ public class SemanticCheckerVisitor implements Visitor {
                 }
                 currClassMethods.add(methodDecl.name());
                 methodDecl.accept(this);
+                if (isErrorFound){
+                    System.out.println("____ failed in method: " + methodDecl.name());
+                }
             }
         }
 
@@ -114,15 +123,22 @@ public class SemanticCheckerVisitor implements Visitor {
         this.lastMethodSeen = methodDecl;
         //check that overriding is legal
         if (!(searchInContext.verifyOverridingMethod(methodDecl, this.lastClassSeen))){
+            System.out.println("____ failed in method 1");
             this.isErrorFound = true;
         }
 
         //check the return expression is of correct type
         if(methodDecl.ret() == null){
+            System.out.println("____ failed in method 2");
             this.isErrorFound = true;
         }
         methodDecl.ret().accept(this);
+        if (isErrorFound){
+            System.out.println("____ failed in method 3");
+        }
+
         if(!searchInContext.isSubType(this.actualType, methodDecl.returnType())){
+            System.out.println("____ failed in method 4");
             this.isErrorFound = true;
         }
 
@@ -133,9 +149,11 @@ public class SemanticCheckerVisitor implements Visitor {
         if(methodDecl.formals() != null){
             for(FormalArg formalArg : methodDecl.formals()){
                 if(currMethodFormals.contains(formalArg.name())){
+                    System.out.println("____ failed in method 5");
                     this.isErrorFound = true;
                 }
                 if(!searchInContext.typeExists(formalArg.type())){
+                    System.out.println("____ failed in method 6");
                     isErrorFound = true;
                     return;
                 }
@@ -146,9 +164,11 @@ public class SemanticCheckerVisitor implements Visitor {
         if(methodDecl.vardecls() != null){
             for(VarDecl varDecl : methodDecl.vardecls()){
                 if(currMethodVarDecls.contains(varDecl.name())){
+                    System.out.println("____ failed in method 7");
                     this.isErrorFound = true;
                 }
                 if(!searchInContext.typeExists(varDecl.type())){
+                    System.out.println("____ failed in method 8");
                     isErrorFound = true;
                     return;
                 }
@@ -159,6 +179,7 @@ public class SemanticCheckerVisitor implements Visitor {
         if(methodDecl.vardecls() != null){
             for(VarDecl varDecl : methodDecl.vardecls()){
                 if(currMethodFormals.contains(varDecl.name())){
+                    System.out.println("____ failed in method 9");
                     this.isErrorFound = true;
                 }
             }
@@ -167,6 +188,10 @@ public class SemanticCheckerVisitor implements Visitor {
         if (methodDecl.body() != null){
             for (Statement statement : methodDecl.body()){
                 statement.accept(this);
+                if (isErrorFound){
+                    System.out.println("____ failed in method 10");
+                    System.out.println(statement.getClass().getName());
+                }
             }
         }
     }
@@ -231,9 +256,15 @@ public class SemanticCheckerVisitor implements Visitor {
     @Override
     public void visit(AssignStatement assignStatement) {
         assignStatement.rv().accept(this);
+        if (isErrorFound){
+            System.out.println("In AssignStatement - 1");
+        }
+
 
         AstType expectedAstType = searchInContext.lookupVarAstType(lastMethodSeen, assignStatement.lv());
+
         if(!(searchInContext.isSubType(actualType, expectedAstType))){
+            System.out.println("In AssignStatement - 2");
             isErrorFound = true;
         }
     }
@@ -242,16 +273,26 @@ public class SemanticCheckerVisitor implements Visitor {
     public void visit(AssignArrayStatement assignArrayStatement) {
         AstType actualAstType = searchInContext.lookupVarAstType(lastMethodSeen, assignArrayStatement.lv());
         if(!searchInContext.isSubType(actualAstType, new IntArrayAstType())){
+            System.out.println("In AssignArrayStatement - 1");
             isErrorFound = true;
         }
 
         assignArrayStatement.rv().accept(this);
+        if(isErrorFound){
+            System.out.println("In AssignArrayStatement - 2");
+        }
         if(!searchInContext.isSubType(actualType, new IntAstType())){
+            System.out.println("In AssignArrayStatement - 3");
+
             isErrorFound = true;
         }
 
         assignArrayStatement.index().accept(this);
+        if(isErrorFound){
+            System.out.println("In AssignArrayStatement - 4");
+        }
         if(!searchInContext.isSubType(actualType, new IntAstType())){
+            System.out.println("In AssignArrayStatement - 5");
             isErrorFound = true;
         }
     }
@@ -361,12 +402,18 @@ public class SemanticCheckerVisitor implements Visitor {
         // Check that ownerExpr is one of the following: this, new Expr, ref to a local var, formal or field
         if (!(e.ownerExpr() instanceof ThisExpr || e.ownerExpr() instanceof NewObjectExpr ||
                 e.ownerExpr() instanceof IdentifierExpr)){
+            System.out.println("In MethodCallExpr - 1");
             isErrorFound = true;
             return;
         }
 
         e.ownerExpr().accept(this);
+
+        if (isErrorFound){
+            System.out.println("In MethodCallExpr - 2");
+        }
         if(!(actualType instanceof RefType)){
+            System.out.println("In MethodCallExpr - 3");
             isErrorFound = true;
             return;
         }
@@ -428,7 +475,13 @@ public class SemanticCheckerVisitor implements Visitor {
 
     @Override
     public void visit(ThisExpr e) {
-        actualType = new RefType(lastClassSeen.name());
+        if (lastClassSeen != null){
+            actualType = new RefType(lastClassSeen.name());
+            return;
+        }
+
+        // In main class and trying to use thisExpr
+        isErrorFound = true;
     }
 
     @Override
