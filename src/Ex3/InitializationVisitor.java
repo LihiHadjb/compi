@@ -50,6 +50,9 @@ public class InitializationVisitor implements Visitor {
         if (program.classDecls() != null) {
             for (ClassDecl classDecl : program.classDecls()) {
                 classDecl.accept(this);
+                if(isErrorFound){
+                    System.out.println("error in class " + classDecl.name());
+                }
             }
         }
 
@@ -61,6 +64,9 @@ public class InitializationVisitor implements Visitor {
         if (classDecl.methoddecls() != null) {
             for (MethodDecl methodDecl : classDecl.methoddecls()) {
                 methodDecl.accept(this);
+                if(isErrorFound){
+                    System.out.println("error in method "+ methodDecl.name());
+                }
             }
         }
     }
