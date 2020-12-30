@@ -33,7 +33,9 @@ public class SemanticCheckerVisitor implements Visitor {
 
     @Override
     public void visit(Program program) {
-        program.mainClass().accept(this);
+        if (program.mainClass() != null){
+            program.mainClass().accept(this);
+        }
         if(program.classDecls() != null){
             for(ClassDecl classDecl : program.classDecls()){
                 classDecl.accept(this);
@@ -57,7 +59,7 @@ public class SemanticCheckerVisitor implements Visitor {
                 this.isErrorFound = true;
                 return;
             }
-            if(classDecl.superName().equals(this.mainClassName)) {
+            if(this.mainClassName != null && classDecl.superName().equals(this.mainClassName)) {
                 this.isErrorFound = true;
                 return;
             }
@@ -74,6 +76,10 @@ public class SemanticCheckerVisitor implements Visitor {
                 }
                 if(searchInContext.isOverridingField(field.name(), lastClassSeen)){
                     this.isErrorFound = true;
+                    return;
+                }
+                if(!searchInContext.typeExists(field.type())){
+                    isErrorFound = true;
                     return;
                 }
                 currClassFields.add(field.name());
@@ -129,6 +135,10 @@ public class SemanticCheckerVisitor implements Visitor {
                 if(currMethodFormals.contains(formalArg.name())){
                     this.isErrorFound = true;
                 }
+                if(!searchInContext.typeExists(formalArg.type())){
+                    isErrorFound = true;
+                    return;
+                }
                 currMethodFormals.add(formalArg.name());
             }
         }
@@ -137,6 +147,10 @@ public class SemanticCheckerVisitor implements Visitor {
             for(VarDecl varDecl : methodDecl.vardecls()){
                 if(currMethodVarDecls.contains(varDecl.name())){
                     this.isErrorFound = true;
+                }
+                if(!searchInContext.typeExists(varDecl.type())){
+                    isErrorFound = true;
+                    return;
                 }
                 currMethodVarDecls.add(varDecl.name());
             }
@@ -240,7 +254,6 @@ public class SemanticCheckerVisitor implements Visitor {
         if(!searchInContext.isSubType(actualType, new IntAstType())){
             isErrorFound = true;
         }
-
     }
 
     @Override
@@ -271,7 +284,6 @@ public class SemanticCheckerVisitor implements Visitor {
         }
 
         actualType = new BoolAstType();
-
     }
 
     @Override
@@ -287,7 +299,6 @@ public class SemanticCheckerVisitor implements Visitor {
         }
 
         actualType = new IntAstType();
-
     }
 
     @Override
@@ -303,8 +314,6 @@ public class SemanticCheckerVisitor implements Visitor {
         }
 
         actualType = new IntAstType();
-
-
     }
 
     @Override

@@ -271,12 +271,12 @@ public class SearchInContext {
         }
 
         //only one of them is null
-        else if(overridingDecl.formals() == null || overridenDecl.formals() != null){
+        else if(overridingDecl.formals() == null && overridenDecl.formals() != null){
             if (overridenDecl.formals().size() > 0){
                 return false;
             }
         }
-        else if(overridingDecl.formals() != null || overridenDecl.formals() == null){
+        else if(overridingDecl.formals() != null && overridenDecl.formals() == null){
             if (overridingDecl.formals().size() > 0){
                 return false;
             }
@@ -329,8 +329,14 @@ public class SearchInContext {
             return false;
         }
         return true;
+    }
 
+    public boolean typeExists(AstType type){
+        if (type instanceof IntAstType || type instanceof IntArrayAstType || type instanceof BoolAstType){
+            return true;
+        }
 
+        return inheritanceTrees.getFlatClasses().get(((RefType)type).id()) != null;
     }
 
     public boolean isSubClass(RefType child, RefType parent){
