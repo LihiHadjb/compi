@@ -18,6 +18,7 @@ import java_cup.runtime.*;
 /************************************/
 /* OPTIONS AND DECLARATIONS SECTION */
 /************************************/
+%state comment
 
 /*****************************************************/
 /* Lexer is the name of the class JFlex will create. */
@@ -63,6 +64,12 @@ import java_cup.runtime.*;
 /***********************/
 /* MACRO DECALARATIONS */
 /***********************/
+LineTerminator	= \r|\n|\r\n
+WhiteSpace		= [\t ] | {LineTerminator}
+DIGIT           = [0-9]
+INTEGER			= 0 | [1-9][0-9]*
+LETTER          = [a-zA-Z]
+ID				= {LETTER}({LETTER} | {DIGIT} | [_])*
 
 /******************************/
 /* DOLAR DOLAR - DON'T TOUCH! */
@@ -81,6 +88,53 @@ import java_cup.runtime.*;
 /**************************************************************/
 
 <YYINITIAL> {
+"class"             { return symbol(sym.CLASS); }
+"extends"           { return symbol(sym.EXTENDS); }
 "public"            { return symbol(sym.PUBLIC); }
+"static"            { return symbol(sym.STATIC); }
+"void"              { return symbol(sym.VOID); }
+"String[]"          { return symbol(sym.STRING_ARR); }
+"int"               { return symbol(sym.INT); }
+"boolean"           { return symbol(sym.BOOLEAN); }
+"new"               { return symbol(sym.NEW); }
+"main"              { return symbol(sym.MAIN); }
+"int[]"             { return symbol(sym.INT_ARRAY); }
+".length"            { return symbol(sym.ARRAY_LENGTH); }
+"while"             { return symbol(sym.WHILE); }
+"if"                { return symbol(sym.IF); }
+"else"              { return symbol(sym.ELSE); }
+"System.out.println"{ return symbol(sym.PRINT); }
+"true"              { return symbol(sym.TRUE); }
+"false"              { return symbol(sym.FALSE); }
+"return"              { return symbol(sym.RETURN); }
+"this"              { return symbol(sym.THIS); }
+
+";"			   { return symbol(sym.SEMICOLON); }
+"!"			   { return symbol(sym.NOT); }
+"&&"			   { return symbol(sym.AND); }
+"||"			   { return symbol(sym.OR); }
+"<"			   { return symbol(sym.LT); }
+"="			   { return symbol(sym.ASSIGN); }
+"."			   { return symbol(sym.DOT); }
+","			   { return symbol(sym.COMMA); }
+"+"            { return symbol(sym.PLUS); }
+"-"            { return symbol(sym.MINUS); }
+"*"            { return symbol(sym.MULT); }
+"("            { return symbol(sym.LPAREN); }
+")"            { return symbol(sym.RPAREN); }
+"{"            { return symbol(sym.LCURLY); }
+"}"            { return symbol(sym.RCURLY); }
+"["            { return symbol(sym.LSQUARE); }
+"]"            { return symbol(sym.RSQUARE; }
+{ID}		   { return symbol(sym.ID, new String(yytext())); }
+{INTEGER}      { return symbol(sym.NUMBER, Integer.parseInt(yytext())); }
+{WhiteSpace}   { /* do nothing */ }
+
+"//".*			   { /* do nothing */ }
+"/*"~"*/"			   { /* do nothing */ }
+
 <<EOF>>				{ return symbol(sym.EOF); }
 }
+
+<comment>\*/    {YYBEGIN(YYINITIAL);}
+<comment>.|[LineTerminator] ;
