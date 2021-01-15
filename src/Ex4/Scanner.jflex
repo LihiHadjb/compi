@@ -135,6 +135,3 @@ ID				= {LETTER}({LETTER} | {DIGIT} | [_])*
 
 <<EOF>>				{ return symbol(sym.EOF); }
 }
-
-<comment>\*/    {YYBEGIN(YYINITIAL);}
-<comment>.|[LineTerminator] ;

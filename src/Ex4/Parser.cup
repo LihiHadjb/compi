@@ -63,12 +63,64 @@ scan with
 /*************/
 /* TERMINALS */
 /*************/
+terminal CLASS;
+terminal EXTENDS;
 terminal PUBLIC;
+terminal STATIC;
+terminal VOID;
+terminal STRING_ARR;
+terminal INT;
+terminal BOOLEAN;
+terminal NEW;
+terminal MAIN;
+terminal INT_ARRAY;
+terminal ARRAY_LENGTH;
+terminal WHILE;
+terminal IF;
+terminal ELSE;
+terminal PRINT;
+terminal TRUE;
+terminal FALSE;
+terminal RETURN;
+terminal THIS;
+terminal SEMICOLON;
+terminal NOT;
+terminal AND;
+terminal OR;
+terminal LT;
+terminal ASSIGN;
+terminal DOT;
+terminal COMMA;
+terminal PLUS;
+terminal MINUS;
+terminal MULT;
+terminal LPAREN;
+terminal RPAREN;
+terminal LCURLY;
+terminal RCURLY;
+terminal LSQUARE;
+terminal RSQUARE;
+terminal ID;
+terminal NUMBER;
+terminal EOF;
+
 
 /*****************/
 /* NON TERMINALS */
 /*****************/
-non terminal prog;
+non terminal Program prog;
+non terminal Expr expr;
+non terminal MainClass mainClass;
+non terminal ClassDecl classDecl;
+non terminal VarDecl varDecl;
+non terminal MethodDecl methodDecl;
+non terminal AstType type;
+non terminal Statement statement;
+non terminal List<ClassDecl> classDecls;
+non terminal List<VarDecl> formals;
+non terminal List<MethodDecl> methodDecl;
+non terminal List<Statement> statements;
+non terminal List<Expr>
 
 /***********************/
 /* OPERATOR PRECEDENCE */
