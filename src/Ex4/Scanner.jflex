@@ -99,7 +99,10 @@ ID				= {LETTER}({LETTER} | {DIGIT} | [_])*
 "new"               { return symbol(sym.NEW); }
 "main"              { return symbol(sym.MAIN); }
 "int[]"             { return symbol(sym.INT_ARRAY); }
-".length"            { return symbol(sym.ARRAY_LENGTH); }
+"."\s*"length"      { return symbol(sym.ARRAY_LENGTH); }
+"."/\s*{Identifier}\s*\(    { return symbol(sym.METHOD_CALL); }
+
+
 "while"             { return symbol(sym.WHILE); }
 "if"                { return symbol(sym.IF); }
 "else"              { return symbol(sym.ELSE); }
