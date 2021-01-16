@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="77bba190-39ee-42e0-9b62-00799af11139" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/src/Ex1/tests/InheritanceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Ex1/tests/InheritanceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Ex1/tests/myExample1.java.xml.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/Ex1/tests/myExample1.java.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1kF8d7nIgqgsOZ4MSZUi7UV8Nfj" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="Downloaded.Files.Path.Enabled" value="false" />
+    <property name="Repository.Attach.Annotations" value="false" />
+    <property name="Repository.Attach.JavaDocs" value="false" />
+    <property name="Repository.Attach.Sources" value="false" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/build.xml" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+  </component>
+  <component name="RunManager" selected="JUnit.InheritanceTest.myExample1Test">
+    <configuration name="InheritanceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="compi" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Ex1.tests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="Ex1.tests" />
+      <option name="MAIN_CLASS_NAME" value="Ex1.tests.InheritanceTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="InheritanceTest.myExample1Test" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="compi" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Ex1.tests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="Ex1.tests" />
+      <option name="MAIN_CLASS_NAME" value="Ex1.tests.InheritanceTest" />
+      <option name="METHOD_NAME" value="myExample1Test" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.InheritanceTest.myExample1Test" />
+        <item itemvalue="JUnit.InheritanceTest" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="77bba190-39ee-42e0-9b62-00799af11139" name="Default Changelist" comment="" />
+      <created>1605285070829</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1605285070829</updated>
+    </task>
+    <task id="LOCAL-00001" summary="Rename was wrong">
+      <created>1605290439844</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1605290440626</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Rename was wrong" />
+    <option name="LAST_COMMIT_MESSAGE" value="Rename was wrong" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="387" y="46" width="1024" height="845" key="#Project_Structure" timestamp="1605352354942">
+      <screen x="67" y="27" width="1853" height="923" />
+    </state>
+    <state x="387" y="46" width="1024" height="845" key="#Project_Structure/67.27.1853.923@67.27.1853.923" timestamp="1605352354942" />
+    <state x="667" y="350" width="643" height="275" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1605352367161">
+      <screen x="67" y="27" width="1853" height="923" />
+    </state>
+    <state x="667" y="350" width="643" height="275" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/67.27.1853.923@67.27.1853.923" timestamp="1605352367161" />
+    <state x="359" y="27" width="777" height="864" key="CommitChangelistDialog2" timestamp="1605290469645">
+      <screen x="67" y="27" width="1853" height="923" />
+    </state>
+    <state x="359" y="27" width="777" height="864" key="CommitChangelistDialog2/67.27.1853.923@67.27.1853.923" timestamp="1605290469645" />
+    <state x="687" y="212" width="735" height="513" key="FileChooserDialogImpl" timestamp="1605351930607">
+      <screen x="67" y="27" width="1853" height="923" />
+    </state>
+    <state x="687" y="212" width="735" height="513" key="FileChooserDialogImpl/67.27.1853.923@67.27.1853.923" timestamp="1605351930607" />
+    <state width="1350" height="323" key="GridCell.Tab.0.bottom" timestamp="1605352456057">
+      <screen x="67" y="27" width="1853" height="923" />
+    </state>
+    <state width="1350" height="323" key="GridCell.Tab.0.bottom/67.27.1853.923@67.27.1853.923" timestamp="1605352456057" />
+    <state width="1350" height="323" key="GridCell.Tab.0.center" timestamp="1605352456056">
+      <screen x="67" y="27" width="1853" height="923" />
+    </state>
+    <state width="1350" height="323" key="GridCell.Tab.0.center/67.27.1853.923@67.27.1853.923" timestamp="1605352456056" />
+    <state width="1350" height="323" key="GridCell.Tab.0.left" timestamp="1605352456054">
+      <screen x="67" y="27" width="1853" height="923" />
+    </state>
+    <state width="1350" height="323" key="GridCell.Tab.0.left/67.27.1853.923@67.27.1853.923" timestamp="1605352456053" />
+    <state width="1350" height="323" key="GridCell.Tab.0.right" timestamp="1605352456057">
+      <screen x="67" y="27" width="1853" height="923" />
+    </state>
+    <state width="1350" height="323" key="GridCell.Tab.0.right/67.27.1853.923@67.27.1853.923" timestamp="1605352456057" />
+    <state width="903" height="292" key="GridCell.Tab.1.bottom" timestamp="1605349730172">
+      <screen x="67" y="27" width="1853" height="923" />
+    </state>
+    <state width="903" height="292" key="GridCell.Tab.1.bottom/67.27.1853.923@67.27.1853.923" timestamp="1605349730172" />
+    <state width="903" height="292" key="GridCell.Tab.1.center" timestamp="1605349730160">
+      <screen x="67" y="27" width="1853" height="923" />
+    </state>
+    <state width="903" height="292" key="GridCell.Tab.1.center/67.27.1853.923@67.27.1853.923" timestamp="1605349730160" />
+    <state width="903" height="292" key="GridCell.Tab.1.left" timestamp="1605349730159">
+      <screen x="67" y="27" width="1853" height="923" />
+    </state>
+    <state width="903" height="292" key="GridCell.Tab.1.left/67.27.1853.923@67.27.1853.923" timestamp="1605349730159" />
+    <state width="903" height="292" key="GridCell.Tab.1.right" timestamp="1605349730166">
+      <screen x="67" y="27" width="1853" height="923" />
+    </state>
+    <state width="903" height="292" key="GridCell.Tab.1.right/67.27.1853.923@67.27.1853.923" timestamp="1605349730166" />
+    <state x="96" y="105" width="1024" height="845" key="SettingsEditor" timestamp="1605352056838">
+      <screen x="67" y="27" width="1853" height="923" />
+    </state>
+    <state x="96" y="105" width="1024" height="845" key="SettingsEditor/67.27.1853.923@67.27.1853.923" timestamp="1605352056838" />
+    <state x="28" y="249" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1605289343513">
+      <screen x="67" y="27" width="1853" height="923" />
+    </state>
+    <state x="28" y="249" width="800" height="528" key="Vcs.Push.Dialog.v2/67.27.1853.923@67.27.1853.923" timestamp="1605289343513" />
+    <state x="665" y="381" width="646" height="213" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD" timestamp="1605286937375">
+      <screen x="67" y="27" width="1853" height="923" />
+    </state>
+    <state x="665" y="381" width="646" height="213" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD/67.27.1853.923@67.27.1853.923" timestamp="1605286937375" />
+    <state x="684" y="96" width="618" height="783" key="find.popup" timestamp="1605352527804">
+      <screen x="67" y="27" width="1853" height="923" />
+    </state>
+    <state x="684" y="96" width="618" height="783" key="find.popup/67.27.1853.923@67.27.1853.923" timestamp="1605352527804" />
+    <state x="787" y="388" width="403" height="199" key="git4idea.remote.GitConfigureRemotesDialog" timestamp="1605286556396">
+      <screen x="67" y="27" width="1853" height="923" />
+    </state>
+    <state x="787" y="388" width="403" height="199" key="git4idea.remote.GitConfigureRemotesDialog/67.27.1853.923@67.27.1853.923" timestamp="1605286556396" />
+  </component>
+</project>

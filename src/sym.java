@@ -6,13 +6,87 @@
 /** CUP generated interface containing symbol constants. */
 public interface sym {
   /* terminals */
-  public static final int error = 1;
-  public static final int PUBLIC = 2;
+  public static final int METHOD_CALL = 14;
+  public static final int MULT = 31;
+  public static final int LPAREN = 32;
+  public static final int INT = 8;
+  public static final int MINUS = 30;
+  public static final int STATIC = 5;
+  public static final int RPAREN = 33;
+  public static final int STRING_ARR = 7;
+  public static final int NOT = 24;
+  public static final int SEMICOLON = 23;
+  public static final int AND = 25;
+  public static final int LT = 26;
+  public static final int COMMA = 28;
+  public static final int CLASS = 2;
+  public static final int PLUS = 29;
+  public static final int ASSIGN = 27;
+  public static final int MAIN = 11;
+  public static final int IF = 16;
+  public static final int THIS = 22;
+  public static final int ID = 38;
   public static final int EOF = 0;
+  public static final int BOOLEAN = 9;
+  public static final int RETURN = 21;
+  public static final int TRUE = 19;
+  public static final int NEW = 10;
+  public static final int error = 1;
+  public static final int LCURLY = 34;
+  public static final int NUMBER = 39;
+  public static final int VOID = 6;
+  public static final int RCURLY = 35;
+  public static final int INT_ARRAY = 12;
+  public static final int ARRAY_LENGTH = 13;
+  public static final int ELSE = 17;
+  public static final int LSQUARE = 36;
+  public static final int RSQUARE = 37;
+  public static final int WHILE = 15;
+  public static final int PUBLIC = 4;
+  public static final int EXTENDS = 3;
+  public static final int FALSE = 20;
+  public static final int PRINT = 18;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
-  "PUBLIC"
+  "CLASS",
+  "EXTENDS",
+  "PUBLIC",
+  "STATIC",
+  "VOID",
+  "STRING_ARR",
+  "INT",
+  "BOOLEAN",
+  "NEW",
+  "MAIN",
+  "INT_ARRAY",
+  "ARRAY_LENGTH",
+  "METHOD_CALL",
+  "WHILE",
+  "IF",
+  "ELSE",
+  "PRINT",
+  "TRUE",
+  "FALSE",
+  "RETURN",
+  "THIS",
+  "SEMICOLON",
+  "NOT",
+  "AND",
+  "LT",
+  "ASSIGN",
+  "COMMA",
+  "PLUS",
+  "MINUS",
+  "MULT",
+  "LPAREN",
+  "RPAREN",
+  "LCURLY",
+  "RCURLY",
+  "LSQUARE",
+  "RSQUARE",
+  "ID",
+  "NUMBER"
   };
 }
 
